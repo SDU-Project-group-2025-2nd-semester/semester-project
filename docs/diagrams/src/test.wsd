@@ -1,5 +1,109 @@
-@startuml
+@startuml test
 
-Bob -> Alice : hello
+namespace HeatManager.Core {
+    class DefaultOptimizer {
+        + DefaultOptimizer(IHeatSourceManager heatSourceManager, IResourceManager resourceManager, ISourceDataProvider sourceDataProvider)
+        + OptimizeAsync() : Task
+    }
+
+    class CsvDataLoader {
+        + LoadData(string csvFilePath)
+    }
+
+    class DatabaseDataLoader {
+        // No methods defined
+    }
+
+    class SourceDataCollection {
+        + SourceDataCollection(IEnumerable<ISourceDataPoint> dataPoints)
+        + Name : string
+        + DataPoints : IEnumerable<ISourceDataPoint>
+    }
+
+    class HeatSourceManager {
+        + HeatSources : IEnumerable<IHeatProductionUnit>
+        + AddHeatSource(IHeatProductionUnit heatProductionUnit)
+    }
+
+    class SourceDataProvider {
+        + SourceDataCollection : ISourceDataCollection
+    }
+
+    class DataOptimizerViewModel {
+        // No methods defined
+    }
+
+    class AssetManagerViewModel {
+        // No methods defined
+    }
+
+    interface IOptimizer {
+        + OptimizeAsync() : Task
+    }
+
+    interface IDataLoader {
+        + LoadData(string csvFilePath)
+    }
+
+    interface IHeatSourceManager {
+        + HeatSources : IEnumerable<IHeatProductionUnit>
+        + AddHeatSource(IHeatProductionUnit heatProductionUnit)
+    }
+
+    interface ISourceDataProvider {
+        + SourceDataCollection : ISourceDataCollection
+    }
+
+    interface IAssetManagerViewModel {
+        // No methods defined
+    }
+
+    interface IDataOptimizerViewModel {
+        // No methods defined
+    }
+
+    class SourceDataPoint {
+        + TimeForm : DateTime
+        + TimeTo : DateTime
+        + HeatDemand : double
+        + ElectricityPrice : decimal
+    }
+
+    class HeatProductionUnit {
+        + Name : string
+        + Cost : decimal
+        + MaxHeatProduction : double
+        + ResourceConsumption : double
+        + Resource : IBasicResource
+        + Emissions : double
+    }
+
+    interface ISourceDataPoint {
+        + TimeForm : DateTime
+        + TimeTo : DateTime
+        + HeatDemand : double
+        + ElectricityPrice : decimal
+    }
+
+    interface IHeatProductionUnit {
+        + Name : string
+        + Cost : decimal
+        + MaxHeatProduction : double
+        + ResourceConsumption : double
+        + Resource : IBasicResource
+        + Emissions : double
+    }
+
+    DefaultOptimizer --> IOptimizer
+    CsvDataLoader --> IDataLoader
+    DatabaseDataLoader --> IDataLoader
+    HeatSourceManager --> IHeatSourceManager
+    SourceDataProvider --> ISourceDataProvider
+    DataOptimizerViewModel --> IDataOptimizerViewModel
+    AssetManagerViewModel --> IAssetManagerViewModel
+    SourceDataCollection --> ISourceDataCollection
+    SourceDataPoint --> ISourceDataPoint
+    HeatProductionUnit --> IHeatProductionUnit
+}
 
 @enduml
