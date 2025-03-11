@@ -41,7 +41,7 @@ public interface ISchedule
 
     internal class HeatProductionUnitSchedule : IHeatProductionUnitSchedule
     {
-        public bool[] IsOn { get; }
+        public double[] Utilization { get; }
 
         public string Name { get; }
 
@@ -58,7 +58,7 @@ public interface ISchedule
 
     internal class ElectricityProductionUnitSchedule : IElectricityProductionUnitSchedule
     {
-        public bool[] IsOn { get; } // Probably add percentage 
+        public double[] Utilization { get; }
 
         public string Name { get; }
 

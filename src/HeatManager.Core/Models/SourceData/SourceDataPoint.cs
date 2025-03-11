@@ -1,5 +1,9 @@
 ﻿namespace HeatManager.Core.Models.SourceData;
 
+/// <summary>
+///
+/// Used for parsing of source csv to our data
+/// </summary>
 public class SourceDataPoint : ISourceDataPoint
 {
     // TODO: Possibly change to record

@@ -2,7 +2,7 @@
 
 public interface IHeatProductionUnitSchedule /*: IHeatProductionUnit*/
 {
-    public bool[] IsOn { get; }
+    public double[] Utilization { get; }
 
     public string Name { get; }
 
