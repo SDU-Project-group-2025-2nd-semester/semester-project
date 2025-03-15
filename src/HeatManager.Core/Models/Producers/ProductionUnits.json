@@ -1,46 +1,44 @@
-{
-    "productionUnits": [
-      {
-        "name": "GB1",
-        "cost": 520.0,
-        "maxHeatProduction": 4.0,
-        "resourceConsumption": 0.9,
-        "resource": "Gas",
-        "emissions": 175.0
-      },
-      {
-        "name": "GB2",
-        "cost": 560.0,
-        "maxHeatProduction": 3.0,
-        "resourceConsumption": 0.7,
-        "resource": "Gas",
-        "emissions": 130.0
-      },
-      {
-        "name": "OB1",
-        "cost": 670.0,
-        "maxHeatProduction": 4.0,
-        "resourceConsumption": 1.5,
-        "resource": "Oil",
-        "emissions": 330.0
-      },
-      {
-        "name": "GM1",
-        "cost": 990.0,
-        "maxHeatProduction": 3.5,
-        "resourceConsumption": 1.8,
-        "resource": "Gas",
-        "emissions": 650.0,
-        "maxElectricity": 2.6
-      },
-      {
-        "name": "HP1",
-        "cost": 60.0,
-        "maxHeatProduction": 6.0,
-        "resourceConsumption": 0.0,
-        "resource": "Electricity",
-        "emissions": 0.0,
-        "maxElectricity": -6.0
-      }
-    ]
+[
+  {
+    "Name": "GB1",
+    "Cost": 520.0,
+    "MaxHeatProduction": 4.0,
+    "ResourceConsumption": 0.9,
+    "Resource": "Gas",
+    "Emissions": 175.0
+  },
+  {
+    "Name": "GB2",
+    "Cost": 560.0,
+    "MaxHeatProduction": 3.0,
+    "ResourceConsumption": 0.7,
+    "Resource": "Gas",
+    "Emissions": 130.0
+  },
+  {
+    "Name": "OB1",
+    "Cost": 670.0,
+    "MaxHeatProduction": 4.0,
+    "ResourceConsumption": 1.5,
+    "Resource": "Oil",
+    "Emissions": 330.0
+  },
+  {
+    "Name": "GM1",
+    "Cost": 990.0,
+    "MaxHeatProduction": 3.5,
+    "ResourceConsumption": 1.8,
+    "Resource": "Gas",
+    "Emissions": 650.0,
+    "MaxElectricity": 2.6
+  },
+  {
+    "Name": "HP1",
+    "Cost": 60.0,
+    "MaxHeatProduction": 6.0,
+    "ResourceConsumption": 0.0,
+    "Resource": "Electricity",
+    "Emissions": 0.0,
+    "MaxElectricity": -6.0
   }
+]
