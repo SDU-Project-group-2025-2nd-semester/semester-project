@@ -3,6 +3,6 @@
 public interface ISourceDataCollection
 {
     string Name { get; }
-    IEnumerable<ISourceDataPoint> DataPoints { get; }
+    List<ISourceDataPoint> DataPoints { get; }
 
 }

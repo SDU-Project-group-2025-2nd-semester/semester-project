@@ -8,7 +8,7 @@ public class SourceDataPoint : ISourceDataPoint
 {
     // TODO: Possibly change to record
 
-    public required DateTime TimeForm { get; init; }
+    public required DateTime TimeFrom { get; init; }
 
     public required DateTime TimeTo { get; init; }
 
