@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0</TargetFramework>
@@ -24,6 +24,13 @@
   <ItemGroup>
     <ProjectReference Include="..\HeatManager.Core\HeatManager.Core.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+      <None Include="..\HeatManager.Core\Models\Producers\ProductionUnits.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+  </ItemGroup>
+
 
   <ItemGroup>
     <Folder Include="Views\" />
