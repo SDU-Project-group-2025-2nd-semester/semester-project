@@ -1,6 +1,9 @@
-﻿namespace HeatManager.Core.ViewModels;
+﻿using System.Collections.ObjectModel;
+using HeatManager.Core.Models.Producers;
+
+namespace HeatManager.Core.ViewModels;
 
 internal interface IAssetManagerViewModel
 {
-    // Implement management of heat/electricity sources and resources
+    ObservableCollection<IHeatProductionUnit> ProductionUnits { get; }
 }
