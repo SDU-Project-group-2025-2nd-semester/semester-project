@@ -1,4 +1,5 @@
-﻿using HeatManager.Core.Services;
+﻿using HeatManager.Core.DataLoader;
+using HeatManager.Core.Services;
 using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +27,16 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IHeatSourceManager,HeatSourceManager>()
             .AddSingleton<IResourceManager, ResourceManager>()
             .AddSingleton<IOptimizer, DefaultOptimizer>();
+            
+            
 
+        #endregion
+        
+        //TODO: Sort where to add this
+        #region DontKnowWhereToPutThis
+        
+        collection.AddTransient<IDataLoader, CsvDataLoader>();
+        
         #endregion
 
         return collection;

@@ -12,7 +12,7 @@ public interface ISourceDataPoint
     /// </summary>
     double HeatDemand { get; init; }
 
-    DateTime TimeForm { get; init; }
+    DateTime TimeFrom { get; init; }
 
     DateTime TimeTo { get; init; }
 }
