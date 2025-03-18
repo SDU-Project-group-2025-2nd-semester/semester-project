@@ -1,10 +1,12 @@
 ﻿using HeatManager.Core.Models.Resources;
+using HeatManager.Core.ViewModels;
+using System.Text.Json.Serialization;
 
 namespace HeatManager.Core.Models.Producers;
 
-internal class HeatProductionUnit : IHeatProductionUnit
+public class HeatProductionUnit : IHeatProductionUnit
 {
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     public decimal Cost { get; set; }
 
@@ -12,7 +14,8 @@ internal class HeatProductionUnit : IHeatProductionUnit
 
     public double ResourceConsumption { get; set; }
 
-    public IBasicResource Resource { get; set; }
+    [JsonConverter(typeof(BasicResourceConverter))]
+    public required IBasicResource Resource { get; set; }
 
     public double Emissions { get; set; }
 }
