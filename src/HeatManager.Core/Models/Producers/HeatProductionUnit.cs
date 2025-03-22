@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace HeatManager.Core.Models.Producers;
 
-public class HeatProductionUnit : IHeatProductionUnit
+internal class HeatProductionUnit : IHeatProductionUnit
 {
     public required string Name { get; set; }
 

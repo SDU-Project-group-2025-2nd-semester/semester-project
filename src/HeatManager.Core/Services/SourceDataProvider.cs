@@ -2,7 +2,7 @@
 
 namespace HeatManager.Core.Services;
 
-public class SourceDataProvider : ISourceDataProvider
+internal class SourceDataProvider : ISourceDataProvider
 {
     public ISourceDataCollection SourceDataCollection { get; set; }
 
