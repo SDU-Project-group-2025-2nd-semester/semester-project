@@ -10,14 +10,52 @@ namespace HeatManager.Core.Tests.ViewModels;
 [TestSubject(typeof(AssetManagerViewModel))]
 public class AssetManagerViewModelTest
 {
-    private const string ValidJson = @"
-        [
-                { ""Name"": ""GB1"", ""Cost"": 520.0, ""MaxHeatProduction"": 4.0, ""ResourceConsumption"": 0.9, ""Resource"": ""Gas"", ""Emissions"": 175.0 },
-                { ""Name"": ""GB2"", ""Cost"": 560.0, ""MaxHeatProduction"": 3.0, ""ResourceConsumption"": 0.7, ""Resource"": ""Gas"", ""Emissions"": 130.0 },
-                { ""Name"": ""OB1"", ""Cost"": 670.0, ""MaxHeatProduction"": 4.0, ""ResourceConsumption"": 1.5, ""Resource"": ""Oil"", ""Emissions"": 330.0 },
-                { ""Name"": ""GM1"", ""Cost"": 990.0, ""MaxHeatProduction"": 3.5, ""ResourceConsumption"": 1.8, ""Resource"": ""Gas"", ""Emissions"": 650.0, ""MaxElectricity"": 2.6 },
-                { ""Name"": ""HP1"", ""Cost"": 60.0, ""MaxHeatProduction"": 6.0, ""ResourceConsumption"": 0.0, ""Resource"": ""Electricity"", ""Emissions"": 0.0, ""MaxElectricity"": -6.0 }
-        ]";
+    private const string ValidJson = """ 
+                                     [
+                                       {
+                                         "Name": "GB1",
+                                         "Cost": 520,
+                                         "MaxHeatProduction": 4,
+                                         "ResourceConsumption": 0.9,
+                                         "Resource": "Gas",
+                                         "Emissions": 175
+                                       },
+                                       {
+                                         "Name": "GB2",
+                                         "Cost": 560,
+                                         "MaxHeatProduction": 3,
+                                         "ResourceConsumption": 0.7,
+                                         "Resource": "Gas",
+                                         "Emissions": 130
+                                       },
+                                       {
+                                         "Name": "OB1",
+                                         "Cost": 670,
+                                         "MaxHeatProduction": 4,
+                                         "ResourceConsumption": 1.5,
+                                         "Resource": "Oil",
+                                         "Emissions": 330
+                                       },
+                                       {
+                                         "Name": "GM1",
+                                         "Cost": 990,
+                                         "MaxHeatProduction": 3.5,
+                                         "ResourceConsumption": 1.8,
+                                         "Resource": "Gas",
+                                         "Emissions": 650,
+                                         "MaxElectricity": 2.6
+                                       },
+                                       {
+                                         "Name": "HP1",
+                                         "Cost": 60,
+                                         "MaxHeatProduction": 6,
+                                         "ResourceConsumption": 0,
+                                         "Resource": "Electricity",
+                                         "Emissions": 0,
+                                         "MaxElectricity": -6
+                                       }
+                                     ]
+                                     """;
 
     [Fact]
     public void LoadUnits_Should_Deserialize_Correct_ProductionUnits()

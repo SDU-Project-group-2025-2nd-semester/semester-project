@@ -26,16 +26,8 @@ public static class ServiceCollectionExtensions
             .AddSingleton<ISourceDataProvider, SourceDataProvider>()
             .AddSingleton<IHeatSourceManager,HeatSourceManager>()
             .AddSingleton<IResourceManager, ResourceManager>()
-            .AddSingleton<IOptimizer, DefaultOptimizer>();
-            
-            
-
-        #endregion
-        
-        //TODO: Sort where to add this
-        #region DontKnowWhereToPutThis
-        
-        collection.AddTransient<IDataLoader, CsvDataLoader>();
+            .AddSingleton<IOptimizer, DefaultOptimizer>()
+            .AddTransient<IDataLoader, CsvDataLoader>();
         
         #endregion
 
