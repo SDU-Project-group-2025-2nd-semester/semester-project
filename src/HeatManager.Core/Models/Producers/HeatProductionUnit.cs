@@ -18,4 +18,6 @@ internal class HeatProductionUnit : IHeatProductionUnit
     public required IBasicResource Resource { get; set; }
 
     public double Emissions { get; set; }
+    
+    
 }

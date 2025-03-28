@@ -1,5 +1,8 @@
-﻿using HeatManager.Core.Models.Schedules;
+﻿using HeatManager.Core.Models.Producers;
+using HeatManager.Core.Models.Schedules;
+using HeatManager.Core.Models.SourceData;
 using HeatManager.Core.Services;
+using System.Runtime.InteropServices.JavaScript;
 
 namespace HeatManager.Core.Services.Optimizers;
 
@@ -18,6 +21,10 @@ internal class DefaultOptimizer : IOptimizer
     private readonly IHeatSourceManager _heatSourceManager;
     private readonly IResourceManager _resourceManager;
     private readonly ISourceDataProvider _sourceDataProvider;
+    
+    private IOptimizerSettings _optimizerSettings; //TODO: Implement settings
+
+    private object _resultManager; //TODO: Implement result manager 
 
     public DefaultOptimizer(IHeatSourceManager heatSourceManager, IResourceManager resourceManager, ISourceDataProvider sourceDataProvider)
     {
@@ -28,8 +35,15 @@ internal class DefaultOptimizer : IOptimizer
 
     public async Task OptimizeAsync()
     {
+        var scheduledEntries = _sourceDataProvider.SourceDataCollection;
+        var heatSources = GetAvailableUnits(_heatSourceManager, _optimizerSettings); // TODO: Implement this method
+        
+        // var resources = _resourceManager.Resources; // TODO: Probably not needed at all in the code
+        
+        
         await Task.Run(() => // To offload it to a background thread, TODO: Probably put to separate method
         {
+            var heatSourcePriorityList = GetHeatSourcePriorityList(heatSources, scheduledEntries.DataPoints[0]); // TODO: Implement this method
             // Probably load some settings here, or get them as parameters
 
             // Make heat source priority list
@@ -40,5 +54,44 @@ internal class DefaultOptimizer : IOptimizer
 
             new Schedule();
         });
+    }
+
+    public void ChangeOptimizationSettings(IOptimizerSettings optimizerSettings)
+    {
+        _optimizerSettings = optimizerSettings; 
+    }
+    
+    private IEnumerable<IHeatProductionUnit> GetHeatSourcePriorityList(IEnumerable<IHeatProductionUnit> availableUnits, ISourceDataPoint entry, IOptimizerStrategy strategy)
+    {
+        decimal electricityPrice = entry.ElectricityPrice;
+        if (strategy.Optimization == OptimizationType.PriceOptimization)
+        {
+            
+        }
+        else if (strategy.Optimization == OptimizationType.Co2Optimization)
+        {
+            
+        }
+        else
+        {
+            throw new Exception("Optimization strategy not selected, caught in DefaultOptimizer.GetHeatSourcePriorityList"); 
+        }
+        
+    }
+
+    private IEnumerable<IHeatProductionUnit> GetAvailableUnits(IHeatSourceManager heatSourceManager, IOptimizerSettings optimizerSettings)
+    {
+        List<IHeatProductionUnit> activeUnits = new List<IHeatProductionUnit>();
+        List<string> availableUnitsNames = optimizerSettings.GetActiveUnits();
+
+        foreach (var heatSourceUnit in heatSourceManager.HeatSources)
+        {
+            if (availableUnitsNames.Contains(heatSourceUnit.Name))
+            {
+                activeUnits.Add(heatSourceUnit);
+            }
+        }
+
+        return activeUnits; 
     }
 }
