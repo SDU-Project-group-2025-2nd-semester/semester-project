@@ -2,7 +2,6 @@
 using HeatManager.Core.Models.Schedules;
 using HeatManager.Core.Models.SourceData;
 using HeatManager.Core.Services;
-using System.Runtime.InteropServices.JavaScript;
 
 namespace HeatManager.Core.Services.Optimizers;
 
@@ -64,19 +63,34 @@ internal class DefaultOptimizer : IOptimizer
     private IEnumerable<IHeatProductionUnit> GetHeatSourcePriorityList(IEnumerable<IHeatProductionUnit> availableUnits, ISourceDataPoint entry, IOptimizerStrategy strategy)
     {
         decimal electricityPrice = entry.ElectricityPrice;
+        List<IHeatProductionUnit> availableUnitsList = availableUnits.ToList();
+        
+        List<IHeatProductionUnit>? heatPumps = availableUnitsList.FindAll(unit => unit.Name.Contains("HP"));  // I don't like this at all
+        
+        if (heatPumps.Count > 0)
+        {
+            foreach (var heatPump in heatPumps)
+            {
+                heatPump.Cost = electricityPrice; 
+            }
+        }
+        
+        IEnumerable<IHeatProductionUnit> heatSourcePriorityList;
+        
         if (strategy.Optimization == OptimizationType.PriceOptimization)
         {
-            
+            heatSourcePriorityList = availableUnitsList.OrderBy(unit => unit.Cost).ThenBy(unit => unit.Emissions);
         }
         else if (strategy.Optimization == OptimizationType.Co2Optimization)
         {
-            
+            heatSourcePriorityList = availableUnitsList.OrderBy(unit => unit.Emissions).ThenBy(unit => unit.Cost);
         }
         else
         {
             throw new Exception("Optimization strategy not selected, caught in DefaultOptimizer.GetHeatSourcePriorityList"); 
         }
-        
+
+        return heatSourcePriorityList; 
     }
 
     private IEnumerable<IHeatProductionUnit> GetAvailableUnits(IHeatSourceManager heatSourceManager, IOptimizerSettings optimizerSettings)
