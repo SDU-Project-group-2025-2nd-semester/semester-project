@@ -8,7 +8,7 @@ namespace HeatManager.Core.ViewModels;
 
 public class AssetManagerViewModel : IAssetManagerViewModel
 {
-    private string DataFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Models", "Producers", "ProductionUnits.json");
+    private readonly string DataFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Models", "Producers", "ProductionUnits.json");
     public ObservableCollection<IHeatProductionUnit> ProductionUnits { get; private set; } = new ObservableCollection<IHeatProductionUnit>();
 
     public AssetManagerViewModel()
@@ -18,99 +18,49 @@ public class AssetManagerViewModel : IAssetManagerViewModel
 
     public void LoadUnits(string filepath)
     {
-        try
+        if (!File.Exists(filepath))
         {
-            if (!File.Exists(filepath))
-            {
-                Console.WriteLine($"Error: Data file not found at {filepath}");
-                return;
-            }
-
-            var json = File.ReadAllText(filepath);
-
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-                Converters = { new BasicResourceConverter() } // Add the converter here
-            };
-
-            ProductionUnits.Clear();
-
-            using (JsonDocument doc = JsonDocument.Parse(json))
-            {
-                var root = doc.RootElement;
-
-                if (root.ValueKind != JsonValueKind.Array)
-                {
-                    Console.WriteLine("Error: JSON root is not an array.");
-                    return;
-                }
-
-                foreach (var element in root.EnumerateArray())
-                {
-                    // Check if the element is a Electricity- or HeatProductionUnit
-                    if (element.TryGetProperty("MaxElectricity", out JsonElement typeElement))
-                    {
-                        try
-                        {
-                            var unit = JsonSerializer.Deserialize<ElectricityProductionUnit>(element.GetRawText(), options);
-                            if (unit != null)
-                            {
-                                ProductionUnits.Add(unit);
-                            }
-                        }
-                        catch (JsonException ex)
-                        {
-                            Console.WriteLine($"Error deserializing element: {ex.Message}");
-                        }
-                    }
-                    else
-                    {
-                        try
-                        {
-                            var unit = JsonSerializer.Deserialize<HeatProductionUnit>(element.GetRawText(), options);
-                            if (unit != null)
-                            {
-                                ProductionUnits.Add(unit);
-                            }
-                        }
-                        catch (JsonException ex)
-                        {
-                            Console.WriteLine($"Error deserializing element: {ex.Message}");
-                        }
-                    }
-
-                }
-            }
+            throw new FileNotFoundException($"Data file not found at {filepath}");
         }
-        catch (JsonException ex)
+
+        var json = File.ReadAllText(filepath);
+
+        var options = new JsonSerializerOptions
         {
-            Console.WriteLine($"JSON Error: {ex.Message}");
-        }
-        catch (IOException ex)
-        {
-            Console.WriteLine($"File Error: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected Error: {ex}");
-        }
+            PropertyNameCaseInsensitive = true,
+            Converters = { new BasicResourceConverter() }
+        };
+
+        var jsonData = JsonSerializer.Deserialize<JsonDataStructure>(json, options) ?? new JsonDataStructure();
+
+        var allUnits = (jsonData.HeatProductionUnits ?? Enumerable.Empty<IHeatProductionUnit>())
+            .Concat(jsonData.ElectricityProductionUnits ?? Enumerable.Empty<IHeatProductionUnit>())
+            .ToList();
+
+        ProductionUnits = new ObservableCollection<IHeatProductionUnit>(allUnits);
+
     }
-
 }
-
 
 internal class BasicResourceConverter : JsonConverter<IBasicResource>
 {
+    private static readonly HashSet<string> ValidResources = new() { "Gas", "Oil", "Electricity" };
+
     public override BasicResource Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType == JsonTokenType.String)
         {
             var name = reader.GetString();
-            if (name == null)
+            if (string.IsNullOrWhiteSpace(name))
             {
-                throw new JsonException("BasicResource name cannot be null.");
+                throw new JsonException("BasicResource name cannot be null or empty.");
             }
+
+            if (!ValidResources.Contains(name))
+            {
+                throw new JsonException($"Invalid resource type: {name}");
+            }
+
             return new BasicResource { Name = name };
         }
 
@@ -121,4 +71,10 @@ internal class BasicResourceConverter : JsonConverter<IBasicResource>
     {
         writer.WriteStringValue(value.Name);
     }
+}
+
+public class JsonDataStructure
+{
+    public List<HeatProductionUnit>? HeatProductionUnits { get; set; }
+    public List<ElectricityProductionUnit>? ElectricityProductionUnits { get; set; }
 }
