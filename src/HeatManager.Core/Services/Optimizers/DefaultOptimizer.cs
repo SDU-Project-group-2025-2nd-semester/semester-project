@@ -25,13 +25,15 @@ internal class DefaultOptimizer : IOptimizer
 
     private object _resultManager; //TODO: Implement result manager 
 
-    public DefaultOptimizer(IHeatSourceManager heatSourceManager, IResourceManager resourceManager, ISourceDataProvider sourceDataProvider)
+    public DefaultOptimizer(IHeatSourceManager heatSourceManager, IResourceManager resourceManager, ISourceDataProvider sourceDataProvider, IOptimizerSettings optimizerSettings)
     {
         _heatSourceManager = heatSourceManager; // TODO: Get all the necessary data from services
         _resourceManager = resourceManager;
         _sourceDataProvider = sourceDataProvider;
+        _optimizerSettings = optimizerSettings;
     }
 
+    
     public async Task OptimizeAsync()
     {
         var scheduledEntries = _sourceDataProvider.SourceDataCollection;
@@ -42,17 +44,41 @@ internal class DefaultOptimizer : IOptimizer
         
         await Task.Run(() => // To offload it to a background thread, TODO: Probably put to separate method
         {
-            var heatSourcePriorityList = GetHeatSourcePriorityList(heatSources, scheduledEntries.DataPoints[0]); // TODO: Implement this method
-            // Probably load some settings here, or get them as parameters
-
-            // Make heat source priority list
-
-            // Iterate over each entry in the schedule
-
-            // Create heat schedule 
-
             new Schedule();
         });
+    }
+    /*
+     * This method gets the available heat sources and the scheduled entries and then optimizes the schedule
+     * TODO: Return type ResultDataPoint ???????
+     */
+    private void Optimize(IEnumerable<IHeatProductionUnit> availableUnits, IEnumerable<ISourceDataPoint> scheduledEntries, IOptimizerStrategy strategy)
+    {
+        IEnumerable<IHeatProductionUnit> heatProductionUnits = availableUnits.ToList();
+        IEnumerable<ISourceDataPoint> sourceDataPoints = scheduledEntries.ToList();
+        
+        IEnumerable<IHeatProductionUnit> heatSourcePriorityList; 
+        
+        List<object> returnList = new List<object>(); //TODO: make a proper return type
+        
+        Dictionary<IHeatProductionUnit, double> activeUnits = new Dictionary<IHeatProductionUnit, double>();
+
+        for (int i = 0; i < sourceDataPoints.Count(); i++)
+        {
+            var entry = sourceDataPoints.ElementAt(i);
+            double remainingDemand = entry.HeatDemand;
+            heatSourcePriorityList = GetHeatSourcePriorityList(heatProductionUnits, entry, strategy);
+            
+            foreach (var heatSource in heatSourcePriorityList)
+            {
+                if (remainingDemand <= 0)
+                    break; // Stop if demand is fully met
+                
+                double production = Math.Min(heatSource.MaxHeatProduction, remainingDemand);
+                activeUnits.Add(heatSource, production);
+                remainingDemand -= production;
+            }
+            
+        }
     }
 
     public void ChangeOptimizationSettings(IOptimizerSettings optimizerSettings)
@@ -60,13 +86,19 @@ internal class DefaultOptimizer : IOptimizer
         _optimizerSettings = optimizerSettings; 
     }
     
+    
+    /*
+     * 
+     */
     private IEnumerable<IHeatProductionUnit> GetHeatSourcePriorityList(IEnumerable<IHeatProductionUnit> availableUnits, ISourceDataPoint entry, IOptimizerStrategy strategy)
     {
         decimal electricityPrice = entry.ElectricityPrice;
         List<IHeatProductionUnit> availableUnitsList = availableUnits.ToList();
         
-        List<IHeatProductionUnit>? heatPumps = availableUnitsList.FindAll(unit => unit.Name.Contains("HP"));  // I don't like this at all
-        
+        /*
+         * Here decide, if a heatpump should not rather be its own object
+         */
+        List<IHeatProductionUnit>? heatPumps = availableUnitsList.FindAll(unit => unit.Name.Contains("HP"));  // I don't like this at all 
         if (heatPumps.Count > 0)
         {
             foreach (var heatPump in heatPumps)
@@ -74,6 +106,22 @@ internal class DefaultOptimizer : IOptimizer
                 heatPump.Cost = electricityPrice; 
             }
         }
+        
+        /*
+         * I don't even know if this is how we the cost of the gas motor should be determined
+         */
+
+        
+        List<IElectricityProductionUnit> gasMotors = availableUnitsList.FindAll(unit => unit is IElectricityProductionUnit electricityProductionUnit); //will not work, because of different types
+        
+        if (gasMotors.Count > 0)
+        {
+            foreach (var gasMotor in gasMotors)
+            {
+                gasMotor.Cost = CalculateGasMotorCost(gasMotor, electricityPrice);
+            }
+        }
+        
         
         IEnumerable<IHeatProductionUnit> heatSourcePriorityList;
         
@@ -108,4 +156,10 @@ internal class DefaultOptimizer : IOptimizer
 
         return activeUnits; 
     }
+
+    private decimal CalculateGasMotorCost(IElectricityProductionUnit gasMotor, decimal electricityPrice)
+    {
+        return gasMotor.Cost - ((decimal) gasMotor.MaxElectricity * electricityPrice);
+    }
+
 }

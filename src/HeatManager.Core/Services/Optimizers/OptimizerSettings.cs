@@ -27,14 +27,6 @@ public class OptimizerSettings : IOptimizerSettings
         AllUnits = activeUnits;
     }
     
-    public void SetUnitState(string unitName, bool state)
-    {
-        if (AllUnits.ContainsKey(unitName))
-        {
-            AllUnits[unitName] = state;
-        }
-    }
-    
     public List<string> GetActiveUnits()
     {
         return AllUnits.Where(x => x.Value).Select(x => x.Key).ToList();
