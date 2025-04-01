@@ -6,7 +6,7 @@ using HeatManager.Core.Models.Resources;
 
 namespace HeatManager.Core.Services;
 
-public class AssetManager : IAssetManager
+internal class AssetManager : IAssetManager
 {
     private readonly string DataFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Models", "Producers", "ProductionUnits.json");
     public ObservableCollection<IHeatProductionUnit> ProductionUnits { get; private set; } = new ObservableCollection<IHeatProductionUnit>();
