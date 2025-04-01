@@ -1,5 +1,5 @@
 ﻿using HeatManager.Core.Models.Resources;
-using HeatManager.Core.ViewModels;
+using HeatManager.Core.Services;
 using System.Text.Json.Serialization;
 
 namespace HeatManager.Core.Models.Producers;
