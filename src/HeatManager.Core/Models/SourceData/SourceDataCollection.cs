@@ -1,13 +1,15 @@
-﻿namespace HeatManager.Core.Models.SourceData;
+﻿using System.Collections.Immutable;
 
-public class SourceDataCollection : ISourceDataCollection
+namespace HeatManager.Core.Models.SourceData;
+
+internal class SourceDataCollection : ISourceDataCollection
 {
     public string Name { get; } // TODO: Possibly remove
 
-    public IEnumerable<ISourceDataPoint> DataPoints { get; }
+    public IImmutableList<ISourceDataPoint> DataPoints { get; }
 
     public SourceDataCollection(IEnumerable<ISourceDataPoint> dataPoints)
     {
-        DataPoints = dataPoints;
+        DataPoints = dataPoints.ToImmutableList();
     }
 }

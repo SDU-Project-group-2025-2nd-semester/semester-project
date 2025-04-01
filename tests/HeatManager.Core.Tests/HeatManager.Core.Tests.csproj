@@ -25,5 +25,11 @@
   <ItemGroup>
     <Folder Include="DataLoader\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="mockFile.csv">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   
 </Project>
