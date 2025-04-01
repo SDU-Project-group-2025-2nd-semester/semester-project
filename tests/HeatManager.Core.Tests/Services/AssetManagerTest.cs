@@ -1,15 +1,15 @@
 using System.IO;
 using HeatManager.Core.Models.Producers;
-using HeatManager.Core.ViewModels;
+using HeatManager.Core.Services;
 using Shouldly;
 using Xunit;
 using JetBrains.Annotations;
 using System;
 
-namespace HeatManager.Core.Tests.ViewModels;
+namespace HeatManager.Core.Tests.Services;
 
-[TestSubject(typeof(AssetManagerViewModel))]
-public class AssetManagerViewModelTest
+[TestSubject(typeof(AssetManager))]
+public class AssetManagerTest
 {
     private const string ValidJson = @"
         {
@@ -32,21 +32,21 @@ public class AssetManagerViewModelTest
         // Arrange
         var filePath = "test.json";
         File.WriteAllText(filePath, ValidJson);
-        var viewModel = new AssetManagerViewModel();
+        var service = new AssetManager();
 
         // Act
-        viewModel.LoadUnits(filePath);
+        service.LoadUnits(filePath);
 
         // Assert
-        viewModel.ProductionUnits.ShouldNotBeNull();
-        viewModel.ProductionUnits.Count.ShouldBe(5);
+        service.ProductionUnits.ShouldNotBeNull();
+        service.ProductionUnits.Count.ShouldBe(5);
 
         // Verify class types
-        viewModel.ProductionUnits[0].ShouldBeOfType<HeatProductionUnit>(); // GB1
-        viewModel.ProductionUnits[1].ShouldBeOfType<HeatProductionUnit>(); // GB2
-        viewModel.ProductionUnits[2].ShouldBeOfType<HeatProductionUnit>(); // OB1
-        viewModel.ProductionUnits[3].ShouldBeOfType<ElectricityProductionUnit>(); // GM1
-        viewModel.ProductionUnits[4].ShouldBeOfType<ElectricityProductionUnit>(); // HP1
+        service.ProductionUnits[0].ShouldBeOfType<HeatProductionUnit>(); // GB1
+        service.ProductionUnits[1].ShouldBeOfType<HeatProductionUnit>(); // GB2
+        service.ProductionUnits[2].ShouldBeOfType<HeatProductionUnit>(); // OB1
+        service.ProductionUnits[3].ShouldBeOfType<ElectricityProductionUnit>(); // GM1
+        service.ProductionUnits[4].ShouldBeOfType<ElectricityProductionUnit>(); // HP1
 
         // Cleanup
         File.Delete(filePath);
@@ -58,13 +58,13 @@ public class AssetManagerViewModelTest
         // Arrange
         var filePath = "test.json";
         File.WriteAllText(filePath, ValidJson);
-        var viewModel = new AssetManagerViewModel();
+        var service = new AssetManager();
 
         // Act
-        viewModel.LoadUnits(filePath);
+        service.LoadUnits(filePath);
 
         // Assert
-        var gb1 = viewModel.ProductionUnits[0];
+        var gb1 = service.ProductionUnits[0];
         gb1.ShouldNotBeNull();
         gb1.Name.ShouldBe("GB1");
         gb1.Cost.ShouldBe(520.0m);
@@ -72,12 +72,12 @@ public class AssetManagerViewModelTest
         gb1.Resource.Name.ShouldBe("Gas");
         gb1.Emissions.ShouldBe(175.0);
 
-        var gm1 = viewModel.ProductionUnits[3] as IElectricityProductionUnit;
+        var gm1 = service.ProductionUnits[3] as IElectricityProductionUnit;
         gm1.ShouldNotBeNull();
         gm1.Name.ShouldBe("GM1");
         gm1.MaxElectricity.ShouldBe(2.6);
 
-        var hp1 = viewModel.ProductionUnits[4] as IElectricityProductionUnit;
+        var hp1 = service.ProductionUnits[4] as IElectricityProductionUnit;
         hp1.ShouldNotBeNull();
         hp1.MaxElectricity.ShouldBe(-6.0);
 
@@ -90,9 +90,9 @@ public class AssetManagerViewModelTest
     {
         var filePath = "invalid.json";
         File.WriteAllText(filePath, "{ invalid_json ");
-        var viewModel = new AssetManagerViewModel();
+        var service = new AssetManager();
 
-        Should.Throw<Exception>(() => viewModel.LoadUnits(filePath));
+        Should.Throw<Exception>(() => service.LoadUnits(filePath));
 
         File.Delete(filePath);
     }
@@ -103,9 +103,9 @@ public class AssetManagerViewModelTest
         var json = "{\"HeatProductionUnits\": [{ \"Name\": \"GB1\" }] }";
         var filePath = "missing_fields.json";
         File.WriteAllText(filePath, json);
-        var viewModel = new AssetManagerViewModel();
+        var service = new AssetManager();
 
-        Should.Throw<Exception>(() => viewModel.LoadUnits(filePath));
+        Should.Throw<Exception>(() => service.LoadUnits(filePath));
 
         File.Delete(filePath);
     }
@@ -116,9 +116,9 @@ public class AssetManagerViewModelTest
         var json = "{\"HeatProductionUnits\": [{ \"Name\": \"GB1\", \"Cost\": \"not_a_number\" }] }";
         var filePath = "invalid_data.json";
         File.WriteAllText(filePath, json);
-        var viewModel = new AssetManagerViewModel();
+        var service = new AssetManager();
 
-        Should.Throw<Exception>(() => viewModel.LoadUnits(filePath));
+        Should.Throw<Exception>(() => service.LoadUnits(filePath));
         File.Delete(filePath);
     }
 
@@ -127,17 +127,17 @@ public class AssetManagerViewModelTest
     {
         var filePath = "empty.json";
         File.WriteAllText(filePath, "");
-        var viewModel = new AssetManagerViewModel();
+        var service = new AssetManager();
 
-        Should.Throw<Exception>(() => viewModel.LoadUnits(filePath));
+        Should.Throw<Exception>(() => service.LoadUnits(filePath));
         File.Delete(filePath);
     }
 
     [Fact]
     public void LoadUnits_Should_Handle_NonExistent_File()
     {
-        var viewModel = new AssetManagerViewModel();
-        Should.Throw<FileNotFoundException>(() => viewModel.LoadUnits("nonexistent.json"));
+        var service = new AssetManager();
+        Should.Throw<FileNotFoundException>(() => service.LoadUnits("nonexistent.json"));
     }
 
     [Fact]
@@ -146,9 +146,9 @@ public class AssetManagerViewModelTest
         var json = "{\"HeatProductionUnits\": [{ \"Name\": \"GB1\", \"Cost\": 100, \"MaxHeatProduction\": 5, \"Resource\": \"UnknownResource\", \"Emissions\": 50 }] }";
         var filePath = "unknown_resource.json";
         File.WriteAllText(filePath, json);
-        var viewModel = new AssetManagerViewModel();
+        var service = new AssetManager();
 
-        Should.Throw<Exception>(() => viewModel.LoadUnits(filePath));
+        Should.Throw<Exception>(() => service.LoadUnits(filePath));
         File.Delete(filePath);
     }
 
@@ -158,10 +158,10 @@ public class AssetManagerViewModelTest
         var json = "{\"HeatProductionUnits\": [ { \"Name\": \"GB1\", \"Cost\": 100, \"MaxHeatProduction\": 5, \"Resource\": \"Gas\", \"Emissions\": 50 }, { \"Name\": \"GB1\", \"Cost\": 100, \"MaxHeatProduction\": 5, \"Resource\": \"Gas\", \"Emissions\": 50 } ] }";
         var filePath = "duplicate.json";
         File.WriteAllText(filePath, json);
-        var viewModel = new AssetManagerViewModel();
+        var service = new AssetManager();
 
-        viewModel.LoadUnits(filePath);
-        viewModel.ProductionUnits.Count.ShouldBe(2);
+        service.LoadUnits(filePath);
+        service.ProductionUnits.Count.ShouldBe(2);
         File.Delete(filePath);
     }
 
@@ -171,9 +171,9 @@ public class AssetManagerViewModelTest
         var json = "{\"HeatProductionUnits\": [{ \"Name\": \"GB1\", \"Cost\": 9999999999, \"MaxHeatProduction\": 9999999999, \"Resource\": \"Gas\", \"Emissions\": 9999999999 }] }";
         var filePath = "large_numbers.json";
         File.WriteAllText(filePath, json);
-        var viewModel = new AssetManagerViewModel();
+        var service = new AssetManager();
 
-        Should.NotThrow(() => viewModel.LoadUnits(filePath));
+        Should.NotThrow(() => service.LoadUnits(filePath));
         File.Delete(filePath);
     }
 }
