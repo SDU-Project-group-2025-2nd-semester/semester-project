@@ -39,37 +39,19 @@ public interface ISchedule
     public decimal[] ElectricityPrice { get; set; }
 
 
-    internal class HeatProductionUnitSchedule : IHeatProductionUnitSchedule
-    {
-        public double[] Utilization { get; }
-
-        public string Name { get; }
-
-        public decimal Cost { get; }
-
-        public double MaxHeatProduction { get; }
-
-        public double ResourceConsumption { get; }
-
-        public IResourceConsumptionSchedule ResourceConsumption2 { get; }
-
-        public double Emissions { get; }
-    }
+    
 
     internal class ElectricityProductionUnitSchedule : IElectricityProductionUnitSchedule
     {
-        public double[] Utilization { get; }
-
         public string Name { get; }
-
-        public decimal Cost { get; }
-
+        public decimal TotalCost { get; }
+        
         public double MaxHeatProduction { get; }
 
         public double ResourceConsumption { get; }
-
-        public IResourceConsumptionSchedule ResourceConsumption2 { get; }
-
+        public double TotalEmissions { get; }
+        
+        public List<IHeatProductionUnitResultDataPoint> DataPoints { get; }
         public double Emissions { get; }
 
         public double MaxElectricity { get; set; }

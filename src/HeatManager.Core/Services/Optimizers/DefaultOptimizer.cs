@@ -2,6 +2,7 @@
 using HeatManager.Core.Models.Schedules;
 using HeatManager.Core.Models.SourceData;
 using HeatManager.Core.Services;
+using System.Collections.Immutable;
 
 namespace HeatManager.Core.Services.Optimizers;
 
@@ -56,12 +57,8 @@ internal class DefaultOptimizer : IOptimizer
         IEnumerable<IHeatProductionUnit> heatProductionUnits = availableUnits.ToList();
         IEnumerable<ISourceDataPoint> sourceDataPoints = scheduledEntries.ToList();
         
-        IEnumerable<IHeatProductionUnit> heatSourcePriorityList; 
+        IEnumerable<IHeatProductionUnit> heatSourcePriorityList;
         
-        List<object> returnList = new List<object>(); //TODO: make a proper return type
-        
-        Dictionary<IHeatProductionUnit, double> activeUnits = new Dictionary<IHeatProductionUnit, double>();
-
         for (int i = 0; i < sourceDataPoints.Count(); i++)
         {
             var entry = sourceDataPoints.ElementAt(i);
@@ -74,7 +71,26 @@ internal class DefaultOptimizer : IOptimizer
                     break; // Stop if demand is fully met
                 
                 double production = Math.Min(heatSource.MaxHeatProduction, remainingDemand);
-                activeUnits.Add(heatSource, production);
+                
+                //TODO: this batch of code should probably be some sort of a getter in a heatProductionUnit
+                double utilization = production / heatSource.MaxHeatProduction;
+                decimal cost = (decimal)production * heatSource.Cost;
+                double consumption = production * heatSource.ResourceConsumption;
+                double emissions = production * heatSource.Emissions;
+                
+                
+                var dataPoint = new HeatProductionUnitResultDataPoint(
+                timeFrom: entry.TimeFrom,
+                timeTo: entry.TimeTo,
+                utilization: utilization,
+                heatProduction: production,
+                cost: cost,
+                resourceConsumption: consumption,
+                emissions: emissions
+                );
+                
+                //TODO: 
+
                 remainingDemand -= production;
             }
             
@@ -162,4 +178,17 @@ internal class DefaultOptimizer : IOptimizer
         return gasMotor.Cost - ((decimal) gasMotor.MaxElectricity * electricityPrice);
     }
 
+    
+    //TODO: Check, if this is the right approach and move it to the RDM
+    private IEnumerable<IHeatProductionUnitSchedule> CreateHeatProductionUnitSchedules(IEnumerable<IHeatProductionUnit> heatProductionUnits)
+    {
+        List<IHeatProductionUnitSchedule> heatProductionUnitSchedules = new List<IHeatProductionUnitSchedule>();
+        
+        foreach (var heatProductionUnit in heatProductionUnits)
+        {
+            heatProductionUnitSchedules.Add(new HeatProductionUnitSchedule(heatProductionUnit.Name));
+        }
+
+        return heatProductionUnitSchedules; 
+    }
 }
