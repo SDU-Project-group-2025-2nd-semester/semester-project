@@ -16,4 +16,5 @@ internal class Schedule : ISchedule
     public double TotalEmissions { get; }
     public double[] HeatDemand { get; set; }
     public decimal[] ElectricityPrice { get; set; }
+    
 }
