@@ -13,7 +13,8 @@ internal class DefaultOptimizer : IOptimizer
     private readonly IResourceManager _resourceManager;
     private readonly ISourceDataProvider _sourceDataProvider;
 
-    private IOptimizerSettings _optimizerSettings; //TODO: Implement settings
+    private IOptimizerSettings _optimizerSettings; //TODO: Implement 
+    private IOptimizerStrategy _optimizerStrategy; //TODO: Implement 
 
     private object _resultManager; //TODO: Implement result manager 
 
@@ -28,8 +29,21 @@ internal class DefaultOptimizer : IOptimizer
 
     public async Task OptimizeAsync()
     {
-        
-        throw new NotImplementedException(); 
+        await Task.Run(Optimize); 
+    }
+
+    private void Optimize()
+    {
+        //Set up the data
+        var scheduledEntries = _sourceDataProvider.SourceDataCollection.DataPoints;
+        var heatSources = GetAvailableUnits(_assetManager, _optimizerSettings);
+
+        foreach (var entry in scheduledEntries)
+        {
+            var priorityList = 
+                GetHeatSourcePriorityList(heatSources, entry, _optimizerStrategy);
+            
+        }
     }
 
     private List<IHeatProductionUnit> GetAvailableUnits(IAssetManager assetManager, IOptimizerSettings settings)
@@ -97,6 +111,8 @@ internal class DefaultOptimizer : IOptimizer
 
         return heatSourcePriorityList; 
     }
+    
+    
     
     
     
