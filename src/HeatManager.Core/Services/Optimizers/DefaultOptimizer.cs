@@ -38,11 +38,45 @@ internal class DefaultOptimizer : IOptimizer
         var scheduledEntries = _sourceDataProvider.SourceDataCollection.DataPoints;
         var heatSources = GetAvailableUnits(_assetManager, _optimizerSettings);
 
-        foreach (var entry in scheduledEntries)
+
+        var heatProductionUnitSchedules = GenerateHeatProductionUnitSchedules(heatSources); 
+        var electricityProductionUnitSchedules = new List<IElectricityProductionUnitSchedule>();
+        
+        for (int i = 0; i < scheduledEntries.Count(); i++)
         {
+            var entry = scheduledEntries.ElementAt(i); 
             var priorityList = 
                 GetHeatSourcePriorityList(heatSources, entry, _optimizerStrategy);
             
+            double remainingDemand = entry.HeatDemand;
+            foreach (var heatSource in priorityList)
+            {
+                if (remainingDemand <= 0)
+                {
+                    //TODO: replace all other entries with 0 utilization
+                }
+                
+                double production = Math.Min(heatSource.MaxHeatProduction, remainingDemand);
+                remainingDemand -= production;
+                
+                double utilization = production / heatSource.MaxHeatProduction;
+                decimal cost = (decimal)production * heatSource.Cost;
+                double consumption = production * heatSource.ResourceConsumption;
+                double emissions = production * heatSource.Emissions;
+                
+                var dataPoint = new HeatProductionUnitResultDataPoint(
+                    timeFrom: entry.TimeFrom,
+                    timeTo: entry.TimeTo,
+                    utilization: utilization,
+                    heatProduction: production,
+                    cost: cost,
+                    resourceConsumption: consumption,
+                    emissions: emissions
+                );
+                //TODO: null reference? 
+                heatProductionUnitSchedules.Find(unit => unit.Name == heatSource.Name)?.AddDataPoint(dataPoint);
+                
+            }
         }
     }
 
@@ -111,15 +145,20 @@ internal class DefaultOptimizer : IOptimizer
 
         return heatSourcePriorityList; 
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+    private List<IHeatProductionUnitSchedule> GenerateHeatProductionUnitSchedules(
+        IEnumerable<IHeatProductionUnit> heatProductionUnits)
+    {
+        List<IHeatProductionUnitSchedule> schedules = new List<IHeatProductionUnitSchedule>();
+        foreach (var unit in heatProductionUnits)
+        {
+            var schedule = new HeatProductionUnitSchedule(unit.Name);
+            schedules.Add(schedule);
+        }
+
+        return schedules;
+    }
+
 }
     

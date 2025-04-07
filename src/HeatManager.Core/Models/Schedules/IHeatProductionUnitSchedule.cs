@@ -9,4 +9,5 @@ public interface IHeatProductionUnitSchedule /*: IHeatProductionUnit*/
     public double TotalEmissions { get; }
     
     public List<IHeatProductionUnitResultDataPoint> DataPoints { get; }
+    void AddDataPoint(IHeatProductionUnitResultDataPoint dataPoint);
 }

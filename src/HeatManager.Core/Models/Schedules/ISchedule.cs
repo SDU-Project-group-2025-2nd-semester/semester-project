@@ -52,6 +52,11 @@ public interface ISchedule
         public double TotalEmissions { get; }
         
         public List<IHeatProductionUnitResultDataPoint> DataPoints { get; }
+        public void AddDataPoint(IHeatProductionUnitResultDataPoint dataPoint)
+        {
+            throw new NotImplementedException();
+        }
+
         public double Emissions { get; }
 
         public double MaxElectricity { get; set; }

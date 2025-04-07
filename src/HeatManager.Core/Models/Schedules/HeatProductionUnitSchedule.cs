@@ -7,9 +7,9 @@ internal class HeatProductionUnitSchedule : IHeatProductionUnitSchedule
     public double MaxHeatProduction { get; private set;}
     public double ResourceConsumption { get; private set;  }
     public double TotalEmissions { get; private set;  }
-    
     public List<IHeatProductionUnitResultDataPoint> DataPoints { get; }
-    
+
+
     public HeatProductionUnitSchedule(string name)
     {
         Name = name;
