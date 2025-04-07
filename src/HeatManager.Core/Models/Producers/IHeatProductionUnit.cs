@@ -27,4 +27,6 @@ public interface IHeatProductionUnit
     /// kg/MWh(th)
     /// </summary>
     public double Emissions { get; set; }
+    
+    public IHeatProductionUnit Clone();
 }

@@ -53,7 +53,17 @@ internal class DefaultOptimizer : IOptimizer
             {
                 if (remainingDemand <= 0)
                 {
-                    //TODO: replace all other entries with 0 utilization
+                    heatProductionUnitSchedules.Find(unit => unit.Name == heatSource.Name)
+                        ?.AddDataPoint(new HeatProductionUnitResultDataPoint(
+                        timeFrom: entry.TimeFrom,
+                        timeTo: entry.TimeTo,
+                        utilization: 0,
+                        heatProduction: 0,
+                        cost: 0,
+                        resourceConsumption: 0,
+                        emissions: 0
+                    ));
+                    continue;
                 }
                 
                 double production = Math.Min(heatSource.MaxHeatProduction, remainingDemand);
@@ -104,7 +114,6 @@ internal class DefaultOptimizer : IOptimizer
         ISourceDataPoint entry, IOptimizerStrategy strategy)
     {
         // Data setup from the source data entry 
-        double heatDemand = entry.HeatDemand;
         decimal electricityPrice = entry.ElectricityPrice;
         
         // Get all the units that are enabled at the moment 
@@ -114,8 +123,15 @@ internal class DefaultOptimizer : IOptimizer
         var heatPumps = availableUnitsList.FindAll(unit => unit.Resource.Name == "Electricity");    
         for (int i = 0; i < heatPumps.Count(); i++)
         {
-            var unit = heatPumps.ElementAt(i);
-            unit.Cost += electricityPrice; //TODO: this will overwrite the cost of the unit and then we will not be able to use it again, needs a fix
+            var unit = heatPumps.ElementAt(i); 
+            var unitClone = unit.Clone();
+            
+            unitClone.Cost += electricityPrice; 
+            
+            availableUnitsList.Remove(unit);
+            availableUnitsList.Add(unitClone);
+            
+            //TODO: Probably not the most efficient way to do it, meeting problem
         }
         
         // Determine the prices for the units that also generate electricity
@@ -124,7 +140,12 @@ internal class DefaultOptimizer : IOptimizer
         for (int i = 0; i < electricityProductionUnits.Count(); i++)
         {
             var unit = electricityProductionUnits.ElementAt(i);
-            unit.Cost -= electricityPrice; //TODO: same as above 
+            var unitClone = unit.Clone();
+            
+            unitClone.Cost -= electricityPrice; //TODO: same as above 
+            
+            availableUnitsList.Remove(unit);
+            availableUnitsList.Add(unitClone);
         }
         
         // Sort the units based on the strategy
