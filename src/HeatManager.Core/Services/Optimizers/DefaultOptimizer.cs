@@ -40,7 +40,7 @@ internal class DefaultOptimizer : IOptimizer
 
 
         var heatProductionUnitSchedules = GenerateHeatProductionUnitSchedules(heatSources); 
-        var electricityProductionUnitSchedules = new List<IElectricityProductionUnitSchedule>();
+        var electricityProductionUnitSchedules = new List<IElectricityProductionUnitSchedule>(); //TODO: Implement this 
         
         for (int i = 0; i < scheduledEntries.Count(); i++)
         {
@@ -67,7 +67,6 @@ internal class DefaultOptimizer : IOptimizer
                 }
                 
                 double production = Math.Min(heatSource.MaxHeatProduction, remainingDemand);
-                remainingDemand -= production;
                 
                 double utilization = production / heatSource.MaxHeatProduction;
                 decimal cost = (decimal)production * heatSource.Cost;
@@ -83,11 +82,14 @@ internal class DefaultOptimizer : IOptimizer
                     resourceConsumption: consumption,
                     emissions: emissions
                 );
+                
                 //TODO: null reference? 
                 heatProductionUnitSchedules.Find(unit => unit.Name == heatSource.Name)?.AddDataPoint(dataPoint);
-                
+                remainingDemand -= production;
             }
         }
+
+        var resultSchedule = new Schedule(heatProductionUnitSchedules, electricityProductionUnitSchedules);
     }
 
     private List<IHeatProductionUnit> GetAvailableUnits(IAssetManager assetManager, IOptimizerSettings settings)

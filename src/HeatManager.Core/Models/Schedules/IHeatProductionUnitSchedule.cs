@@ -3,11 +3,31 @@
 public interface IHeatProductionUnitSchedule /*: IHeatProductionUnit*/
 {
     public string Name { get; }
-    public decimal TotalCost { get; }
-    public double MaxHeatProduction { get; }
-    public double ResourceConsumption { get; }
-    public double TotalEmissions { get; }
+    List<IHeatProductionUnitResultDataPoint> DataPoints { get; }
+    //Heat Production
+    double[] HeatProduction { get;  }
+    double TotalHeatProduction { get;  }
+    double MaxHeatProduction { get;  }
     
-    public List<IHeatProductionUnitResultDataPoint> DataPoints { get; }
+    //Emissions
+    public double[] Emissions { get;  }
+    public double TotalEmissions { get;  }
+    public double MaxEmissions { get;  }
+    
+    //Costs
+    decimal[] Costs { get;  }
+    decimal TotalCost { get;  }
+    decimal MaxCost { get;  }
+    
+    //Resources
+    double[] ResourceConsumption { get;  }
+    double TotalResourceConsumption { get;  }
+    double MaxResourceConsumption { get;  }
+    
+    //Utilization 
+    double[] Utilization { get;  }
+    double TotalUtilization { get;  }
+    double MaxUtilization { get;  }
+    
     void AddDataPoint(IHeatProductionUnitResultDataPoint dataPoint);
 }

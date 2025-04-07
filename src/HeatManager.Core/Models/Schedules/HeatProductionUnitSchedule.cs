@@ -3,11 +3,33 @@ namespace HeatManager.Core.Models.Schedules;
 internal class HeatProductionUnitSchedule : IHeatProductionUnitSchedule
 {
     public string Name { get; }
-    public decimal TotalCost { get; private set; }
-    public double MaxHeatProduction { get; private set;}
-    public double ResourceConsumption { get; private set;  }
-    public double TotalEmissions { get; private set;  }
     public List<IHeatProductionUnitResultDataPoint> DataPoints { get; }
+    //Heat Production
+    public double[] HeatProduction => DataPoints.Select(x => x.HeatProduction).ToArray();
+    public double TotalHeatProduction => HeatProduction.Sum();
+    public double MaxHeatProduction => HeatProduction.Max();
+    
+    //Emissions
+    public double[] Emissions => DataPoints.Select(x => x.Emissions).ToArray();
+    public double TotalEmissions => Emissions.Sum();
+    public double MaxEmissions => Emissions.Max();
+    
+    //Costs
+    public decimal[] Costs => DataPoints.Select(x => x.Cost).ToArray();
+    public decimal TotalCost => Costs.Sum(); 
+    public decimal MaxCost => Costs.Max();
+    
+    //Resources
+    public double[] ResourceConsumption => DataPoints.Select(x => x.ResourceConsumption).ToArray();
+    public double TotalResourceConsumption => ResourceConsumption.Sum();
+    public double MaxResourceConsumption => ResourceConsumption.Max();
+    
+    //Utilization 
+    public double[] Utilization => DataPoints.Select(x => x.Utilization).ToArray();
+    public double TotalUtilization => Utilization.Sum();
+    public double MaxUtilization => Utilization.Max();
+
+    
 
 
     public HeatProductionUnitSchedule(string name)
@@ -19,31 +41,6 @@ internal class HeatProductionUnitSchedule : IHeatProductionUnitSchedule
     public void AddDataPoint(IHeatProductionUnitResultDataPoint dataPoint)
     {
         DataPoints.Add(dataPoint);
-        UpdateProperties();
     }
-
-    private void UpdateProperties()
-    {
-        UpdateTotalCost();
-        UpdateMaxHeatProduction();
-        UpdateResourceConsumption();
-        UpdateTotalEmissions();
-    }
-    private void UpdateTotalCost()
-    {
-        TotalCost = DataPoints.Sum(x => x.Cost);
-    }
-    private void UpdateMaxHeatProduction()
-    {
-        MaxHeatProduction = DataPoints.Max(x => x.HeatProduction);
-    }
-    private void UpdateResourceConsumption()
-    {
-        ResourceConsumption = DataPoints.Sum(x => x.ResourceConsumption);
-    }
-    private void UpdateTotalEmissions()
-    {
-        TotalEmissions = DataPoints.Sum(x => x.Emissions);
-    }
-        
+    
 }
