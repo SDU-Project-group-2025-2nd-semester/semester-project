@@ -9,6 +9,4 @@ public interface IHeatProductionUnitResultDataPoint
     decimal Cost { get; }
     double ResourceConsumption { get; }
     double Emissions { get; }
-    
-    
 }

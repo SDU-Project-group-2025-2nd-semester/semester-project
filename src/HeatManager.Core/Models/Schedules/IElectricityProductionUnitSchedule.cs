@@ -1,14 +1,17 @@
 ﻿namespace HeatManager.Core.Models.Schedules;
 
-public interface IElectricityProductionUnitSchedule : IHeatProductionUnitSchedule
+public interface IElectricityProductionUnitSchedule
 {
-    
-    public double[] ElectricityProduction { get; set; }
-    public double MaxElectricityProduction => ElectricityProduction.Max();
-    public double TotalElectricityProduction => ElectricityProduction.Sum();
-    
-    public decimal[] ElectricityPrices { get; set; }
-    public decimal MaxElectricityPrice => ElectricityPrices.Max();
-    public decimal TotalElectricityPrice => ElectricityPrices.Sum();
+    public string Name { get; init;  }
 
+    public double[] ElectricityProduction { get; }
+    public double MaxElectricityProduction { get; }
+    public double TotalElectricityProduction { get; }
+    
+    public decimal[] ElectricityPrices { get; }
+    public decimal MaxElectricityPrice { get; }
+    public decimal TotalElectricityPrice { get; }
+
+    public List<IElectricityProductionResultDataPoint> DataPoints { get; set;  }
+    public void AddDataPoint(IElectricityProductionResultDataPoint dataPoint);
 }
