@@ -37,10 +37,13 @@ internal class DefaultOptimizer : IOptimizer
         //Set up the data
         var scheduledEntries = _sourceDataProvider.SourceDataCollection.DataPoints;
         var heatSources = GetAvailableUnits(_assetManager, _optimizerSettings);
+        var electricitySources = heatSources
+            .OfType<IElectricityProductionUnit>()
+            .ToList();
 
 
-        var heatProductionUnitSchedules = GenerateHeatProductionUnitSchedules(heatSources); 
-        var electricityProductionUnitSchedules = new List<IElectricityProductionUnitSchedule>(); //TODO: Implement this 
+        var heatProductionUnitSchedules = GenerateHeatProductionUnitSchedules(heatSources);
+        var electricityProductionUnitSchedules = GenerateElectricityProductionUnitSchedules(electricitySources); 
         
         for (int i = 0; i < scheduledEntries.Count(); i++)
         {
@@ -83,8 +86,22 @@ internal class DefaultOptimizer : IOptimizer
                     emissions: emissions
                 );
                 
-                //TODO: null reference? 
                 heatProductionUnitSchedules.Find(unit => unit.Name == heatSource.Name)?.AddDataPoint(dataPoint);
+
+                
+                if (heatSource is IElectricityProductionUnit electricityProductionUnit)
+                {
+                    var electricityProduction = utilization * electricityProductionUnit.MaxElectricity; 
+                    var electricityDataPoint = new ElectricityProductionResultDataPoint(
+                        timeFrom: entry.TimeFrom,
+                        timeTo: entry.TimeTo,
+                        electricityProduction: electricityProduction,
+                        electricityPrice: entry.ElectricityPrice
+                    );
+                    electricityProductionUnitSchedules.Find(unit => unit.Name == electricityProductionUnit.Name)
+                        ?.AddDataPoint(electricityDataPoint);
+                }
+                
                 remainingDemand -= production;
             }
         }
@@ -183,5 +200,16 @@ internal class DefaultOptimizer : IOptimizer
         return schedules;
     }
 
+    private List<IElectricityProductionUnitSchedule> GenerateElectricityProductionUnitSchedules(
+        IEnumerable<IElectricityProductionUnit> electricityProductionUnits)
+    {
+        List<IElectricityProductionUnitSchedule> schedules = new List<IElectricityProductionUnitSchedule>();
+        foreach (var unit in electricityProductionUnits)
+        {
+            var schedule = new ElectricityProductionUnitSchedule(unit.Name);
+            schedules.Add(schedule);
+        }
+        return schedules;
+    }
+
 }
-    
