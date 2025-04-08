@@ -2,7 +2,7 @@
 
 namespace HeatManager.Core.Services;
 
-class ResourceManager : IResourceManager
+internal class ResourceManager : IResourceManager
 {
     public IEnumerable<IBasicResource> Resources { get; }
 

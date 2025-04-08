@@ -1,8 +1,10 @@
-﻿namespace HeatManager.Core.Models.SourceData;
+﻿using System.Collections.Immutable;
+
+namespace HeatManager.Core.Models.SourceData;
 
 public interface ISourceDataCollection
 {
     string Name { get; }
-    List<ISourceDataPoint> DataPoints { get; }
+    IImmutableList<ISourceDataPoint> DataPoints { get; }
 
 }

@@ -2,7 +2,7 @@
 
 namespace HeatManager.Core.Services;
 
-class HeatSourceManager : IHeatSourceManager
+internal class HeatSourceManager : IHeatSourceManager
 {
     public IEnumerable<IHeatProductionUnit> HeatSources { get; }
 
