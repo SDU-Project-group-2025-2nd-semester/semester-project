@@ -1,9 +1,10 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using HeatManager.Core.Views;
 
-namespace HeatManager
-{
+namespace HeatManager;
+
     public partial class App : Application
     {
         public override void Initialize()
@@ -21,4 +22,3 @@ namespace HeatManager
             base.OnFrameworkInitializationCompleted();
         }
     }
-}
