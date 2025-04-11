@@ -4,9 +4,9 @@ namespace HeatManager.Core.Services;
 
 internal class HeatSourceManager : IHeatSourceManager
 {
-    public IEnumerable<IHeatProductionUnit> HeatSources { get; }
+    public IEnumerable<HeatProductionUnit> HeatSources { get; }
 
-    public void AddHeatSource(IHeatProductionUnit heatProductionUnit)
+    public void AddHeatSource(HeatProductionUnit heatProductionUnit)
     {
         throw new NotImplementedException();
     }

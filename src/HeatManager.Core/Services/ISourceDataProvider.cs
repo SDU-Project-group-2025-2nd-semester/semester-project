@@ -4,7 +4,9 @@ namespace HeatManager.Core.Services;
 
 public interface ISourceDataProvider
 {
-    ISourceDataCollection SourceDataCollection { get; set; }
-    void SetDataCollection(ISourceDataCollection sourceDataCollection);
-    ISourceDataCollection GetDataCollection();
+    public SourceDataCollection SourceDataCollection { get; set; }
+
+    public void SetDataCollection(SourceDataCollection sourceDataCollection);
+
+    public SourceDataCollection GetDataCollection();
 }

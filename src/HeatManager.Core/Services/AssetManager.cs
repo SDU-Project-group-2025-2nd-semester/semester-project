@@ -9,7 +9,8 @@ namespace HeatManager.Core.Services;
 internal class AssetManager : IAssetManager
 {
     private readonly string DataFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Models", "Producers", "ProductionUnits.json");
-    public ObservableCollection<IHeatProductionUnit> ProductionUnits { get; private set; } = new ObservableCollection<IHeatProductionUnit>();
+
+    public ObservableCollection<HeatProductionUnit> ProductionUnits { get; set; } = [];
 
     public AssetManager()
     {
@@ -33,18 +34,18 @@ internal class AssetManager : IAssetManager
 
         var jsonData = JsonSerializer.Deserialize<JsonDataStructure>(json, options) ?? new JsonDataStructure();
 
-        var allUnits = (jsonData.HeatProductionUnits ?? Enumerable.Empty<IHeatProductionUnit>())
-            .Concat(jsonData.ElectricityProductionUnits ?? Enumerable.Empty<IHeatProductionUnit>())
+        var allUnits = (jsonData.HeatProductionUnits ?? Enumerable.Empty<HeatProductionUnit>())
+            .Concat(jsonData.ElectricityProductionUnits ?? Enumerable.Empty<HeatProductionUnit>())
             .ToList();
 
-        ProductionUnits = new ObservableCollection<IHeatProductionUnit>(allUnits);
+        ProductionUnits = new ObservableCollection<HeatProductionUnit>(allUnits);
 
     }
 }
 
-internal class BasicResourceConverter : JsonConverter<IBasicResource>
+internal class BasicResourceConverter : JsonConverter<BasicResource>
 {
-    private static readonly HashSet<string> ValidResources = new() { "Gas", "Oil", "Electricity" };
+    private static readonly HashSet<string> ValidResources = ["Gas", "Oil", "Electricity"];
 
     public override BasicResource Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -67,7 +68,7 @@ internal class BasicResourceConverter : JsonConverter<IBasicResource>
         throw new JsonException("Invalid format for BasicResource.");
     }
 
-    public override void Write(Utf8JsonWriter writer, IBasicResource value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, BasicResource value, JsonSerializerOptions options)
     {
         writer.WriteStringValue(value.Name);
     }

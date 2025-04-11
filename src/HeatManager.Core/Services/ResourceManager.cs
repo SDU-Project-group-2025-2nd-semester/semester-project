@@ -4,11 +4,11 @@ namespace HeatManager.Core.Services;
 
 internal class ResourceManager : IResourceManager
 {
-    public IEnumerable<IBasicResource> Resources { get; }
+    public IEnumerable<BasicResource> Resources { get; }
 
-    private readonly List<IBasicResource> _resources = [];
+    private readonly List<BasicResource> _resources = [];
 
-    public void AddResource(IBasicResource resource)
+    public void AddResource(BasicResource resource)
     {
         _resources.Add(resource);
     }

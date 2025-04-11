@@ -4,20 +4,20 @@ namespace HeatManager.Core.Services;
 
 internal class SourceDataProvider : ISourceDataProvider
 {
-    public ISourceDataCollection SourceDataCollection { get; set; }
+    public SourceDataCollection SourceDataCollection { get; set; }
 
 
-    public SourceDataProvider(IEnumerable<ISourceDataPoint> dataPoints)
+    public SourceDataProvider(IEnumerable<SourceDataPoint> dataPoints)
     {
-        SourceDataCollection = new SourceDataCollection(dataPoints);; 
+        SourceDataCollection = new SourceDataCollection(dataPoints); 
     }
     
-    public void SetDataCollection(ISourceDataCollection collection)
+    public void SetDataCollection(SourceDataCollection collection)
     {
         SourceDataCollection = collection;
     }
     
-    public ISourceDataCollection GetDataCollection()
+    public SourceDataCollection GetDataCollection()
     {
         return SourceDataCollection;
     }
