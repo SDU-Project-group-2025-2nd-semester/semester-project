@@ -31,13 +31,13 @@ internal class AssetManager : IAssetManager
             Converters = { new BasicResourceConverter() }
         };
 
-        var jsonData = JsonSerializer.Deserialize<JsonDataStructure>(json, options) ?? new JsonDataStructure();
+       /*  var jsonData = JsonSerializer.Deserialize<JsonDataStructure>(json, options) ?? new JsonDataStructure();
 
         var allUnits = (jsonData.HeatProductionUnits ?? Enumerable.Empty<IHeatProductionUnit>())
             .Concat(jsonData.ElectricityProductionUnits ?? Enumerable.Empty<IHeatProductionUnit>())
             .ToList();
 
-        ProductionUnits = new ObservableCollection<IHeatProductionUnit>(allUnits);
+        ProductionUnits = new ObservableCollection<IHeatProductionUnit>(allUnits); */
 
     }
 }
@@ -75,6 +75,6 @@ internal class BasicResourceConverter : JsonConverter<IBasicResource>
 
 public class JsonDataStructure
 {
-    public List<HeatProductionUnit>? HeatProductionUnits { get; set; }
-    public List<ElectricityProductionUnit>? ElectricityProductionUnits { get; set; }
+    /* public List<HeatProductionUnit>? HeatProductionUnits { get; set; }
+    public List<ElectricityProductionUnit>? ElectricityProductionUnits { get; set; } */
 }

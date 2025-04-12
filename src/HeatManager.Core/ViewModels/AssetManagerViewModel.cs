@@ -1,6 +1,5 @@
 ﻿namespace HeatManager.Core.ViewModels;
 
-internal class AssetManagerViewModel : IAssetManagerViewModel
-{
-    
+internal class AssetManagerViewModel : ViewModelBase, IAssetManagerViewModel
+{   
 }
