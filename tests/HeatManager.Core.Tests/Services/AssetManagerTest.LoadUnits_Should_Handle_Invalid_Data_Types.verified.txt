@@ -1,0 +1,30 @@
+﻿{
+  Type: JsonException,
+  LineNumber: 1,
+  BytePositionInLine: 2,
+  Path: $,
+  Message: 'H' is an invalid start of a property name. Expected a '"'. Path: $ | LineNumber: 1 | BytePositionInLine: 2.,
+  InnerException: {
+    $type: JsonReaderException,
+    Type: JsonReaderException,
+    LineNumber: 1,
+    BytePositionInLine: 2,
+    Message: 'H' is an invalid start of a property name. Expected a '"'. LineNumber: 1 | BytePositionInLine: 2.,
+    StackTrace:
+at System.Text.Json.ThrowHelper.ThrowJsonReaderException(Utf8JsonReader& json, ExceptionResource resource, Byte nextByte, ReadOnlySpan`1 bytes)
+at System.Text.Json.Utf8JsonReader.ReadSingleSegment()
+at System.Text.Json.Utf8JsonReader.Read()
+at System.Text.Json.Serialization.Converters.ObjectDefaultConverter`1.OnTryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value)
+at System.Text.Json.Serialization.JsonConverter`1.TryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value, Boolean& isPopulatedValue)
+at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader& reader, T& value, JsonSerializerOptions options, ReadStack& state)
+  },
+  StackTrace:
+at System.Text.Json.ThrowHelper.ReThrowWithPath(ReadStack& state, JsonReaderException ex)
+at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader& reader, T& value, JsonSerializerOptions options, ReadStack& state)
+at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Deserialize(Utf8JsonReader& reader, ReadStack& state)
+at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 utf8Json, JsonTypeInfo`1 jsonTypeInfo, Nullable`1 actualByteCount)
+at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 json, JsonTypeInfo`1 jsonTypeInfo)
+at System.Text.Json.JsonSerializer.Deserialize[TValue](String json, JsonSerializerOptions options)
+at HeatManager.Core.Services.AssetManager.LoadUnits(String filepath)
+at HeatManager.Core.Tests.Services.AssetManagerTest.<>c__DisplayClass3_0.<LoadUnits_Should_Handle_Invalid_Data_Types>b__0()
+}

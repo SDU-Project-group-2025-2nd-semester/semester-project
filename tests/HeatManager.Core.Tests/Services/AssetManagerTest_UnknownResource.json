@@ -1,0 +1,11 @@
+{
+  "HeatProductionUnits": [
+    {
+      "Name": "GB1",
+      "Cost": 100,
+      "MaxHeatProduction": 5,
+      "Resource": "UnknownResource",
+      "Emissions": 50
+    }
+  ]
+}
