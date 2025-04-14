@@ -2,7 +2,9 @@ using HeatManager.Core.Services.Optimizers;
 using Xunit;
 
 namespace HeatManager.Core.Tests.Services;
-
+/*
+ * dotnet test --filter "FullyQualifiedName~OptimizerStrategyTest"
+ */
 public class OptimizerStrategyTest
 {
     [Fact]

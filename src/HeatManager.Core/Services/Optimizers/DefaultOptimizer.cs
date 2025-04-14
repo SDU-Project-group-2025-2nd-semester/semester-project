@@ -1,4 +1,5 @@
 ﻿using HeatManager.Core.Models.Producers;
+using HeatManager.Core.Models.Resources;
 using HeatManager.Core.Models.Schedules;
 using HeatManager.Core.Models.SourceData;
 using HeatManager.Core.Services;

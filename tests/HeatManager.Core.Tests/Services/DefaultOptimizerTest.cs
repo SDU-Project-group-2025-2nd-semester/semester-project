@@ -12,13 +12,14 @@ using System.Collections.ObjectModel;
 
 namespace HeatManager.Core.Tests.Services;
 /*
- * dotnet test --filter "FullyQualifiedName~DefaultOptimizerTests"
+ * dotnet test --filter "FullyQualifiedName~DefaultOptimizerTest"
  */
 public class DefaultOptimizerTest
 {
     private readonly Mock<IAssetManager> _mockAssetManager;
     private readonly Mock<ISourceDataProvider> _mockSourceDataProvider;
     private readonly Mock<IOptimizerSettings> _mockOptimizerSettings;
+    private readonly Mock<IOptimizerStrategy> _mockOptimizerStrategy; 
     private readonly Mock<object> _mockResultManager;
     private readonly DefaultOptimizer _optimizer;
     private readonly Mock<IBasicResource> _mockResource;
@@ -28,6 +29,7 @@ public class DefaultOptimizerTest
         _mockAssetManager = new Mock<IAssetManager>();
         _mockSourceDataProvider = new Mock<ISourceDataProvider>();
         _mockOptimizerSettings = new Mock<IOptimizerSettings>();
+        _mockOptimizerStrategy = new Mock<IOptimizerStrategy>(); 
         _mockResultManager = new Mock<object>();
         _mockResource = new Mock<IBasicResource>();
 
@@ -35,6 +37,7 @@ public class DefaultOptimizerTest
             _mockAssetManager.Object,
             _mockSourceDataProvider.Object,
             _mockOptimizerSettings.Object,
+            _mockOptimizerStrategy.Object,
             _mockResultManager.Object);
     }
 
