@@ -139,7 +139,7 @@ public class DefaultOptimizerTest
         mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns(0);
 
         // Act
-        var result = _optimizer.GetHeatSourcePriorityList(units, mockSourceDataPoint.Object, strategy);
+        var result = DefaultOptimizer.GetHeatSourcePriorityList(units, mockSourceDataPoint.Object, strategy);
 
         // Assert
         Assert.Equal("Unit2", result.First().Name); // Cheaper unit should be first
@@ -160,7 +160,7 @@ public class DefaultOptimizerTest
         mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns(0);
 
         // Act
-        var result = _optimizer.GetHeatSourcePriorityList(units, mockSourceDataPoint.Object, strategy);
+        var result = DefaultOptimizer.GetHeatSourcePriorityList(units, mockSourceDataPoint.Object, strategy);
 
         // Assert
         Assert.Equal("Unit2", result.First().Name); // Lower emissions unit should be first
@@ -187,7 +187,7 @@ public class DefaultOptimizerTest
         mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns(2);
 
         // Act
-        var result = _optimizer.GetHeatSourcePriorityList(new[] { unit }, mockSourceDataPoint.Object, strategy);
+        var result = DefaultOptimizer.GetHeatSourcePriorityList(new[] { unit }, mockSourceDataPoint.Object, strategy);
 
         // Assert
         Assert.Equal(3, result.First().Cost); // Original cost + electricity price
@@ -214,7 +214,7 @@ public class DefaultOptimizerTest
         mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns(1);
 
         // Act
-        var result = _optimizer.GetHeatSourcePriorityList(units, mockSourceDataPoint.Object, strategy);
+        var result = DefaultOptimizer.GetHeatSourcePriorityList(units, mockSourceDataPoint.Object, strategy);
 
         // Assert
         Assert.Equal("ElectricUnit", result.First().Name); // Should be first despite higher emissions due to lower cost
@@ -235,7 +235,7 @@ public class DefaultOptimizerTest
         mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns(0);
 
         // Act
-        var result = _optimizer.GetHeatSourcePriorityList(units, mockSourceDataPoint.Object, strategy);
+        var result = DefaultOptimizer.GetHeatSourcePriorityList(units, mockSourceDataPoint.Object, strategy);
 
         // Assert
         Assert.Equal("Unit1", result.First().Name); // Negative cost should be first
@@ -256,7 +256,7 @@ public class DefaultOptimizerTest
         mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns(0);
 
         // Act
-        var result = _optimizer.GetHeatSourcePriorityList(units, mockSourceDataPoint.Object, strategy);
+        var result = DefaultOptimizer.GetHeatSourcePriorityList(units, mockSourceDataPoint.Object, strategy);
 
         // Assert
         Assert.Equal("Unit2", result.First().Name); // Lower emissions should be first when costs are equal
@@ -272,22 +272,113 @@ public class DefaultOptimizerTest
         
         var mockUnit = new Mock<IElectricityProductionUnit>();
         mockUnit.Setup(u => u.Name).Returns("Unit1");
-        mockUnit.Setup(u => u.Cost).Returns(1);
+        mockUnit.SetupProperty(u => u.Cost, (decimal)1);
         mockUnit.Setup(u => u.Emissions).Returns(1);
         mockUnit.Setup(u => u.Resource).Returns(mockElectricityResource.Object);
+        mockUnit.Setup(u => u.MaxHeatProduction).Returns(3);
         mockUnit.Setup(u => u.MaxElectricity).Returns(3);
-        mockUnit.Setup(u => u.Clone()).Returns(mockUnit.Object);
+        
+        // Create a new mock for the cloned unit
+        var mockClonedUnit = new Mock<IElectricityProductionUnit>();
+        mockClonedUnit.Setup(u => u.Name).Returns("Unit1");
+        mockClonedUnit.SetupProperty(u => u.Cost, (decimal)1);
+        mockClonedUnit.Setup(u => u.Emissions).Returns(1);
+        mockClonedUnit.Setup(u => u.Resource).Returns(mockElectricityResource.Object);
+        mockClonedUnit.Setup(u => u.MaxHeatProduction).Returns(3);
+        mockClonedUnit.Setup(u => u.MaxElectricity).Returns(3);
+        mockClonedUnit.Setup(u => u.Clone()).Returns(mockClonedUnit.Object);
+        
+        // Setup Clone to return the new mock
+        mockUnit.Setup(u => u.Clone()).Returns(mockClonedUnit.Object);
         
         var units = new List<IHeatProductionUnit> { mockUnit.Object };
         var strategy = new OptimizerStrategy(true);
         var mockSourceDataPoint = new Mock<ISourceDataPoint>();
         mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns(2);
+        mockSourceDataPoint.Setup(s => s.HeatDemand).Returns(2);
 
         // Act
-        var result = _optimizer.GetHeatSourcePriorityList(units, mockSourceDataPoint.Object, strategy);
+        var result = DefaultOptimizer.GetHeatSourcePriorityList(units, mockSourceDataPoint.Object, strategy);
 
         // Assert
-        Assert.Equal(-1, result.First().Cost); // Cost should be reduced by electricity price
+        var resultUnit = result.First();
+        Assert.Equal("Unit1", resultUnit.Name);
+        Assert.Equal(-1, resultUnit.Cost); // Original cost (1) - electricity price (2) = -1
+    }
+
+    [Fact]
+    public void GetHeatSourcePriorityList_WithMixedElectricityUnits_AdjustsCostsCorrectly()
+    {
+        // Arrange
+        var mockElectricityResource = new Mock<IBasicResource>();
+        mockElectricityResource.Setup(r => r.Type).Returns(ResourceType.Electricity);
+        mockElectricityResource.Setup(r => r.Name).Returns("Electricity");
+        
+        // Unit that only consumes electricity
+        var mockConsumingUnit = new Mock<IHeatProductionUnit>();
+        mockConsumingUnit.Setup(u => u.Name).Returns("ConsumingUnit");
+        mockConsumingUnit.Setup(u => u.Cost).Returns((decimal)1);
+        mockConsumingUnit.Setup(u => u.Emissions).Returns(1);
+        mockConsumingUnit.Setup(u => u.Resource).Returns(mockElectricityResource.Object);
+        mockConsumingUnit.Setup(u => u.MaxHeatProduction).Returns(3);
+
+        
+        // Create a new mock for the cloned consuming unit
+        var mockClonedConsumingUnit = new Mock<IHeatProductionUnit>();
+        mockClonedConsumingUnit.Setup(u => u.Name).Returns("ConsumingUnit");
+        mockClonedConsumingUnit.SetupProperty(u => u.Cost, (decimal)1);
+        mockClonedConsumingUnit.Setup(u => u.Emissions).Returns(1);
+        mockClonedConsumingUnit.Setup(u => u.Resource).Returns(mockElectricityResource.Object);
+        mockClonedConsumingUnit.Setup(u => u.MaxHeatProduction).Returns(3);
+        mockClonedConsumingUnit.Setup(u => u.Clone()).Returns(mockClonedConsumingUnit.Object);
+        
+        mockConsumingUnit.Setup(u => u.Clone()).Returns(mockClonedConsumingUnit.Object);
+        
+        // Unit that produces electricity
+        var mockProducingUnit = new Mock<IElectricityProductionUnit>();
+        mockProducingUnit.Setup(u => u.Name).Returns("ProducingUnit");
+        mockProducingUnit.SetupProperty(u => u.Cost, (decimal)1);
+        mockProducingUnit.Setup(u => u.Emissions).Returns(1);
+        mockProducingUnit.Setup(u => u.Resource).Returns(mockElectricityResource.Object);
+        mockProducingUnit.Setup(u => u.MaxHeatProduction).Returns(3);
+        mockProducingUnit.Setup(u => u.MaxElectricity).Returns(3);
+        
+        // Create a new mock for the cloned producing unit
+        var mockClonedProducingUnit = new Mock<IElectricityProductionUnit>();
+        mockClonedProducingUnit.Setup(u => u.Name).Returns("ProducingUnit");
+        mockClonedProducingUnit.SetupProperty(u => u.Cost, (decimal)1);
+        mockClonedProducingUnit.Setup(u => u.Emissions).Returns(1);
+        mockClonedProducingUnit.Setup(u => u.Resource).Returns(mockElectricityResource.Object);
+        mockClonedProducingUnit.Setup(u => u.MaxElectricity).Returns(3);
+        mockClonedProducingUnit.Setup(u => u.MaxHeatProduction).Returns(3);
+
+        mockClonedProducingUnit.Setup(u => u.Clone()).Returns(mockClonedProducingUnit.Object);
+        
+        mockProducingUnit.Setup(u => u.Clone()).Returns(mockClonedProducingUnit.Object);
+        
+        var units = new List<IHeatProductionUnit> { mockConsumingUnit.Object, mockProducingUnit.Object };
+        var strategy = new OptimizerStrategy(true);
+        var mockSourceDataPoint = new Mock<ISourceDataPoint>();
+        mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns((decimal)2);
+        mockSourceDataPoint.Setup(s => s.HeatDemand).Returns(2);
+
+        // Act
+        var result = DefaultOptimizer.GetHeatSourcePriorityList(units, mockSourceDataPoint.Object, strategy);
+
+        var amazingName = result.ElementAt(0); 
+        var amazingName2 = result.ElementAt(1); 
+
+        // Assert
+        var resultList = result.ToList();
+        Assert.Equal(2, resultList.Count);
+        
+        // Consuming unit should have increased cost
+        var consumingUnit = resultList.First(u => u.Name == "ConsumingUnit");
+        Assert.Equal((decimal)3, amazingName2.Cost); // Original cost (1) + electricity price (2) = 3
+        
+        // Producing unit should have decreased cost
+        var producingUnit = resultList.First(u => u.Name == "ProducingUnit");
+        Assert.Equal((decimal)-1, amazingName.Cost); // Original cost (1) - electricity price (2) = -1
     }
 
     [Fact]

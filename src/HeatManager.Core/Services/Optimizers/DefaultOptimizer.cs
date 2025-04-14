@@ -125,7 +125,7 @@ internal class DefaultOptimizer : IOptimizer
         _optimizerSettings = optimizerSettings;
     }
 
-    public IEnumerable<IHeatProductionUnit> GetHeatSourcePriorityList(IEnumerable<IHeatProductionUnit> availableUnits,
+    public static IEnumerable<IHeatProductionUnit> GetHeatSourcePriorityList(IEnumerable<IHeatProductionUnit> availableUnits,
         ISourceDataPoint entry, IOptimizerStrategy strategy)
     {
         // Data setup from the source data entry 
@@ -134,35 +134,50 @@ internal class DefaultOptimizer : IOptimizer
         // Get all the units that are enabled at the moment 
         List<IHeatProductionUnit> availableUnitsList = availableUnits.ToList();
         
-        // Determine the prices for the electricity-based devices TODO: implement it as an enum in the BasicResource class
-        var heatPumps = availableUnitsList.FindAll(unit => unit.Resource.Name == "Electricity");    
-        //var heatPumps = availableUnitsList.FindAll(unit => unit.Resource.Type == ResourceType.Electricity);
-        for (int i = 0; i < heatPumps.Count(); i++)
+        /*
+         * Dangerous part of modifying the prices based on electricity prices. 
+         */
+
+        // Handle heat pumps (electricity consumers)
+        // var heatPumps = availableUnitsList.FindAll(unit => unit.Resource.Type == ResourceType.Electricity && !(unit is IElectricityProductionUnit));
+        var heatPumps = availableUnitsList.FindAll(unit => unit.Resource.Name == "Electricity" && !(unit is IElectricityProductionUnit));   
+
+        var modifiedHeatPumps = new List<IHeatProductionUnit>();
+
+        foreach (var unit in heatPumps)
         {
-            var unit = heatPumps.ElementAt(i); 
             var unitClone = unit.Clone();
-            
-            unitClone.Cost += electricityPrice; 
-            
-            availableUnitsList.Remove(unit);
-            availableUnitsList.Add(unitClone);
-            
-            //TODO: Probably not the most efficient way to do it, meeting problem
+            unitClone.Cost += electricityPrice;
+            modifiedHeatPumps.Add(unitClone);
         }
-        
-        // Determine the prices for the units that also generate electricity
-        var electricityProductionUnits =
-            availableUnitsList.OfType<IElectricityProductionUnit>().ToList();
-        for (int i = 0; i < electricityProductionUnits.Count(); i++)
+
+        // Remove original heat pumps and add modified ones
+        foreach (var unit in heatPumps)
         {
-            var unit = electricityProductionUnits.ElementAt(i);
-            var unitClone = unit.Clone();
-            
-            unitClone.Cost -= electricityPrice; //TODO: same as above 
-            
             availableUnitsList.Remove(unit);
-            availableUnitsList.Add(unitClone);
         }
+        availableUnitsList.AddRange(modifiedHeatPumps);
+
+        // Handle electricity producers
+        var electricityProductionUnits = availableUnitsList.OfType<IElectricityProductionUnit>().ToList();
+        var modifiedProducers = new List<IHeatProductionUnit>();
+
+        foreach (var unit in electricityProductionUnits)
+        {
+            var unitClone = unit.Clone();
+            // Calculate the electricity production ratio (electricity per unit of heat)
+            double electricityRatio = unit.MaxElectricity / unit.MaxHeatProduction;
+            // Adjust the cost by subtracting the value of produced electricity
+            unitClone.Cost -= electricityPrice * (decimal)electricityRatio;
+            modifiedProducers.Add(unitClone);
+        }
+
+        // Remove original producers and add modified ones
+        foreach (var unit in electricityProductionUnits)
+        {
+            availableUnitsList.Remove(unit);
+        }
+        availableUnitsList.AddRange(modifiedProducers);
         
         // Sort the units based on the strategy
         IEnumerable<IHeatProductionUnit> heatSourcePriorityList;
