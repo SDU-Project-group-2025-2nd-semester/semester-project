@@ -73,8 +73,4 @@ internal class BasicResourceConverter : JsonConverter<IBasicResource>
     }
 }
 
-public class JsonDataStructure
-{
-    public List<HeatProductionUnit>? HeatProductionUnits { get; set; }
-    public List<ElectricityProductionUnit>? ElectricityProductionUnits { get; set; }
-}
+     
