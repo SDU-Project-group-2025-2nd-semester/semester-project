@@ -10,7 +10,6 @@ internal class DefaultOptimizer : IOptimizer
 {
 
     private readonly IAssetManager _assetManager;
-    private readonly IResourceManager _resourceManager;
     private readonly ISourceDataProvider _sourceDataProvider;
 
     private IOptimizerSettings _optimizerSettings; //TODO: Implement 
@@ -18,13 +17,13 @@ internal class DefaultOptimizer : IOptimizer
 
     private object _resultManager; //TODO: Implement result manager 
 
-    public DefaultOptimizer(IAssetManager assetManager, IResourceManager resourceManager,
-        ISourceDataProvider sourceDataProvider, IOptimizerSettings optimizerSettings)
+    public DefaultOptimizer(IAssetManager assetManager,
+        ISourceDataProvider sourceDataProvider, IOptimizerSettings optimizerSettings, object resultManager)
     {
-        _assetManager = assetManager; // TODO: Get all the necessary data from services
-        _resourceManager = resourceManager;
+        _assetManager = assetManager; 
         _sourceDataProvider = sourceDataProvider;
         _optimizerSettings = optimizerSettings;
+        _resultManager = resultManager; 
     }
 
     public void Optimize()
