@@ -106,7 +106,7 @@ internal class DefaultOptimizer : IOptimizer
 
     public List<IHeatProductionUnit> GetAvailableUnits(IAssetManager assetManager, IOptimizerSettings settings)
     {
-        List<string> activeUnitsNames = settings.GetActiveUnits(); 
+        List<string> activeUnitsNames = settings.GetActiveUnitsNames(); 
         List<IHeatProductionUnit> availableUnits = new List<IHeatProductionUnit>();
         for (int i = 0; i < assetManager.ProductionUnits.Count(); i++)
         {

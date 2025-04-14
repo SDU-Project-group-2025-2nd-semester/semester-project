@@ -4,22 +4,13 @@ public class OptimizerSettings : IOptimizerSettings
 {
     public Dictionary<string, bool> AllUnits { get; set; }
     
-    public OptimizerSettings(List<string> allUnits, Dictionary<string, bool>? initialStates = null)  
+    public OptimizerSettings(List<string> unitsNames)  
     {
-        AllUnits = new Dictionary<string, bool>();
-
-        if (initialStates == null)
+        AllUnits = new Dictionary<string, bool>(); 
+        foreach (var unit in unitsNames) 
         {
-            return; 
-        }
-        
-        foreach (var unit in allUnits)
-        {
-            if (initialStates.ContainsKey(unit))
-            {
-                AllUnits[unit] = initialStates[unit];
-            }
-        }
+            AllUnits.Add(unit, false); 
+        } 
     }
     
     public OptimizerSettings(Dictionary<string, bool> activeUnits)
@@ -27,7 +18,7 @@ public class OptimizerSettings : IOptimizerSettings
         AllUnits = activeUnits;
     }
     
-    public List<string> GetActiveUnits()
+    public List<string> GetActiveUnitsNames()
     {
         return AllUnits.Where(x => x.Value).Select(x => x.Key).ToList();
     }
