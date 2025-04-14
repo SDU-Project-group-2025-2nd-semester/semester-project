@@ -44,7 +44,7 @@ internal class Schedule : ISchedule
         Start = HeatProductionUnitSchedules.ElementAt(0).DataPoints.ElementAt(0).TimeFrom; 
         End = HeatProductionUnitSchedules.ElementAt(0).DataPoints
             .ElementAt(Length - 1).TimeTo; //TODO: make this actually readable
-        Resolution = Start - End; 
+        Resolution = End - Start; 
         
         
         
