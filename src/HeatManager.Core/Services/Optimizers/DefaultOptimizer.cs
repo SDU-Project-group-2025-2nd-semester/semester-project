@@ -13,16 +13,17 @@ internal class DefaultOptimizer : IOptimizer
     private readonly ISourceDataProvider _sourceDataProvider;
 
     private IOptimizerSettings _optimizerSettings; //TODO: Implement 
-    private IOptimizerStrategy _optimizerStrategy; //TODO: Implement 
+    private readonly IOptimizerStrategy _optimizerStrategy; //TODO: Implement 
 
     private object _resultManager; //TODO: Implement result manager 
 
     public DefaultOptimizer(IAssetManager assetManager,
-        ISourceDataProvider sourceDataProvider, IOptimizerSettings optimizerSettings, object resultManager)
+        ISourceDataProvider sourceDataProvider, IOptimizerSettings optimizerSettings, IOptimizerStrategy optimizerStrategy, object resultManager)
     {
         _assetManager = assetManager; 
         _sourceDataProvider = sourceDataProvider;
         _optimizerSettings = optimizerSettings;
+        _optimizerStrategy = optimizerStrategy;
         _resultManager = resultManager; 
     }
 
