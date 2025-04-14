@@ -136,6 +136,7 @@ internal class DefaultOptimizer : IOptimizer
         
         // Determine the prices for the electricity-based devices TODO: implement it as an enum in the BasicResource class
         var heatPumps = availableUnitsList.FindAll(unit => unit.Resource.Name == "Electricity");    
+        //var heatPumps = availableUnitsList.FindAll(unit => unit.Resource.Type == ResourceType.Electricity);
         for (int i = 0; i < heatPumps.Count(); i++)
         {
             var unit = heatPumps.ElementAt(i); 
