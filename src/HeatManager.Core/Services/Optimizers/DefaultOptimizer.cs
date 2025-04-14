@@ -27,12 +27,7 @@ internal class DefaultOptimizer : IOptimizer
         _optimizerSettings = optimizerSettings;
     }
 
-    public async Task OptimizeAsync()
-    {
-        await Task.Run(Optimize); 
-    }
-
-    private void Optimize()
+    public void Optimize()
     {
         //Set up the data
         var scheduledEntries = _sourceDataProvider.SourceDataCollection.DataPoints;
@@ -109,7 +104,7 @@ internal class DefaultOptimizer : IOptimizer
         var resultSchedule = new Schedule(heatProductionUnitSchedules, electricityProductionUnitSchedules);
     }
 
-    private List<IHeatProductionUnit> GetAvailableUnits(IAssetManager assetManager, IOptimizerSettings settings)
+    public List<IHeatProductionUnit> GetAvailableUnits(IAssetManager assetManager, IOptimizerSettings settings)
     {
         List<string> activeUnitsNames = settings.GetActiveUnits(); 
         List<IHeatProductionUnit> availableUnits = new List<IHeatProductionUnit>();
@@ -129,7 +124,7 @@ internal class DefaultOptimizer : IOptimizer
         _optimizerSettings = optimizerSettings;
     }
 
-    private IEnumerable<IHeatProductionUnit> GetHeatSourcePriorityList(IEnumerable<IHeatProductionUnit> availableUnits,
+    public IEnumerable<IHeatProductionUnit> GetHeatSourcePriorityList(IEnumerable<IHeatProductionUnit> availableUnits,
         ISourceDataPoint entry, IOptimizerStrategy strategy)
     {
         // Data setup from the source data entry 
@@ -187,7 +182,7 @@ internal class DefaultOptimizer : IOptimizer
     }
 
 
-    private List<IHeatProductionUnitSchedule> GenerateHeatProductionUnitSchedules(
+    public List<IHeatProductionUnitSchedule> GenerateHeatProductionUnitSchedules(
         IEnumerable<IHeatProductionUnit> heatProductionUnits)
     {
         List<IHeatProductionUnitSchedule> schedules = new List<IHeatProductionUnitSchedule>();
@@ -200,7 +195,7 @@ internal class DefaultOptimizer : IOptimizer
         return schedules;
     }
 
-    private List<IElectricityProductionUnitSchedule> GenerateElectricityProductionUnitSchedules(
+    public List<IElectricityProductionUnitSchedule> GenerateElectricityProductionUnitSchedules(
         IEnumerable<IElectricityProductionUnit> electricityProductionUnits)
     {
         List<IElectricityProductionUnitSchedule> schedules = new List<IElectricityProductionUnitSchedule>();
