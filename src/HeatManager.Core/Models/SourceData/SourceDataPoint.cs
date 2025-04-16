@@ -4,7 +4,7 @@
 ///
 /// Used for parsing of source csv to our data
 /// </summary>
-public class SourceDataPoint : ISourceDataPoint
+public class SourceDataPoint
 {
     // TODO: Possibly change to record
 
@@ -12,7 +12,13 @@ public class SourceDataPoint : ISourceDataPoint
 
     public required DateTime TimeTo { get; init; }
 
+    /// <summary>
+    /// MWh(th)
+    /// </summary>
     public required double HeatDemand { get; init; }
 
+    /// <summary>
+    /// DKK/MWh(el)
+    /// </summary>
     public required decimal ElectricityPrice { get; init; }
 }

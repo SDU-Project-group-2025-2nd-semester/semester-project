@@ -1,35 +1,85 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net9.0</TargetFrameworks>
-    
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net9.0</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2025.1.0-eap1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-    <PackageReference Include="Moq" Version="4.20.72" />
-    <PackageReference Include="Shouldly" Version="4.3.0" />
-    <PackageReference Include="xunit" Version="2.9.3" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="JetBrains.Annotations" Version="2025.1.0-eap1" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+		<PackageReference Include="Moq" Version="4.20.72" />
+		<PackageReference Include="Shouldly" Version="4.3.0" />
+		<PackageReference Include="xunit" Version="2.9.3" />
+		<PackageReference Include="Verify.DiffPlex" Version="3.1.2" />
+		<PackageReference Include="Verify.Xunit" Version="29.2.0" />
+		<PackageReference Include="Testcontainers.PostgreSql" Version="4.3.0" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="3.0.2">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\HeatManager.Core\HeatManager.Core.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\HeatManager.Core\HeatManager.Core.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DataLoader\" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Update="Services\AssetManagerTest.LoadUnits_Should_Throw_Exception_For_InvalidJson.verified.txt">
+		  <DependentUpon>AssetManagerTest.cs</DependentUpon>
+		</None>
+		<None Update="Services\AssetManagerTest.LoadUnits_Should_Handle_Unrecognized_Resource.verified.txt">
+		  <DependentUpon>AssetManagerTest.cs</DependentUpon>
+		</None>
+		<None Update="Services\AssetManagerTest.LoadUnits_Should_Handle_NonExistent_File.verified.txt">
+		  <DependentUpon>AssetManagerTest.cs</DependentUpon>
+		</None>
+		<None Update="Services\AssetManagerTest.LoadUnits_Should_Handle_Missing_Fields.verified.txt">
+		  <DependentUpon>AssetManagerTest.cs</DependentUpon>
+		</None>
+		<None Update="Services\AssetManagerTest.LoadUnits_Should_Handle_Large_Numbers.verified.txt">
+		  <DependentUpon>AssetManagerTest.cs</DependentUpon>
+		</None>
+		<None Update="Services\AssetManagerTest.LoadUnits_Should_Handle_Invalid_Data_Types.verified.txt">
+		  <DependentUpon>AssetManagerTest.cs</DependentUpon>
+		</None>
+		<None Update="Services\AssetManagerTest.LoadUnits_Should_Handle_Empty_File.verified.txt">
+		  <DependentUpon>AssetManagerTest.cs</DependentUpon>
+		</None>
+		<None Update="Services\AssetManagerTest.LoadUnits_Should_Handle_Duplicate_Entries.verified.txt">
+		  <DependentUpon>AssetManagerTest.cs</DependentUpon>
+		</None>
+		<None Update="Services\AssetManagerTest.LoadUnits_Should_Deserialize_Correct_ProductionUnits.verified.txt">
+		  <DependentUpon>AssetManagerTest.cs</DependentUpon>
+		</None>
+		<None Update="Services\AssetManagerTest_Duplicate.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Services\AssetManagerTest_Empty.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Services\AssetManagerTest_Invalid.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Services\AssetManagerTest_InvalidData.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Services\AssetManagerTest_LargeNumbers.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Services\AssetManagerTest_MissingFields.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Services\AssetManagerTest_UnknownResource.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Services\AssetManagerTest_Valid.json">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="mockFile.csv">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="mockFile.csv">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  
 </Project>

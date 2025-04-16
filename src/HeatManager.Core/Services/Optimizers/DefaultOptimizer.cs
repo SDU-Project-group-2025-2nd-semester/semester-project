@@ -1,5 +1,7 @@
 ﻿using HeatManager.Core.Models.Schedules;
-using HeatManager.Core.Services;
+using HeatManager.Core.Services.HeatSourceManager;
+using HeatManager.Core.Services.ResourceManagers;
+using HeatManager.Core.Services.SourceDataProviders;
 
 namespace HeatManager.Core.Services.Optimizers;
 

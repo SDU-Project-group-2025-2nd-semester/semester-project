@@ -1,0 +1,35 @@
+﻿{
+  Id: Guid_1,
+  Name: Test,
+  CreatedAt: DateTime_1,
+  LastOpened: DateTime_2,
+  ProjectData: {
+    ProductionUnits: [
+      {
+        Name: Test,
+        Resource: {}
+      }
+    ],
+    HeatProductionUnits: [
+      {
+        Name: Test,
+        Resource: {}
+      }
+    ],
+    Resources: [
+      {
+        Name: TestResource
+      }
+    ],
+    SourceData: {
+      DataPoints: [
+        {
+          TimeFrom: DateTime_3,
+          TimeTo: DateTime_4,
+          HeatDemand: 10.0,
+          ElectricityPrice: 10.0
+        }
+      ]
+    }
+  }
+}
