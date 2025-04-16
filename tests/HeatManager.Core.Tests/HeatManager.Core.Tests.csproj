@@ -26,10 +26,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="DataLoader\" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<None Update="Services\AssetManagerTest.LoadUnits_Should_Throw_Exception_For_InvalidJson.verified.txt">
 		  <DependentUpon>AssetManagerTest.cs</DependentUpon>
 		</None>

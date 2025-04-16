@@ -1,10 +1,10 @@
 ﻿using HeatManager.Core.Models.Producers;
 
-namespace HeatManager.Core.Services;
+namespace HeatManager.Core.Services.HeatSourceManager;
 
 public interface IHeatSourceManager
 {
-    public IEnumerable<HeatProductionUnit> HeatSources { get; }
+    public List<HeatProductionUnit> HeatSources { get; }
 
     public void AddHeatSource(HeatProductionUnit heatProductionUnit); // TODO: Probably set to something line name or so, since I don't want to expose the whole class
 

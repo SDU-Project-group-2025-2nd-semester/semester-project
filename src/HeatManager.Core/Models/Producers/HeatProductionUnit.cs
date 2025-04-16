@@ -1,5 +1,5 @@
 ﻿using HeatManager.Core.Models.Resources;
-using HeatManager.Core.Services;
+using HeatManager.Core.Services.AssetManagers;
 using System.Text.Json.Serialization;
 
 namespace HeatManager.Core.Models.Producers;
@@ -24,7 +24,7 @@ public class HeatProductionUnit
     public double ResourceConsumption { get; set; }
 
     [JsonConverter(typeof(BasicResourceConverter))]
-    public required BasicResource Resource { get; set; }
+    public required Resource Resource { get; set; }
 
     /// <summary>
     /// kg/MWh(th)

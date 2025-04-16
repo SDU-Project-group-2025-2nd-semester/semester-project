@@ -1,7 +1,7 @@
-using System.Collections.ObjectModel;
 using HeatManager.Core.Models.Producers;
+using System.Collections.ObjectModel;
 
-namespace HeatManager.Core.Services;
+namespace HeatManager.Core.Services.AssetManagers;
 
 public interface IAssetManager
 {

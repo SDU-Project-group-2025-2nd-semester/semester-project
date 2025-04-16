@@ -1,4 +1,4 @@
-using HeatManager.Core.Services;
+using HeatManager.Core.Services.AssetManagers;
 using JetBrains.Annotations;
 using Shouldly;
 

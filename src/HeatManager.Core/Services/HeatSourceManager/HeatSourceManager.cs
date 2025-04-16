@@ -1,10 +1,10 @@
 ﻿using HeatManager.Core.Models.Producers;
 
-namespace HeatManager.Core.Services;
+namespace HeatManager.Core.Services.HeatSourceManager;
 
 internal class HeatSourceManager : IHeatSourceManager
 {
-    public IEnumerable<HeatProductionUnit> HeatSources { get; }
+    public List<HeatProductionUnit> HeatSources { get; }
 
     public void AddHeatSource(HeatProductionUnit heatProductionUnit)
     {

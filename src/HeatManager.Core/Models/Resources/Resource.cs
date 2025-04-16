@@ -1,6 +1,6 @@
 ﻿namespace HeatManager.Core.Models.Resources;
 
-public class BasicResource
+public class Resource
 {
     public string Name { get; set; }
 }
