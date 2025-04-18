@@ -3,7 +3,71 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:HeatManager.Core.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d"
         x:Class="HeatManager.Core.Views.AssetManagerView"
-        x:DataType="vm:AssetManagerViewModel">     
+        x:DataType="vm:AssetManagerViewModel">
+
+        <UserControl.Styles>
+                        <Style Selector="TextBlock">
+                                <Setter Property="Foreground" Value="Black"/>
+                        </Style>
+        </UserControl.Styles>
+        
+        <StackPanel Background="#FFDDDF">
+
+        <ScrollViewer HorizontalAlignment="Right" VerticalScrollBarVisibility="Auto" Height="800" Margin="0,0,20,0">
+                <StackPanel>
+                <ItemsControl ItemsSource="{Binding Units}">
+                        <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                                <Border Padding="25,20,25,20" Margin="10" Background="#B3ffffff" Width="250" CornerRadius="7">
+                                <StackPanel>
+                                        <Border CornerRadius="7" ClipToBounds="True"  Margin="0,0,0,10">
+                                        <Image Source="/Assets/units.png" Width="200"/>
+                                        </Border>
+                                        <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="16" Height="16" Fill="#0F7B0F" Margin="0,0,5,0"/>
+                                        <StackPanel Margin="10,5,0,15">
+                                                <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14"/>
+                                                <TextBlock Text="Active" Opacity="0.7"/>
+                                        </StackPanel>
+                                        </StackPanel>
+
+                                        <!-- Production Cost -->
+                                        <TextBlock Text="Production Cost" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding Cost, StringFormat='{}{0} DKK/ MWh(th)'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>
+
+                                        <!-- Max Heat -->
+                                        <TextBlock Text="Max Heat" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding MaxHeatProduction, FallbackValue=0, StringFormat='{}{0} MW'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>
+
+                                        <!-- Max Electricity -->
+                                        <TextBlock Text="Max Electricity" FontWeight="Bold" />
+                                        <TextBlock Text="{Binding MaxElectricity, FallbackValue='0 MW', StringFormat='{}{0} MW'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>
+
+                                        <!-- CO2 Emissions -->
+                                        <TextBlock Text="CO2 Emissions" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding Emissions, StringFormat='{}{0} kg/ MWh(th)'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>
+
+                                        <!-- Consumption -->
+                                        <TextBlock Text="{Binding Resource, TargetNullValue='No', StringFormat='{}{0} Consumption'}" FontWeight="Bold"/>
+                                        <TextBlock Opacity="0.7" Margin="10,0,0,15" FontSize="12">
+                                        <Run Text="{Binding ResourceConsumption, FallbackValue=0}"></Run>
+                                        <Run Text="{Binding Resource, FallbackValue='N/A', StringFormat=' MWh({0})/ MWh(th)'}"></Run> 
+                                        </TextBlock>
+
+                                </StackPanel>
+                                </Border>
+                        </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                </StackPanel>
+        </ScrollViewer>
+        </StackPanel>
+
 </UserControl>
