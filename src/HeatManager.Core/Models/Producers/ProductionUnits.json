@@ -24,6 +24,14 @@
       "ResourceConsumption": 1.5,
       "Resource": "Oil",
       "Emissions": 330.0
+    },
+    {
+      "Name": "HP1",
+      "Cost": 60.0,
+      "MaxHeatProduction": 6.0,
+      "ResourceConsumption": 6.0,
+      "Resource": "Electricity",
+      "Emissions": 0.0
     }
   ],
   "ElectricityProductionUnits":
@@ -36,15 +44,6 @@
       "Resource": "Gas",
       "Emissions": 650.0,
       "MaxElectricity": 2.6
-    },
-    {
-      "Name": "HP1",
-      "Cost": 60.0,
-      "MaxHeatProduction": 6.0,
-      "ResourceConsumption": 0.0,
-      "Resource": "Electricity",
-      "Emissions": 0.0,
-      "MaxElectricity": -6.0
     }
   ]
   
