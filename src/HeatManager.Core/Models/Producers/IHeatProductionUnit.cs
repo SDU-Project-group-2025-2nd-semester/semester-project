@@ -21,7 +21,7 @@ public interface IHeatProductionUnit
     /// </summary>
     public double ResourceConsumption { get; set; }
 
-    public IBasicResource Resource { get; set; }
+    public Resource Resource { get; set; }
 
     /// <summary>
     /// kg/MWh(th)

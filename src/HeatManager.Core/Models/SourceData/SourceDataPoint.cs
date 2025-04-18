@@ -8,11 +8,17 @@ public class SourceDataPoint : ISourceDataPoint
 {
     // TODO: Possibly change to record
 
-    public required DateTime TimeFrom { get; init; }
+    public DateTime TimeFrom { get; set; }
 
-    public required DateTime TimeTo { get; init; }
+    public DateTime TimeTo { get; set; }
 
-    public required double HeatDemand { get; init; }
+    /// <summary>
+    /// MWh(th)
+    /// </summary>
+    public double HeatDemand { get; set; }
 
-    public required decimal ElectricityPrice { get; init; }
+    /// <summary>
+    /// DKK/MWh(el)
+    /// </summary>
+    public decimal ElectricityPrice { get; set; }
 }

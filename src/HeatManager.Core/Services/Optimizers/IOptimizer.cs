@@ -3,6 +3,7 @@ using HeatManager.Core.Models.SourceData;
 using HeatManager.Core.Models.Schedules;
 using HeatManager.Core.Services;
 using System.Collections.Generic;
+using HeatManager.Core.Services.AssetManagers;
 
 namespace HeatManager.Core.Services.Optimizers;
 
@@ -32,12 +33,12 @@ public interface IOptimizer
     /// </summary>
     /// <param name="heatSources">The available heat production units</param>
     /// <returns>A list of heat production unit schedules</returns>
-    List<IHeatProductionUnitSchedule> GenerateHeatProductionUnitSchedules(IEnumerable<IHeatProductionUnit> heatSources);
+    List<HeatProductionUnitSchedule> GenerateHeatProductionUnitSchedules(IEnumerable<IHeatProductionUnit> heatSources);
 
     /// <summary>
     /// Generates schedules for electricity production units
     /// </summary>
     /// <param name="electricitySources">The available electricity production units</param>
     /// <returns>A list of electricity production unit schedules</returns>
-    List<IElectricityProductionUnitSchedule> GenerateElectricityProductionUnitSchedules(IEnumerable<IElectricityProductionUnit> electricitySources);
+    List<ElectricityProductionUnitSchedule> GenerateElectricityProductionUnitSchedules(IEnumerable<ElectricityProductionUnit> electricitySources);
 }

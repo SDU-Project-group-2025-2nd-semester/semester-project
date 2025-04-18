@@ -1,22 +1,34 @@
 ﻿using HeatManager.Core.Models.Resources;
-using HeatManager.Core.Services;
+using HeatManager.Core.Services.AssetManagers;
 using System.Text.Json.Serialization;
 
 namespace HeatManager.Core.Models.Producers;
 
-internal class HeatProductionUnit : IHeatProductionUnit
+public class HeatProductionUnit : IHeatProductionUnit
 {
     public required string Name { get; set; }
 
+    /// <summary>
+    /// DKK/MWh(th)
+    /// </summary>
     public decimal Cost { get; set; }
 
+    /// <summary>
+    /// MW
+    /// </summary>
     public double MaxHeatProduction { get; set; }
 
+    /// <summary>
+    /// MWh(resource)/MWh(th)
+    /// </summary>
     public double ResourceConsumption { get; set; }
 
     [JsonConverter(typeof(BasicResourceConverter))]
-    public required IBasicResource Resource { get; set; }
+    public required Resource Resource { get; set; }
 
+    /// <summary>
+    /// kg/MWh(th)
+    /// </summary>
     public double Emissions { get; set; }
     
     public IHeatProductionUnit Clone()

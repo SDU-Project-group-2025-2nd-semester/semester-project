@@ -1,13 +1,14 @@
-﻿using System.Collections.Immutable;
+﻿using Avalonia.Controls;
+using System.Collections.Immutable;
 
 namespace HeatManager.Core.Models.Schedules;
 
-internal class Schedule : ISchedule
+internal class Schedule
 {
     public int Length { get; private set; }
     //Main Data
-    public IEnumerable<IHeatProductionUnitSchedule> HeatProductionUnitSchedules { get; }
-    public IEnumerable<IElectricityProductionUnitSchedule> ElectricityProductionUnitSchedules { get; }
+    public IEnumerable<HeatProductionUnitSchedule> HeatProductionUnitSchedules { get; }
+    public IEnumerable<ElectricityProductionUnitSchedule> ElectricityProductionUnitSchedules { get; }
     
     //Time Data
     public DateTime Start { get; private set; }
@@ -29,8 +30,8 @@ internal class Schedule : ISchedule
     //Electricity related data
     public decimal[] ElectricityPrice { get; set; }
 
-    public Schedule(IEnumerable<IHeatProductionUnitSchedule> heatProductionUnitSchedules,
-        IEnumerable<IElectricityProductionUnitSchedule> electricityProductionUnitSchedules)
+    public Schedule(IEnumerable<HeatProductionUnitSchedule> heatProductionUnitSchedules,
+        IEnumerable<ElectricityProductionUnitSchedule> electricityProductionUnitSchedules)
     {
         HeatProductionUnitSchedules = heatProductionUnitSchedules;
         ElectricityProductionUnitSchedules = electricityProductionUnitSchedules;
@@ -55,9 +56,9 @@ internal class Schedule : ISchedule
         
     }
     
-    private double[] GetEmissionsByHour(IEnumerable<IHeatProductionUnitSchedule> heatProductionUnitSchedules)
+    private double[] GetEmissionsByHour(IEnumerable<HeatProductionUnitSchedule> heatProductionUnitSchedules)
     {
-        IEnumerable<IHeatProductionUnitSchedule> productionUnitSchedules = heatProductionUnitSchedules.ToList();
+        IEnumerable<HeatProductionUnitSchedule> productionUnitSchedules = heatProductionUnitSchedules.ToList();
         var emissions = new double[Length];
         
         for (int i = 0; i < Length; i++)
@@ -70,9 +71,9 @@ internal class Schedule : ISchedule
         return emissions; 
     }
     
-    private decimal[] GetCostsByHour(IEnumerable<IHeatProductionUnitSchedule> heatProductionUnitSchedules)
+    private decimal[] GetCostsByHour(IEnumerable<HeatProductionUnitSchedule> heatProductionUnitSchedules)
     {
-        IEnumerable<IHeatProductionUnitSchedule> productionUnitSchedules = heatProductionUnitSchedules.ToList();
+        IEnumerable<HeatProductionUnitSchedule> productionUnitSchedules = heatProductionUnitSchedules.ToList();
         var costs = new decimal[Length];
         
         for (int i = 0; i < Length; i++)
@@ -85,9 +86,9 @@ internal class Schedule : ISchedule
         return costs; 
     }
 
-    private double[] GetHeatProductionByHour(IEnumerable<IHeatProductionUnitSchedule> heatProductionUnitSchedules)
+    private double[] GetHeatProductionByHour(IEnumerable<HeatProductionUnitSchedule> heatProductionUnitSchedules)
     {
-        IEnumerable<IHeatProductionUnitSchedule> productionUnitSchedules = HeatProductionUnitSchedules.ToList();
+        IEnumerable<HeatProductionUnitSchedule> productionUnitSchedules = HeatProductionUnitSchedules.ToList();
         var heatProduction = new double[Length];
         
         for (int i = 0; i < Length; i++)

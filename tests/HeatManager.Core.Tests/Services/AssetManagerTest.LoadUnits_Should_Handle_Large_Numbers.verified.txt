@@ -1,0 +1,11 @@
+﻿[
+  {
+    Name: GB1,
+    Cost: 9999999999.0,
+    MaxHeatProduction: 9999999999.0,
+    Resource: {
+      Name: Gas
+    },
+    Emissions: 9999999999.0
+  }
+]
