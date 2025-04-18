@@ -1,0 +1,25 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Heading Style -->
+    <Style Selector="TextBlock.heading">
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Margin" Value="0,0,0,20" />
+    </Style>
+
+    <!-- Subheading Style -->
+    <Style Selector="TextBlock.subheading">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Margin" Value="0,0,0,5" />
+    </Style>
+
+    <!-- Normal Text Style -->
+    <Style Selector="TextBlock.normaltext">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Margin" Value="0,0,0,25" />
+    </Style>
+
+</Styles>
