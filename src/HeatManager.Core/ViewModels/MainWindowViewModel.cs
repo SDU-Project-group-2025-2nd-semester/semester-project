@@ -11,7 +11,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private UserControl ?currentView = new AssetManagerView { DataContext = new AssetManagerViewModel() };
 
     [RelayCommand]
-    private void SetConfigPanelView()
+    internal void SetConfigPanelView()
     {
         CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel() };
     }
@@ -31,6 +31,6 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void SetOverviewView()
     {
-        CurrentView = new OverviewView { DataContext = new OverviewViewModel() };
+        CurrentView = new OverviewView { DataContext = new OverviewViewModel(this) };
     }
 }

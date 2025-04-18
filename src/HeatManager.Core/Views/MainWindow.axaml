@@ -8,7 +8,8 @@
         x:DataType="vm:MainWindowViewModel"
         Title="HeatManager">
 
-        <SplitView IsPaneOpen = "True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <SplitView IsPaneOpen = "True" DisplayMode="Inline" OpenPaneLength="300" 
+                   VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
        
             <SplitView.Pane>
             
@@ -32,7 +33,7 @@
        
             <SplitView.Content>
                 
-                <ContentControl Content = "{Binding CurrentView}"/>
+                <ContentControl Content = "{Binding CurrentView}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             
             </SplitView.Content>
     
