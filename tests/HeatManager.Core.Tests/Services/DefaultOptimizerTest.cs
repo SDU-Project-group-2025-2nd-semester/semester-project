@@ -11,6 +11,8 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using System;
 using System.Collections.Immutable;
+using HeatManager.Core.Services.AssetManagers;
+using HeatManager.Core.Services.SourceDataProviders;
 
 namespace HeatManager.Core.Tests.Services;
 /*
@@ -24,7 +26,7 @@ public class DefaultOptimizerTest
     private readonly Mock<IOptimizerStrategy> _mockOptimizerStrategy; 
     private readonly Mock<object> _mockResultManager;
     private readonly DefaultOptimizer _optimizer;
-    private readonly Mock<IBasicResource> _mockResource;
+    private readonly Mock<Resource> _mockResource;
 
     public DefaultOptimizerTest()
     {
@@ -33,7 +35,7 @@ public class DefaultOptimizerTest
         _mockOptimizerSettings = new Mock<IOptimizerSettings>();
         _mockOptimizerStrategy = new Mock<IOptimizerStrategy>(); 
         _mockResultManager = new Mock<object>();
-        _mockResource = new Mock<IBasicResource>();
+        _mockResource = new Mock<Resource>();
 
         _optimizer = new DefaultOptimizer(
             _mockAssetManager.Object,
@@ -55,7 +57,7 @@ public class DefaultOptimizerTest
     {
         // Arrange
         var activeUnits = new List<string> { "Unit1", "Unit2" };
-        var allUnits = new ObservableCollection<IHeatProductionUnit>
+        var allUnits = new ObservableCollection<HeatProductionUnitBase>
         {
             new HeatProductionUnit { Name = "Unit1", Resource = _mockResource.Object },
             new HeatProductionUnit { Name = "Unit2", Resource = _mockResource.Object },
@@ -93,7 +95,7 @@ public class DefaultOptimizerTest
     public void GenerateHeatProductionUnitSchedules_CreatesCorrectNumberOfSchedules()
     {
         // Arrange
-        var units = new List<IHeatProductionUnit>
+        var units = new List<HeatProductionUnit>
         {
             new HeatProductionUnit { Name = "Unit1", Resource = _mockResource.Object },
             new HeatProductionUnit { Name = "Unit2", Resource = _mockResource.Object }
@@ -112,10 +114,10 @@ public class DefaultOptimizerTest
     public void GenerateElectricityProductionUnitSchedules_CreatesCorrectNumberOfSchedules()
     {
         // Arrange
-        var units = new List<IElectricityProductionUnit>
+        var units = new List<ElectricityProductionUnit>
         {
-            new Mock<IElectricityProductionUnit>().Object,
-            new Mock<IElectricityProductionUnit>().Object
+            new Mock<ElectricityProductionUnit>().Object,
+            new Mock<ElectricityProductionUnit>().Object
         };
 
         // Act
@@ -129,13 +131,13 @@ public class DefaultOptimizerTest
     public void GetHeatSourcePriorityList_WithPriceOptimization_OrdersByCost()
     {
         // Arrange
-        var units = new List<IHeatProductionUnit>
+        var units = new List<HeatProductionUnit>
         {
             new HeatProductionUnit { Name = "Unit1", Cost = 2, Emissions = 1, Resource = _mockResource.Object },
             new HeatProductionUnit { Name = "Unit2", Cost = 1, Emissions = 2, Resource = _mockResource.Object }
         };
         var strategy = new OptimizerStrategy(true);
-        var mockSourceDataPoint = new Mock<ISourceDataPoint>();
+        var mockSourceDataPoint = new Mock<SourceDataPoint>();
         mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns(0);
 
         // Act
@@ -150,13 +152,13 @@ public class DefaultOptimizerTest
     public void GetHeatSourcePriorityList_WithCo2Optimization_OrdersByEmissions()
     {
         // Arrange
-        var units = new List<IHeatProductionUnit>
+        var units = new List<HeatProductionUnit>
         {
             new HeatProductionUnit { Name = "Unit1", Cost = 1, Emissions = 2, Resource = _mockResource.Object },
             new HeatProductionUnit { Name = "Unit2", Cost = 2, Emissions = 1, Resource = _mockResource.Object }
         };
         var strategy = new OptimizerStrategy(false);
-        var mockSourceDataPoint = new Mock<ISourceDataPoint>();
+        var mockSourceDataPoint = new Mock<SourceDataPoint>();
         mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns(0);
 
         // Act
@@ -171,7 +173,7 @@ public class DefaultOptimizerTest
     public void GetHeatSourcePriorityList_WithElectricityBasedUnits_AdjustsCosts()
     {
         // Arrange
-        var mockElectricityResource = new Mock<IBasicResource>();
+        var mockElectricityResource = new Mock<Resource>();
         mockElectricityResource.Setup(r => r.Name).Returns("Electricity");
         
         var unit = new HeatProductionUnit 
@@ -183,7 +185,7 @@ public class DefaultOptimizerTest
         };
         
         var strategy = new OptimizerStrategy(true);
-        var mockSourceDataPoint = new Mock<ISourceDataPoint>();
+        var mockSourceDataPoint = new Mock<SourceDataPoint>();
         mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns(2);
 
         // Act
@@ -197,20 +199,20 @@ public class DefaultOptimizerTest
     public void GetHeatSourcePriorityList_WithMixedResourceTypes_HandlesCorrectly()
     {
         // Arrange
-        var mockGasResource = new Mock<IBasicResource>();
+        var mockGasResource = new Mock<Resource>();
         mockGasResource.Setup(r => r.Type).Returns(ResourceType.Gas);
         
-        var mockElectricityResource = new Mock<IBasicResource>();
+        var mockElectricityResource = new Mock<Resource>();
         mockElectricityResource.Setup(r => r.Type).Returns(ResourceType.Electricity);
         
-        var units = new List<IHeatProductionUnit>
+        var units = new List<HeatProductionUnit>
         {
             new HeatProductionUnit { Name = "GasUnit", Cost = 2, Emissions = 1, Resource = mockGasResource.Object },
             new HeatProductionUnit { Name = "ElectricUnit", Cost = 1, Emissions = 2, Resource = mockElectricityResource.Object }
         };
         
         var strategy = new OptimizerStrategy(true);
-        var mockSourceDataPoint = new Mock<ISourceDataPoint>();
+        var mockSourceDataPoint = new Mock<SourceDataPoint>();
         mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns(1);
 
         // Act
@@ -224,14 +226,14 @@ public class DefaultOptimizerTest
     public void GetHeatSourcePriorityList_WithNegativeCost_HandlesCorrectly()
     {
         // Arrange
-        var units = new List<IHeatProductionUnit>
+        var units = new List<HeatProductionUnit>
         {
             new HeatProductionUnit { Name = "Unit1", Cost = -1, Emissions = 1, Resource = _mockResource.Object },
             new HeatProductionUnit { Name = "Unit2", Cost = 1, Emissions = 1, Resource = _mockResource.Object }
         };
         
         var strategy = new OptimizerStrategy(true);
-        var mockSourceDataPoint = new Mock<ISourceDataPoint>();
+        var mockSourceDataPoint = new Mock<SourceDataPoint>();
         mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns(0);
 
         // Act
@@ -245,14 +247,14 @@ public class DefaultOptimizerTest
     public void GetHeatSourcePriorityList_WithEqualCosts_OrdersByEmissions()
     {
         // Arrange
-        var units = new List<IHeatProductionUnit>
+        var units = new List<HeatProductionUnit>
         {
             new HeatProductionUnit { Name = "Unit1", Cost = 1, Emissions = 2, Resource = _mockResource.Object },
             new HeatProductionUnit { Name = "Unit2", Cost = 1, Emissions = 1, Resource = _mockResource.Object }
         };
         
         var strategy = new OptimizerStrategy(true);
-        var mockSourceDataPoint = new Mock<ISourceDataPoint>();
+        var mockSourceDataPoint = new Mock<SourceDataPoint>();
         mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns(0);
 
         // Act
@@ -266,11 +268,11 @@ public class DefaultOptimizerTest
     public void GetHeatSourcePriorityList_WithElectricityProduction_AdjustsCostsCorrectly()
     {
         // Arrange
-        var mockElectricityResource = new Mock<IBasicResource>();
+        var mockElectricityResource = new Mock<Resource>();
         mockElectricityResource.Setup(r => r.Type).Returns(ResourceType.Electricity);
         mockElectricityResource.Setup(r => r.Name).Returns("Electricity");
         
-        var mockUnit = new Mock<IElectricityProductionUnit>();
+        var mockUnit = new Mock<ElectricityProductionUnit>();
         mockUnit.Setup(u => u.Name).Returns("Unit1");
         mockUnit.SetupProperty(u => u.Cost, (decimal)1);
         mockUnit.Setup(u => u.Emissions).Returns(1);
@@ -279,7 +281,7 @@ public class DefaultOptimizerTest
         mockUnit.Setup(u => u.MaxElectricity).Returns(3);
         
         // Create a new mock for the cloned unit
-        var mockClonedUnit = new Mock<IElectricityProductionUnit>();
+        var mockClonedUnit = new Mock<ElectricityProductionUnit>();
         mockClonedUnit.Setup(u => u.Name).Returns("Unit1");
         mockClonedUnit.SetupProperty(u => u.Cost, (decimal)1);
         mockClonedUnit.Setup(u => u.Emissions).Returns(1);
@@ -291,9 +293,9 @@ public class DefaultOptimizerTest
         // Setup Clone to return the new mock
         mockUnit.Setup(u => u.Clone()).Returns(mockClonedUnit.Object);
         
-        var units = new List<IHeatProductionUnit> { mockUnit.Object };
+        var units = new List<HeatProductionUnitBase> { mockUnit.Object };
         var strategy = new OptimizerStrategy(true);
-        var mockSourceDataPoint = new Mock<ISourceDataPoint>();
+        var mockSourceDataPoint = new Mock<SourceDataPoint>();
         mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns(2);
         mockSourceDataPoint.Setup(s => s.HeatDemand).Returns(2);
 
@@ -310,12 +312,12 @@ public class DefaultOptimizerTest
     public void GetHeatSourcePriorityList_WithMixedElectricityUnits_AdjustsCostsCorrectly()
     {
         // Arrange
-        var mockElectricityResource = new Mock<IBasicResource>();
+        var mockElectricityResource = new Mock<Resource>();
         mockElectricityResource.Setup(r => r.Type).Returns(ResourceType.Electricity);
         mockElectricityResource.Setup(r => r.Name).Returns("Electricity");
         
         // Unit that only consumes electricity
-        var mockConsumingUnit = new Mock<IHeatProductionUnit>();
+        var mockConsumingUnit = new Mock<HeatProductionUnit>();
         mockConsumingUnit.Setup(u => u.Name).Returns("ConsumingUnit");
         mockConsumingUnit.Setup(u => u.Cost).Returns((decimal)1);
         mockConsumingUnit.Setup(u => u.Emissions).Returns(1);
@@ -324,7 +326,7 @@ public class DefaultOptimizerTest
 
         
         // Create a new mock for the cloned consuming unit
-        var mockClonedConsumingUnit = new Mock<IHeatProductionUnit>();
+        var mockClonedConsumingUnit = new Mock<HeatProductionUnit>();
         mockClonedConsumingUnit.Setup(u => u.Name).Returns("ConsumingUnit");
         mockClonedConsumingUnit.SetupProperty(u => u.Cost, (decimal)1);
         mockClonedConsumingUnit.Setup(u => u.Emissions).Returns(1);
@@ -335,7 +337,7 @@ public class DefaultOptimizerTest
         mockConsumingUnit.Setup(u => u.Clone()).Returns(mockClonedConsumingUnit.Object);
         
         // Unit that produces electricity
-        var mockProducingUnit = new Mock<IElectricityProductionUnit>();
+        var mockProducingUnit = new Mock<ElectricityProductionUnit>();
         mockProducingUnit.Setup(u => u.Name).Returns("ProducingUnit");
         mockProducingUnit.SetupProperty(u => u.Cost, (decimal)1);
         mockProducingUnit.Setup(u => u.Emissions).Returns(1);
@@ -344,7 +346,7 @@ public class DefaultOptimizerTest
         mockProducingUnit.Setup(u => u.MaxElectricity).Returns(3);
         
         // Create a new mock for the cloned producing unit
-        var mockClonedProducingUnit = new Mock<IElectricityProductionUnit>();
+        var mockClonedProducingUnit = new Mock<ElectricityProductionUnit>();
         mockClonedProducingUnit.Setup(u => u.Name).Returns("ProducingUnit");
         mockClonedProducingUnit.SetupProperty(u => u.Cost, (decimal)1);
         mockClonedProducingUnit.Setup(u => u.Emissions).Returns(1);
@@ -356,9 +358,9 @@ public class DefaultOptimizerTest
         
         mockProducingUnit.Setup(u => u.Clone()).Returns(mockClonedProducingUnit.Object);
         
-        var units = new List<IHeatProductionUnit> { mockConsumingUnit.Object, mockProducingUnit.Object };
+        var units = new List<HeatProductionUnitBase> { mockConsumingUnit.Object, mockProducingUnit.Object };
         var strategy = new OptimizerStrategy(true);
-        var mockSourceDataPoint = new Mock<ISourceDataPoint>();
+        var mockSourceDataPoint = new Mock<SourceDataPoint>();
         mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns((decimal)2);
         mockSourceDataPoint.Setup(s => s.HeatDemand).Returns(2);
 
@@ -385,7 +387,7 @@ public class DefaultOptimizerTest
     public void GenerateHeatProductionUnitSchedules_WithEmptyList_ReturnsEmptyList()
     {
         // Arrange
-        var units = new List<IHeatProductionUnit>();
+        var units = new List<HeatProductionUnit>();
 
         // Act
         var result = _optimizer.GenerateHeatProductionUnitSchedules(units);
@@ -398,7 +400,7 @@ public class DefaultOptimizerTest
     public void GenerateElectricityProductionUnitSchedules_WithEmptyList_ReturnsEmptyList()
     {
         // Arrange
-        var units = new List<IElectricityProductionUnit>();
+        var units = new List<ElectricityProductionUnit>();
 
         // Act
         var result = _optimizer.GenerateElectricityProductionUnitSchedules(units);
@@ -412,7 +414,7 @@ public class DefaultOptimizerTest
     {
         // Arrange
         var activeUnits = new List<string>();
-        var allUnits = new ObservableCollection<IHeatProductionUnit>
+        var allUnits = new ObservableCollection<HeatProductionUnitBase>
         {
             new HeatProductionUnit { Name = "Unit1", Resource = _mockResource.Object }
         };
@@ -432,7 +434,7 @@ public class DefaultOptimizerTest
     {
         // Arrange
         var activeUnits = new List<string> { "NonExistentUnit" };
-        var allUnits = new ObservableCollection<IHeatProductionUnit>
+        var allUnits = new ObservableCollection<HeatProductionUnitBase>
         {
             new HeatProductionUnit { Name = "Unit1", Resource = _mockResource.Object }
         };
@@ -451,7 +453,7 @@ public class DefaultOptimizerTest
     public void Optimize_WithSingleUnit_ProducesCorrectSchedule()
     {
         // Arrange
-        var mockUnit = new Mock<IHeatProductionUnit>();
+        var mockUnit = new Mock<HeatProductionUnit>();
         mockUnit.Setup(u => u.Name).Returns("Unit1");
         mockUnit.Setup(u => u.MaxHeatProduction).Returns(100);
         mockUnit.Setup(u => u.Cost).Returns(1);
@@ -459,17 +461,17 @@ public class DefaultOptimizerTest
         mockUnit.Setup(u => u.ResourceConsumption).Returns(1);
         mockUnit.Setup(u => u.Resource).Returns(_mockResource.Object);
 
-        var mockSourceDataPoint = new Mock<ISourceDataPoint>();
+        var mockSourceDataPoint = new Mock<SourceDataPoint>();
         mockSourceDataPoint.Setup(s => s.HeatDemand).Returns(50);
         mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns(0);
         mockSourceDataPoint.Setup(s => s.TimeFrom).Returns(DateTime.Now);
         mockSourceDataPoint.Setup(s => s.TimeTo).Returns(DateTime.Now.AddHours(1));
 
-        var sourceDataCollection = new Mock<ISourceDataCollection>();
+        var sourceDataCollection = new Mock<SourceDataCollection>();
         sourceDataCollection.Setup(s => s.DataPoints).Returns(ImmutableList.Create(mockSourceDataPoint.Object));
 
         _mockSourceDataProvider.Setup(p => p.SourceDataCollection).Returns(sourceDataCollection.Object);
-        _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<IHeatProductionUnit> { mockUnit.Object });
+        _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<HeatProductionUnitBase> { mockUnit.Object });
         _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames()).Returns(new List<string> { "Unit1" });
 
         // Act
@@ -484,7 +486,7 @@ public class DefaultOptimizerTest
     public void Optimize_WithMultipleUnits_HandlesDemandDistribution()
     {
         // Arrange
-        var mockUnit1 = new Mock<IHeatProductionUnit>();
+        var mockUnit1 = new Mock<HeatProductionUnitBase>();
         mockUnit1.Setup(u => u.Name).Returns("Unit1");
         mockUnit1.Setup(u => u.MaxHeatProduction).Returns(50);
         mockUnit1.Setup(u => u.Cost).Returns(1);
@@ -492,7 +494,7 @@ public class DefaultOptimizerTest
         mockUnit1.Setup(u => u.ResourceConsumption).Returns(1);
         mockUnit1.Setup(u => u.Resource).Returns(_mockResource.Object);
 
-        var mockUnit2 = new Mock<IHeatProductionUnit>();
+        var mockUnit2 = new Mock<HeatProductionUnit>();
         mockUnit2.Setup(u => u.Name).Returns("Unit2");
         mockUnit2.Setup(u => u.MaxHeatProduction).Returns(50);
         mockUnit2.Setup(u => u.Cost).Returns(2);
@@ -500,17 +502,17 @@ public class DefaultOptimizerTest
         mockUnit2.Setup(u => u.ResourceConsumption).Returns(1);
         mockUnit2.Setup(u => u.Resource).Returns(_mockResource.Object);
 
-        var mockSourceDataPoint = new Mock<ISourceDataPoint>();
+        var mockSourceDataPoint = new Mock<SourceDataPoint>();
         mockSourceDataPoint.Setup(s => s.HeatDemand).Returns(75);
         mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns(0);
         mockSourceDataPoint.Setup(s => s.TimeFrom).Returns(DateTime.Now);
         mockSourceDataPoint.Setup(s => s.TimeTo).Returns(DateTime.Now.AddHours(1));
 
-        var sourceDataCollection = new Mock<ISourceDataCollection>();
+        var sourceDataCollection = new Mock<SourceDataCollection>();
         sourceDataCollection.Setup(s => s.DataPoints).Returns(ImmutableList.Create(mockSourceDataPoint.Object));
 
         _mockSourceDataProvider.Setup(p => p.SourceDataCollection).Returns(sourceDataCollection.Object);
-        _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<IHeatProductionUnit> { mockUnit1.Object, mockUnit2.Object });
+        _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<HeatProductionUnitBase> { mockUnit1.Object, mockUnit2.Object });
         _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames()).Returns(new List<string> { "Unit1", "Unit2" });
 
         // Act
@@ -525,7 +527,7 @@ public class DefaultOptimizerTest
     public void Optimize_WithExcessDemand_HandlesCorrectly()
     {
         // Arrange
-        var mockUnit = new Mock<IHeatProductionUnit>();
+        var mockUnit = new Mock<HeatProductionUnit>();
         mockUnit.Setup(u => u.Name).Returns("Unit1");
         mockUnit.Setup(u => u.MaxHeatProduction).Returns(50);
         mockUnit.Setup(u => u.Cost).Returns(1);
@@ -533,17 +535,17 @@ public class DefaultOptimizerTest
         mockUnit.Setup(u => u.ResourceConsumption).Returns(1);
         mockUnit.Setup(u => u.Resource).Returns(_mockResource.Object);
 
-        var mockSourceDataPoint = new Mock<ISourceDataPoint>();
+        var mockSourceDataPoint = new Mock<SourceDataPoint>();
         mockSourceDataPoint.Setup(s => s.HeatDemand).Returns(100);
         mockSourceDataPoint.Setup(s => s.ElectricityPrice).Returns(0);
         mockSourceDataPoint.Setup(s => s.TimeFrom).Returns(DateTime.Now);
         mockSourceDataPoint.Setup(s => s.TimeTo).Returns(DateTime.Now.AddHours(1));
 
-        var sourceDataCollection = new Mock<ISourceDataCollection>();
+        var sourceDataCollection = new Mock<SourceDataCollection>();
         sourceDataCollection.Setup(s => s.DataPoints).Returns(ImmutableList.Create(mockSourceDataPoint.Object));
 
         _mockSourceDataProvider.Setup(p => p.SourceDataCollection).Returns(sourceDataCollection.Object);
-        _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<IHeatProductionUnit> { mockUnit.Object });
+        _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<HeatProductionUnitBase> { mockUnit.Object });
         _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames()).Returns(new List<string> { "Unit1" });
 
         // Act

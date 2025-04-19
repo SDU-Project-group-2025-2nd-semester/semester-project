@@ -39,16 +39,16 @@ public class ProjectManagerTest : DatabaseAccess
 
         _sourceDataProvider = _mockSourceDataProvider.Object;
 
-        var testResource = new Resource { Name = "TestResource" };
+        var testResource = new Resource("TestResource");
 
-        var obs = new ObservableCollection<HeatProductionUnit>
+        var obs = new ObservableCollection<HeatProductionUnitBase>
         {
             new ElectricityProductionUnit
             {
                 Name = "TestElectricitySource",
                 Resource = testResource
             },
-            new()
+            new HeatProductionUnit()
             {
                 Name ="TestHeatSource",
                 Resource = testResource
@@ -117,13 +117,13 @@ public class ProjectManagerTest : DatabaseAccess
 
         await projectManager.NewProjectAsync("Test");
 
-        var testResource = new Resource();
+        var testResource = new Resource("FirstTestResource");
 
         _heatSourceManager.HeatSources.AddRange([new HeatProductionUnit { Name = "Test", Resource = testResource }]);
 
         _assetManager.ProductionUnits.Add(new HeatProductionUnit { Name = "Test", Resource = testResource });
 
-        _resourceManager.Resources.Add(new Resource(){Name = "TestResource"});
+        _resourceManager.Resources.Add(new Resource("TestResource"));
 
         _sourceDataProvider.SourceDataCollection = new SourceDataCollection([
             new SourceDataPoint()
@@ -150,13 +150,13 @@ public class ProjectManagerTest : DatabaseAccess
 
         await projectManager.NewProjectAsync("Test");
 
-        var testResource = new Resource();
+        var testResource = new Resource("FirstTestResource");
 
         _heatSourceManager.HeatSources.AddRange([new HeatProductionUnit { Name = "Test", Resource = testResource }]);
 
         _assetManager.ProductionUnits.Add(new HeatProductionUnit { Name = "Test", Resource = testResource });
 
-        _resourceManager.Resources.Add(new Resource(){Name = "TestResource"});
+        _resourceManager.Resources.Add(new Resource("TestResource"));
 
         _sourceDataProvider.SourceDataCollection = new SourceDataCollection([
             new SourceDataPoint()
@@ -176,7 +176,7 @@ public class ProjectManagerTest : DatabaseAccess
         await projectManager.LoadProjectFromDb("Test");
 
         // Assert
-        
+
         newProject.Name.ShouldBe("NewProject");
 
         await Verify(projectManager.CurrentProject);
@@ -190,7 +190,7 @@ public class ProjectManagerTest : DatabaseAccess
 
         await projectManager.NewProjectAsync("Test1");
 
-        
+
         await projectManager.SaveProjectAsync();
 
         await projectManager.NewProjectAsync("Test2");

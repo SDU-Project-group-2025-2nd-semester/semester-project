@@ -1,26 +1,20 @@
 ﻿namespace HeatManager.Core.Models.Resources;
 
-public class Resource
+public class Resource(string name)
 {
-    public string Name { get; set; }
-    public ResourceType Type { get; set; }
+    public string Name { get; set; } = name;
+    public ResourceType Type { get; set; } = name switch
+    {
+        "Gas" => ResourceType.Gas,
+        "Oil" => ResourceType.Oil,
+        "Electricity" => ResourceType.Electricity,
+        _ => throw new ArgumentException($"Invalid resource name: {name}")
+    };
+}
 
-    public Resource(string name) 
-    { 
-        Name = name; 
-        switch (name) 
-        { 
-            case "Gas":
-                Type = ResourceType.Gas;
-                break;
-            case "Oil":
-                Type = ResourceType.Oil;
-                break;
-            case "Electricity":
-                Type = ResourceType.Electricity;
-                break;
-            default:
-                throw new ArgumentException($"Invalid resource name: {name}");
-        }
-    }
+public enum ResourceType
+{
+    Gas,
+    Oil,
+    Electricity
 }

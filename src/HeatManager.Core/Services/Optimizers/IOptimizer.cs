@@ -26,14 +26,14 @@ public interface IOptimizer
     /// <param name="assetManager">The asset manager containing the units</param>
     /// <param name="settings">The current optimization settings</param>
     /// <returns>A list of available heat production units</returns>
-    List<IHeatProductionUnit> GetAvailableUnits(IAssetManager assetManager, IOptimizerSettings settings);
+    List<HeatProductionUnitBase> GetAvailableUnits(IAssetManager assetManager, IOptimizerSettings settings);
 
     /// <summary>
     /// Generates schedules for heat production units
     /// </summary>
     /// <param name="heatSources">The available heat production units</param>
     /// <returns>A list of heat production unit schedules</returns>
-    List<HeatProductionUnitSchedule> GenerateHeatProductionUnitSchedules(IEnumerable<IHeatProductionUnit> heatSources);
+    List<HeatProductionUnitSchedule> GenerateHeatProductionUnitSchedules(IEnumerable<HeatProductionUnitBase> heatSources);
 
     /// <summary>
     /// Generates schedules for electricity production units

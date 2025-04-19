@@ -5,7 +5,7 @@ namespace HeatManager.Core.Services.AssetManagers;
 
 public interface IAssetManager
 {
-    public ObservableCollection<HeatProductionUnit> ProductionUnits { get; }
+    public ObservableCollection<HeatProductionUnitBase> ProductionUnits { get; }
 
     public void LoadUnits(string filepath);
 }

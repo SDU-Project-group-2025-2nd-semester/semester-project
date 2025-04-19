@@ -26,7 +26,7 @@ internal class BasicResourceConverter : JsonConverter<Resource>
             throw new JsonException($"Invalid resource type: {name}");
         }
 
-        return new Resource { Name = name };
+        return new Resource(name);
 
     }
 

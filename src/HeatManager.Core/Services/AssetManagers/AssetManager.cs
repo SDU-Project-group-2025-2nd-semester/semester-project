@@ -8,7 +8,7 @@ internal class AssetManager : IAssetManager
 {
     private readonly string DataFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Models", "Producers", "ProductionUnits.json");
 
-    public ObservableCollection<HeatProductionUnit> ProductionUnits { get; set; } = [];
+    public ObservableCollection<HeatProductionUnitBase> ProductionUnits { get; set; } = [];
 
     public AssetManager()
     {
@@ -32,11 +32,11 @@ internal class AssetManager : IAssetManager
 
         var jsonData = JsonSerializer.Deserialize<JsonDataStructure>(json, options) ?? new JsonDataStructure();
 
-        var allUnits = (jsonData.HeatProductionUnits ?? Enumerable.Empty<HeatProductionUnit>())
-            .Concat(jsonData.ElectricityProductionUnits ?? Enumerable.Empty<HeatProductionUnit>())
+        var allUnits = (jsonData.HeatProductionUnits ?? Enumerable.Empty<HeatProductionUnitBase>())
+            .Concat(jsonData.ElectricityProductionUnits ?? Enumerable.Empty<HeatProductionUnitBase>())
             .ToList();
 
-        ProductionUnits = new ObservableCollection<HeatProductionUnit>(allUnits);
+        ProductionUnits = new ObservableCollection<HeatProductionUnitBase>(allUnits);
 
     }
 }

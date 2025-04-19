@@ -1,8 +1,10 @@
 ﻿using HeatManager.Core.Models.Resources;
+using HeatManager.Core.Services.AssetManagers;
+using System.Text.Json.Serialization;
 
 namespace HeatManager.Core.Models.Producers;
 
-public interface IHeatProductionUnit
+public abstract class HeatProductionUnitBase
 {
     public string Name { get; set; }
 
@@ -21,12 +23,13 @@ public interface IHeatProductionUnit
     /// </summary>
     public double ResourceConsumption { get; set; }
 
+    [JsonConverter(typeof(BasicResourceConverter))]
     public Resource Resource { get; set; }
 
     /// <summary>
     /// kg/MWh(th)
     /// </summary>
     public double Emissions { get; set; }
-    
-    public IHeatProductionUnit Clone();
+
+    public HeatProductionUnitBase Clone() => (HeatProductionUnitBase)MemberwiseClone();
 }

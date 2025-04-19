@@ -4,7 +4,7 @@
 ///
 /// Used for parsing of source csv to our data
 /// </summary>
-public class SourceDataPoint : ISourceDataPoint
+public class SourceDataPoint
 {
     // TODO: Possibly change to record
 
