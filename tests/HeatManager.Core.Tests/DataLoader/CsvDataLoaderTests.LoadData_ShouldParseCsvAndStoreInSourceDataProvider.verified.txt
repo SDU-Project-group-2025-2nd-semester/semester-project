@@ -1,0 +1,28 @@
+﻿{
+  DataPoints: [
+    {
+      TimeFrom: DateTime_1,
+      TimeTo: DateTime_2,
+      HeatDemand: 1.79,
+      ElectricityPrice: 752.03
+    },
+    {
+      TimeFrom: DateTime_2,
+      TimeTo: DateTime_3,
+      HeatDemand: 1.85,
+      ElectricityPrice: 691.05
+    },
+    {
+      TimeFrom: DateTime_3,
+      TimeTo: DateTime_4,
+      HeatDemand: 1.76,
+      ElectricityPrice: 674.78
+    },
+    {
+      TimeFrom: DateTime_4,
+      TimeTo: DateTime_5,
+      HeatDemand: 1.67,
+      ElectricityPrice: 652.95
+    }
+  ]
+}

@@ -1,10 +1,12 @@
 ﻿namespace HeatManager.Core.Models.Producers;
 
-internal class ElectricityProductionUnit : HeatProductionUnit, IElectricityProductionUnit
+public class ElectricityProductionUnit : HeatProductionUnitBase
 {
 
     /// <summary>
     /// MW
     /// </summary>
     public double MaxElectricity { get; set; }
+
+    public new ElectricityProductionUnit Clone() => (ElectricityProductionUnit)MemberwiseClone();
 }

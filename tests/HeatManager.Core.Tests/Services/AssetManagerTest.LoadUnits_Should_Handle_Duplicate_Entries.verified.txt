@@ -1,0 +1,20 @@
+﻿[
+  {
+    Name: GB1,
+    Cost: 100.0,
+    MaxHeatProduction: 5.0,
+    Resource: {
+      Name: Gas
+    },
+    Emissions: 50.0
+  },
+  {
+    Name: GB1,
+    Cost: 100.0,
+    MaxHeatProduction: 5.0,
+    Resource: {
+      Name: Gas
+    },
+    Emissions: 50.0
+  }
+]

@@ -1,0 +1,18 @@
+{
+  "HeatProductionUnits": [
+    {
+      "Name": "GB1",
+      "Cost": 100,
+      "MaxHeatProduction": 5,
+      "Resource": "Gas",
+      "Emissions": 50
+    },
+    {
+      "Name": "GB1",
+      "Cost": 100,
+      "MaxHeatProduction": 5,
+      "Resource": "Gas",
+      "Emissions": 50
+    }
+  ]
+}

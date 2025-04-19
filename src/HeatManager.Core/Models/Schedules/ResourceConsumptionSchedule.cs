@@ -1,6 +1,6 @@
 ﻿namespace HeatManager.Core.Models.Schedules;
 
-public interface IResourceConsumptionSchedule
+public class ResourceConsumptionSchedule
 {
     public string Name { get; }
 
