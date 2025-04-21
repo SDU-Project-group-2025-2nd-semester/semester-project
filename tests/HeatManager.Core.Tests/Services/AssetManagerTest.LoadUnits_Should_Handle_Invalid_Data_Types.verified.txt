@@ -26,5 +26,5 @@ at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 utf8Json,
 at System.Text.Json.JsonSerializer.ReadFromSpan[TValue](ReadOnlySpan`1 json, JsonTypeInfo`1 jsonTypeInfo)
 at System.Text.Json.JsonSerializer.Deserialize[TValue](String json, JsonSerializerOptions options)
 at HeatManager.Core.Services.AssetManagers.AssetManager.LoadUnits(String filepath)
-at HeatManager.Core.Tests.Services.AssetManagerTest.<>c__DisplayClass3_0.<LoadUnits_Should_Handle_Invalid_Data_Types>b__0()
+at HeatManager.Core.Tests.Services.AssetManagerTest.<>c__DisplayClass2_0.<LoadUnits_Should_Handle_Invalid_Data_Types>b__0()
 }

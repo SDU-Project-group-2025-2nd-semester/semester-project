@@ -1,5 +1,4 @@
-﻿using System;
-using HeatManager.Core.Models.Projects;
+﻿using HeatManager.Core.Models.Projects;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable

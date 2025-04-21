@@ -1,5 +1,4 @@
 using HeatManager.Core.Services.Optimizers;
-using Xunit;
 
 namespace HeatManager.Core.Tests.Services;
 /*

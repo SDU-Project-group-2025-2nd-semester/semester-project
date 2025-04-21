@@ -1,6 +1,6 @@
 ﻿namespace HeatManager.Core.Models.Producers;
 
-public class ElectricityProductionUnit : HeatProductionUnitBase
+public class ElectricityProductionUnit : ProductionUnitBase
 {
 
     /// <summary>

@@ -1,6 +1,5 @@
 ﻿using HeatManager.Core.Models.Projects;
 using Microsoft.EntityFrameworkCore;
-using System.Resources;
 
 namespace HeatManager.Core.Db;
 

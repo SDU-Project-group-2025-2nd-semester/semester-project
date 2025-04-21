@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace HeatManager.Core.Models.Producers;
 
-public abstract class HeatProductionUnitBase
+public abstract class ProductionUnitBase
 {
     public string Name { get; set; }
 
@@ -31,5 +31,5 @@ public abstract class HeatProductionUnitBase
     /// </summary>
     public double Emissions { get; set; }
 
-    public HeatProductionUnitBase Clone() => (HeatProductionUnitBase)MemberwiseClone();
+    public ProductionUnitBase Clone() => (ProductionUnitBase)MemberwiseClone();
 }

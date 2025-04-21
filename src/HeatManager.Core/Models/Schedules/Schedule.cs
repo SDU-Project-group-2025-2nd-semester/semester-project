@@ -1,7 +1,4 @@
-﻿using Avalonia.Controls;
-using System.Collections.Immutable;
-
-namespace HeatManager.Core.Models.Schedules;
+﻿namespace HeatManager.Core.Models.Schedules;
 
 internal class Schedule
 {

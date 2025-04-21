@@ -7,18 +7,25 @@
     ProductionUnits: [
       {
         Name: Test,
-        Resource: {}
+        Resource: {
+          Name: Oil,
+          Type: Oil
+        }
       }
     ],
     HeatProductionUnits: [
       {
         Name: Test,
-        Resource: {}
+        Resource: {
+          Name: Oil,
+          Type: Oil
+        }
       }
     ],
     Resources: [
       {
-        Name: TestResource
+        Name: Electricity,
+        Type: Electricity
       }
     ],
     SourceData: {

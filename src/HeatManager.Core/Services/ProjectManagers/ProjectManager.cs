@@ -23,9 +23,9 @@ public class ProjectManager(
 
         var projectData = CurrentProject.ProjectData;
 
-        projectData.HeatProductionUnits = assetManager.ProductionUnits.ToList();
+        projectData.HeatProductionUnits = heatSourceManager.HeatSources.ToList();
 
-        projectData.ProductionUnits = heatSourceManager.HeatSources.ToList();
+        projectData.ProductionUnits = assetManager.ProductionUnits.ToList();
 
         projectData.Resources = resourceManager.Resources.ToList();
 
@@ -78,8 +78,8 @@ public class ProjectManager(
 
         var projectData = CurrentProject.ProjectData;
 
-        projectData.HeatProductionUnits.ForEach(assetManager.ProductionUnits.Add);
-        projectData.ProductionUnits.ForEach(heatSourceManager.HeatSources.Add);
+        projectData.HeatProductionUnits.ForEach(heatSourceManager.HeatSources.Add);
+        projectData.ProductionUnits.ForEach(assetManager.ProductionUnits.Add);
         projectData.Resources.ForEach(resourceManager.Resources.Add);
 
         sourceDataProvider.SourceDataCollection = projectData.SourceData;

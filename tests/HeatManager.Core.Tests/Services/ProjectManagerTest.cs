@@ -1,7 +1,4 @@
-﻿using Castle.Components.DictionaryAdapter;
-using Castle.Core.Resource;
-using HeatManager.Core.Models.Producers;
-using HeatManager.Core.Models.Projects;
+﻿using HeatManager.Core.Models.Producers;
 using HeatManager.Core.Models.Resources;
 using HeatManager.Core.Models.SourceData;
 using HeatManager.Core.Services.AssetManagers;
@@ -39,9 +36,9 @@ public class ProjectManagerTest : DatabaseAccess
 
         _sourceDataProvider = _mockSourceDataProvider.Object;
 
-        var testResource = new Resource("TestResource");
+        var testResource = new Resource("Electricity");
 
-        var obs = new ObservableCollection<HeatProductionUnitBase>
+        var obs = new ObservableCollection<ProductionUnitBase>
         {
             new ElectricityProductionUnit
             {
@@ -117,13 +114,13 @@ public class ProjectManagerTest : DatabaseAccess
 
         await projectManager.NewProjectAsync("Test");
 
-        var testResource = new Resource("FirstTestResource");
+        var testResource = new Resource("Oil");
 
         _heatSourceManager.HeatSources.AddRange([new HeatProductionUnit { Name = "Test", Resource = testResource }]);
 
         _assetManager.ProductionUnits.Add(new HeatProductionUnit { Name = "Test", Resource = testResource });
 
-        _resourceManager.Resources.Add(new Resource("TestResource"));
+        _resourceManager.Resources.Add(new Resource("Electricity"));
 
         _sourceDataProvider.SourceDataCollection = new SourceDataCollection([
             new SourceDataPoint()
@@ -150,13 +147,13 @@ public class ProjectManagerTest : DatabaseAccess
 
         await projectManager.NewProjectAsync("Test");
 
-        var testResource = new Resource("FirstTestResource");
+        var testResource = new Resource("Oil");
 
         _heatSourceManager.HeatSources.AddRange([new HeatProductionUnit { Name = "Test", Resource = testResource }]);
 
         _assetManager.ProductionUnits.Add(new HeatProductionUnit { Name = "Test", Resource = testResource });
 
-        _resourceManager.Resources.Add(new Resource("TestResource"));
+        _resourceManager.Resources.Add(new Resource("Electricity"));
 
         _sourceDataProvider.SourceDataCollection = new SourceDataCollection([
             new SourceDataPoint()

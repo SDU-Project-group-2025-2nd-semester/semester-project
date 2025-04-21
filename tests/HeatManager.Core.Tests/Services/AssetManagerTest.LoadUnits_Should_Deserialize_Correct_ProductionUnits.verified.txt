@@ -25,7 +25,8 @@
     MaxHeatProduction: 4.0,
     ResourceConsumption: 1.5,
     Resource: {
-      Name: Oil
+      Name: Oil,
+      Type: Oil
     },
     Emissions: 330.0
   },
@@ -46,7 +47,8 @@
     Cost: 60.0,
     MaxHeatProduction: 6.0,
     Resource: {
-      Name: Electricity
+      Name: Electricity,
+      Type: Electricity
     }
   }
 ]

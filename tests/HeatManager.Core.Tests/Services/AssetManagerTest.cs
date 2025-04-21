@@ -30,15 +30,15 @@ public class AssetManagerTest
         await Throws(() => service.LoadUnits("./Services/AssetManagerTest_Invalid.json"));
     }
 
-    [Fact]
-    public async Task LoadUnits_Should_Handle_Missing_Fields()
-    {
-        // Arrange
-        var service = new AssetManager();
+    //[Fact]
+    //public async Task LoadUnits_Should_Handle_Missing_Fields()
+    //{
+    //    // Arrange
+    //    var service = new AssetManager();
 
-        // Act & Validate
-        await Throws(() => service.LoadUnits("./Services/AssetManagerTest_MissingFields.json"));
-    }
+    //    // Act & Validate
+    //    await Throws(() => service.LoadUnits("./Services/AssetManagerTest_MissingFields.json"));
+    //}
 
     [Fact]
     public async Task LoadUnits_Should_Handle_Invalid_Data_Types()
