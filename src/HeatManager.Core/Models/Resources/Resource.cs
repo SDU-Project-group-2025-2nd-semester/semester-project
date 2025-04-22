@@ -10,11 +10,8 @@ public class Resource(string name)
         "Electricity" => ResourceType.Electricity,
         _ => throw new ArgumentException($"Invalid resource name: {name}")
     };
-}
-
-public enum ResourceType
-{
-    Gas,
-    Oil,
-    Electricity
+    public override string ToString()
+    {
+        return Name;
+    }
 }
