@@ -37,7 +37,7 @@ internal class AssetManager : IAssetManager
             .Concat(jsonData.ElectricityProductionUnits ?? Enumerable.Empty<IHeatProductionUnit>())
             .ToList();
 
-        ProductionUnits = new ObservableCollection<IHeatProductionUnit>(allUnits);
+        ProductionUnits = new ObservableCollection<IHeatProductionUnit>(allUnits); 
 
     }
 }
