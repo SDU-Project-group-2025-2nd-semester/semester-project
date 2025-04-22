@@ -18,17 +18,16 @@ namespace HeatManager.Core.Views
 
             var parser = new CsvDataLoader(sourceDataProvider);
 
-            parser.LoadData("./source-data-csv/summer.csv");
+            parser.LoadData("./source-data-csv/winter.csv");    
 
             var assetManager = new AssetManager();
             
             
             var optimizerSettings = new OptimizerSettings(assetManager.ProductionUnits.Select(u => u.Name).ToList());
             
-            foreach (var optimizerSettingsAllUnit in optimizerSettings.AllUnits)
-            {
-                optimizerSettings.AllUnits[optimizerSettingsAllUnit.Key] = true;
-            }
+            optimizerSettings.SetActive("GB1");
+            optimizerSettings.SetActive("GB2");
+            optimizerSettings.SetActive("OB1");
             
             var optimizer = new DefaultOptimizer( assetManager, sourceDataProvider, optimizerSettings,new OptimizerStrategy(true), new object());
             

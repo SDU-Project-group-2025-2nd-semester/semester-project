@@ -22,4 +22,12 @@ public class OptimizerSettings : IOptimizerSettings
     {
         return AllUnits.Where(x => x.Value).Select(x => x.Key).ToList();
     }
+
+    public void SetActive(string name)
+    {
+        if (AllUnits.ContainsKey(name))
+        {
+            AllUnits[name] = true;
+        }
+    }
 }
