@@ -10,7 +10,7 @@ namespace HeatManager.Core.ViewModels;
 
 internal class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel
 {
-    public ObservableCollection<ISeries> Series = [];
+    public ObservableCollection<ISeries> Series { get; } = [];
     private readonly IOptimizer _optimizer;
 
     public DataOptimizerViewModel(IOptimizer optimizer)
