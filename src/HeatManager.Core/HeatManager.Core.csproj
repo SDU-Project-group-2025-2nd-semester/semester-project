@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-   		<Folder Include="." />
+   		<!--<Folder Include="." />-->
     	<AvaloniaResource Include="Assets\**" />
 		<AvaloniaResource Include="Views\styles.axaml" />
   	</ItemGroup>
@@ -29,7 +29,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="..\HeatManager.Core\Models\Producers\ProductionUnits.json">
+		<None Include=".\Models\Producers\ProductionUnits.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include=".\source-data-csv\winter.csv">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Include=".\source-data-csv\summer.csv">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>

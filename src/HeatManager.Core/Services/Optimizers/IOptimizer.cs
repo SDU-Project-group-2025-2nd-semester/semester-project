@@ -9,7 +9,7 @@ public interface IOptimizer
     /// <summary>
     /// Performs the optimization process
     /// </summary>
-    public void Optimize();
+    public Schedule Optimize();
 
     /// <summary>
     /// Changes the optimization settings

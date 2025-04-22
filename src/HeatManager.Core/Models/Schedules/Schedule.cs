@@ -1,6 +1,6 @@
 ﻿namespace HeatManager.Core.Models.Schedules;
 
-internal class Schedule
+public class Schedule
 {
     public int Length { get; private set; }
     //Main Data

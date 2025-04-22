@@ -1,11 +1,13 @@
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using HeatManager.Core.Services.Optimizers;
+using HeatManager.Core.Services.SourceDataProviders;
 using HeatManager.Core.Views;
 
 namespace HeatManager.Core.ViewModels;
 
-public partial class MainWindowViewModel : ViewModelBase
+public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOptimizer optimizer) : ViewModelBase
 {   
     [ObservableProperty]
     private UserControl? currentView;
@@ -25,13 +27,13 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void SetOptimizerView()
     {
-        CurrentView = new DataOptimizerView { DataContext = new DataOptimizerViewModel() };
+        CurrentView = new DataOptimizerView { DataContext = new DataOptimizerViewModel(optimizer) };
     }
 
     [RelayCommand]
     private void SetGridProductionView()
     {
-        CurrentView = new GridProductionView { DataContext = new GridProductionViewModel() };
+        CurrentView = new GridProductionView { DataContext = new GridProductionViewModel(dataProvider) };
     }
 
     [RelayCommand]
