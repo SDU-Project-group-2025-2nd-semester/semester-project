@@ -1,0 +1,8 @@
+{
+  HeatProductionUnits: [
+    {
+      "Name": "GB1",
+      "Cost": "not_a_number"
+    }
+  ]
+}

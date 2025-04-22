@@ -1,6 +1,6 @@
 namespace HeatManager.Core.Models.Schedules;
 
-internal class HeatProductionUnitSchedule : IHeatProductionUnitSchedule
+public class HeatProductionUnitSchedule
 {
     public string Name { get; }
     public List<IHeatProductionUnitResultDataPoint> DataPoints { get; }

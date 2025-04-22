@@ -1,0 +1,54 @@
+﻿[
+  {
+    Name: GB1,
+    Cost: 520.0,
+    MaxHeatProduction: 4.0,
+    ResourceConsumption: 0.9,
+    Resource: {
+      Name: Gas
+    },
+    Emissions: 175.0
+  },
+  {
+    Name: GB2,
+    Cost: 560.0,
+    MaxHeatProduction: 3.0,
+    ResourceConsumption: 0.7,
+    Resource: {
+      Name: Gas
+    },
+    Emissions: 130.0
+  },
+  {
+    Name: OB1,
+    Cost: 670.0,
+    MaxHeatProduction: 4.0,
+    ResourceConsumption: 1.5,
+    Resource: {
+      Name: Oil,
+      Type: Oil
+    },
+    Emissions: 330.0
+  },
+  {
+    MaxElectricity: 2.6,
+    Name: GM1,
+    Cost: 990.0,
+    MaxHeatProduction: 3.5,
+    ResourceConsumption: 1.8,
+    Resource: {
+      Name: Gas
+    },
+    Emissions: 650.0
+  },
+  {
+    MaxElectricity: -6.0,
+    Name: HP1,
+    Cost: 60.0,
+    MaxHeatProduction: 6.0,
+    Resource: {
+      Name: Electricity,
+      Type: Electricity
+    }
+  }
+]

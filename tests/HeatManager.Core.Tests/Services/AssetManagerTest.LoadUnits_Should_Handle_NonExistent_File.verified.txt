@@ -1,0 +1,7 @@
+﻿{
+  Type: FileNotFoundException,
+  Message: Data file not found at ./Services/Nonexistent.json,
+  StackTrace:
+at HeatManager.Core.Services.AssetManagers.AssetManager.LoadUnits(String filepath)
+at HeatManager.Core.Tests.Services.AssetManagerTest.<>c__DisplayClass4_0.<LoadUnits_Should_Handle_NonExistent_File>b__0()
+}
