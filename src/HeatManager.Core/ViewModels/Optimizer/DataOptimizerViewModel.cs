@@ -35,7 +35,7 @@ internal class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel
             {
                 Values =  unitSchedule.HeatProduction,
                 Name = unitSchedule.Name,
-                Fill = new SolidColorPaint(Colors[i])
+                Fill = new SolidColorPaint(Colors[i % Colors.Length])
             });
         }
     }
