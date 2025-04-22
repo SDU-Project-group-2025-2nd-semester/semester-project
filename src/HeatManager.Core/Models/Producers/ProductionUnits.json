@@ -24,7 +24,7 @@
       "ResourceConsumption": 1.5,
       "Resource": "Oil",
       "Emissions": 330.0
-    },
+    }, 
     {
       "Name": "HP1",
       "Cost": 60.0,

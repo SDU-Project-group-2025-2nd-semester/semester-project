@@ -18,4 +18,17 @@ internal class HeatProductionUnit : IHeatProductionUnit
     public required IBasicResource Resource { get; set; }
 
     public double Emissions { get; set; }
+    
+    public IHeatProductionUnit Clone()
+    {
+        return new HeatProductionUnit
+        {
+            Name = Name,
+            Cost = Cost,
+            MaxHeatProduction = MaxHeatProduction,
+            ResourceConsumption = ResourceConsumption,
+            Resource = Resource,
+            Emissions = Emissions
+        };
+    }
 }

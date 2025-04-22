@@ -2,29 +2,32 @@
 
 public interface IHeatProductionUnitSchedule /*: IHeatProductionUnit*/
 {
-    public double[] Utilization { get; }
-
     public string Name { get; }
-
-    /// <summary>
-    /// DKK/MWh(th)
-    /// </summary>
-    public decimal Cost { get; }
-
-    /// <summary>
-    /// MW
-    /// </summary>
-    public double MaxHeatProduction { get; }
-
-    /// <summary>
-    /// MWh(resource)/MWh(th)
-    /// </summary>
-    public double ResourceConsumption { get; }
-
-    public IResourceConsumptionSchedule ResourceConsumption2 { get; }
-
-    /// <summary>
-    /// kg/MWh(th)
-    /// </summary>
-    public double Emissions { get; }
+    List<IHeatProductionUnitResultDataPoint> DataPoints { get; }
+    //Heat Production
+    double[] HeatProduction { get;  }
+    double TotalHeatProduction { get;  }
+    double MaxHeatProduction { get;  }
+    
+    //Emissions
+    public double[] Emissions { get;  }
+    public double TotalEmissions { get;  }
+    public double MaxEmissions { get;  }
+    
+    //Costs
+    decimal[] Costs { get;  }
+    decimal TotalCost { get;  }
+    decimal MaxCost { get;  }
+    
+    //Resources
+    double[] ResourceConsumption { get;  }
+    double TotalResourceConsumption { get;  }
+    double MaxResourceConsumption { get;  }
+    
+    //Utilization 
+    double[] Utilization { get;  }
+    double TotalUtilization { get;  }
+    double MaxUtilization { get;  }
+    
+    void AddDataPoint(IHeatProductionUnitResultDataPoint dataPoint);
 }
