@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:HeatManager.Core.Views" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:HeatManager.Core.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="HeatManager.Core.Views.OverviewView"
+        x:DataType="vm:OverviewViewModel">
+
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60*" /> 
+            <RowDefinition Height="40*" /> 
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="33*" /> 
+            <ColumnDefinition Width="67*" /> 
+        </Grid.ColumnDefinitions>
+
+        <!-- Red Background -->
+        <local:RedBackground Grid.RowSpan="2" Grid.ColumnSpan="2" />
+
+        <!-- White Background -->
+        <local:WhiteBackground Opacity="0.9" Grid.RowSpan="2" Grid.ColumnSpan="2" />
+
+        <!-- Weekly Statistics Panel -->
+        <local:WeeklyStatistics Grid.Row="0" Grid.Column="0" />
+
+        <!-- Map Panel -->  
+        <local:Map Grid.Row="0" Grid.Column="1" />
+
+        <!-- Production Units Panel 
+        <local:ProductionUnits Grid.Row="1" Grid.ColumnSpan="2" />  -->
+        <Button Command="{Binding NavigateToConfigPanelCommand}" Grid.Row="1" Grid.ColumnSpan="2" 
+                Background="Transparent" BorderBrush="Transparent">
+            <local:ProductionUnits />
+        </Button>
+    </Grid>
+
+</UserControl>

@@ -29,12 +29,10 @@
       "Name": "HP1",
       "Cost": 60.0,
       "MaxHeatProduction": 6.0,
-      "ResourceConsumption": 0.0,
+      "ResourceConsumption": 6.0,
       "Resource": "Electricity",
-      "Emissions": 0.0,
-      "MaxElectricity": -6.0
+      "Emissions": 0.0
     }
-
   ],
   "ElectricityProductionUnits":
   [
