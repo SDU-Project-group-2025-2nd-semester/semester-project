@@ -8,7 +8,13 @@ namespace HeatManager.Core.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {   
     [ObservableProperty]
-    private UserControl ?currentView = new AssetManagerView { DataContext = new AssetManagerViewModel() };
+    private UserControl? currentView;
+
+    public MainWindowViewModel()
+    {
+        // Set the default view to OverviewView
+        CurrentView = new OverviewView { DataContext = new OverviewViewModel(this) };
+    }
 
     [RelayCommand]
     internal void SetConfigPanelView()
