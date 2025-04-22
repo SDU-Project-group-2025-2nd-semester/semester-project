@@ -7,6 +7,7 @@ namespace HeatManager.Core.Views
         public DataOptimizerView()
         {
             InitializeComponent();
+            
         }
     }
 }

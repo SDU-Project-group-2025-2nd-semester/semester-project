@@ -24,7 +24,7 @@ internal class DefaultOptimizer : IOptimizer
         _resultManager = resultManager;
     }
 
-    public void Optimize()
+    public Schedule Optimize()
     {
         //Set up the data
         var scheduledEntries = _sourceDataProvider.SourceDataCollection.DataPoints;
@@ -97,6 +97,7 @@ internal class DefaultOptimizer : IOptimizer
         }
 
         var resultSchedule = new Schedule(heatProductionUnitSchedules, electricityProductionUnitSchedules);
+        return resultSchedule; 
     }
 
     public List<ProductionUnitBase> GetAvailableUnits(IAssetManager assetManager, IOptimizerSettings settings)
