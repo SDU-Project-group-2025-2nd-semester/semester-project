@@ -1,7 +1,6 @@
 ﻿using HeatManager.Core.Db;
 using HeatManager.Core.Models.Projects;
 using HeatManager.Core.Services.AssetManagers;
-using HeatManager.Core.Services.HeatSourceManager;
 using HeatManager.Core.Services.ResourceManagers;
 using HeatManager.Core.Services.SourceDataProviders;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,6 @@ namespace HeatManager.Core.Services.ProjectManagers;
 public class ProjectManager(
     HeatManagerDbContext dbContext, 
     IAssetManager assetManager, 
-    IHeatSourceManager heatSourceManager, 
     IResourceManager resourceManager, 
     ISourceDataProvider sourceDataProvider) : IProjectManager
 {
@@ -23,7 +21,7 @@ public class ProjectManager(
 
         var projectData = CurrentProject.ProjectData;
 
-        projectData.HeatProductionUnits = heatSourceManager.HeatSources.ToList();
+        projectData.HeatProductionUnits = assetManager.HeatProductionUnits.ToList();
 
         projectData.ProductionUnits = assetManager.ProductionUnits.ToList();
 
@@ -73,12 +71,10 @@ public class ProjectManager(
     private Task LoadAsync()
     {
         assetManager.ProductionUnits.Clear();
-        heatSourceManager.HeatSources.Clear();
         resourceManager.Resources.Clear();
 
         var projectData = CurrentProject.ProjectData;
 
-        projectData.HeatProductionUnits.ForEach(heatSourceManager.HeatSources.Add);
         projectData.ProductionUnits.ForEach(assetManager.ProductionUnits.Add);
         projectData.Resources.ForEach(resourceManager.Resources.Add);
 

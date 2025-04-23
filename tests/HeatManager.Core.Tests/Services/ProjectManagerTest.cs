@@ -2,7 +2,6 @@
 using HeatManager.Core.Models.Resources;
 using HeatManager.Core.Models.SourceData;
 using HeatManager.Core.Services.AssetManagers;
-using HeatManager.Core.Services.HeatSourceManager;
 using HeatManager.Core.Services.ProjectManagers;
 using HeatManager.Core.Services.ResourceManagers;
 using HeatManager.Core.Services.SourceDataProviders;
@@ -18,9 +17,6 @@ public class ProjectManagerTest : DatabaseAccess
 {
     private readonly IAssetManager _assetManager;
     private readonly Mock<IAssetManager> _mockAssetManager;
-
-    private readonly IHeatSourceManager _heatSourceManager;
-    private readonly Mock<IHeatSourceManager> _mockHeatSourceManager;
 
     private readonly IResourceManager _resourceManager;
     private readonly Mock<IResourceManager> _mockResourceManager;
@@ -54,21 +50,18 @@ public class ProjectManagerTest : DatabaseAccess
 
         _mockAssetManager = new Mock<IAssetManager>();
 
+        var heatSources = new ObservableCollection<HeatProductionUnit>(); 
         _mockAssetManager
             .Setup(a => a.ProductionUnits)
-            .Returns(obs);
+            .Returns(obs); 
+
+        _mockAssetManager
+            .Setup(a => a.HeatProductionUnits)
+            .Returns(heatSources); 
 
         _assetManager = _mockAssetManager.Object;
 
-        _mockHeatSourceManager = new Mock<IHeatSourceManager>();
 
-        var heatSources = new List<HeatProductionUnit>();
-
-        _mockHeatSourceManager
-            .Setup(h => h.HeatSources)
-            .Returns(heatSources);
-
-        _heatSourceManager = _mockHeatSourceManager.Object;
 
         _mockResourceManager = new Mock<IResourceManager>();
         var resources = new List<Resource> { testResource };
@@ -85,7 +78,7 @@ public class ProjectManagerTest : DatabaseAccess
     public async Task NewProjectAsync_CreatesProjectSuccessfully()
     {
         // Arrange 
-        var projectManager = new ProjectManager(_dbContext, _assetManager, _heatSourceManager, _resourceManager, _sourceDataProvider);
+        var projectManager = new ProjectManager(_dbContext, _assetManager, _resourceManager, _sourceDataProvider);
 
         // Act
         await projectManager.NewProjectAsync("Test");
@@ -95,9 +88,7 @@ public class ProjectManagerTest : DatabaseAccess
         projectManager.CurrentProject.ShouldNotBeNull();
 
         _mockAssetManager.Verify(a => a.ProductionUnits, Times.Exactly(2));
-
-        _mockHeatSourceManager.Verify(h => h.HeatSources, Times.Exactly(2));
-
+        
         _mockResourceManager.Verify(r => r.Resources, Times.Exactly(2));
 
         _mockSourceDataProvider.VerifySet(s => s.SourceDataCollection = It.IsAny<SourceDataCollection>(), Times.Once);
@@ -110,14 +101,13 @@ public class ProjectManagerTest : DatabaseAccess
     public async Task SaveProjectAsync_SavesProjectSuccessfully()
     {
         // Arrange 
-        var projectManager = new ProjectManager(_dbContext, _assetManager, _heatSourceManager, _resourceManager, _sourceDataProvider);
+        var projectManager = new ProjectManager(_dbContext, _assetManager, _resourceManager, _sourceDataProvider);
 
         await projectManager.NewProjectAsync("Test");
 
         var testResource = new Resource("Oil");
-
-        _heatSourceManager.HeatSources.AddRange([new HeatProductionUnit { Name = "Test", Resource = testResource }]);
-
+        
+        _assetManager.HeatProductionUnits.Add(new HeatProductionUnit { Name = "Test", Resource = testResource });
         _assetManager.ProductionUnits.Add(new HeatProductionUnit { Name = "Test", Resource = testResource });
 
         _resourceManager.Resources.Add(new Resource("Electricity"));
@@ -143,14 +133,13 @@ public class ProjectManagerTest : DatabaseAccess
     public async Task LoadProjectAsync_LoadsSuccessfully()
     {
         // Arrange 
-        var projectManager = new ProjectManager(_dbContext, _assetManager, _heatSourceManager, _resourceManager, _sourceDataProvider);
+        var projectManager = new ProjectManager(_dbContext, _assetManager, _resourceManager, _sourceDataProvider);
 
         await projectManager.NewProjectAsync("Test");
 
         var testResource = new Resource("Oil");
-
-        _heatSourceManager.HeatSources.AddRange([new HeatProductionUnit { Name = "Test", Resource = testResource }]);
-
+            
+        _assetManager.HeatProductionUnits.Add(new HeatProductionUnit { Name = "Test", Resource = testResource });
         _assetManager.ProductionUnits.Add(new HeatProductionUnit { Name = "Test", Resource = testResource });
 
         _resourceManager.Resources.Add(new Resource("Electricity"));
@@ -183,7 +172,7 @@ public class ProjectManagerTest : DatabaseAccess
     public async Task GetProjects_ShouldReturnCorrectProjects()
     {
         // Arrange 
-        var projectManager = new ProjectManager(_dbContext, _assetManager, _heatSourceManager, _resourceManager, _sourceDataProvider);
+        var projectManager = new ProjectManager(_dbContext, _assetManager, _resourceManager, _sourceDataProvider);
 
         await projectManager.NewProjectAsync("Test1");
 

@@ -9,6 +9,15 @@ internal class AssetManager : IAssetManager
     private readonly string DataFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Models", "Producers", "ProductionUnits.json");
 
     public ObservableCollection<ProductionUnitBase> ProductionUnits { get; set; } = [];
+    // This is just for parity, as the ProjectManager requires it.
+    // Created after removing HeatSourceManager
+    public ObservableCollection<HeatProductionUnit> HeatProductionUnits
+    {
+        get
+        {
+            return new ObservableCollection<HeatProductionUnit>(ProductionUnits.OfType<HeatProductionUnit>());
+        }
+    }
 
     public AssetManager()
     {
