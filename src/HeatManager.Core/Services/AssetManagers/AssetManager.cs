@@ -11,13 +11,8 @@ internal class AssetManager : IAssetManager
     public ObservableCollection<ProductionUnitBase> ProductionUnits { get; set; } = [];
     // This is just for parity, as the ProjectManager requires it.
     // Created after removing HeatSourceManager
-    public ObservableCollection<HeatProductionUnit> HeatProductionUnits
-    {
-        get
-        {
-            return new ObservableCollection<HeatProductionUnit>(ProductionUnits.OfType<HeatProductionUnit>());
-        }
-    }
+    public ObservableCollection<HeatProductionUnit> HeatProductionUnits =>
+        new(ProductionUnits.OfType<HeatProductionUnit>()); 
 
     public AssetManager()
     {
