@@ -7,7 +7,7 @@ namespace HeatManager.Core.Models.Projects;
 public class ProjectData
 {
     public List<ProductionUnitBase> ProductionUnits { get; set; } = [];
-    public List<HeatProductionUnit> HeatProductionUnits { get; set; } = [];
+    //public List<HeatProductionUnit> HeatProductionUnits { get; set; } = [];
     public List<Resource> Resources { get; set; } = [];
     public SourceDataCollection? SourceData { get; set; }
 }
