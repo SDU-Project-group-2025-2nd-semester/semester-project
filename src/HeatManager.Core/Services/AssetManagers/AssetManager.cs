@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace HeatManager.Core.Services.AssetManagers;
 
-internal class AssetManager : IAssetManager
+public class AssetManager : IAssetManager
 {
     private readonly string DataFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Models", "Producers", "ProductionUnits.json");
 

@@ -7,6 +7,17 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
+  <ItemGroup>
+    <AvaloniaXaml Remove="Views\styles.axaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\city-map.jpg" />
+    <AvaloniaResource Include="Assets\Icons\circle-check-solid.png" />
+    <AvaloniaResource Include="Assets\Icons\circle-exclamation-solid.png" />
+    <AvaloniaResource Include="Assets\Icons\circle-xmark-solid.png" />
+    <AvaloniaResource Include="Assets\units.png" />
+    <AvaloniaResource Include="Views\styles.axaml" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.2.7" />

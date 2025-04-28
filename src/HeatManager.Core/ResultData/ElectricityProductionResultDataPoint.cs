@@ -1,4 +1,4 @@
-namespace HeatManager.Core.Models.Schedules;
+namespace HeatManager.Core.ResultData;
 
 public class ElectricityProductionResultDataPoint : IElectricityProductionResultDataPoint
 {

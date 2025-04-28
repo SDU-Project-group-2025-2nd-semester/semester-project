@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:overview="clr-namespace:HeatManager.ViewModels.Overview"
+             x:Class="HeatManager.Views.Overview.WeeklyStatistics"
+             x:DataType="overview:WeeklyStatisticsViewModel"> 
+
+    <UserControl.Styles>
+        <StyleInclude Source="/Views/styles.axaml" />
+    </UserControl.Styles>
+
+    <!-- Border for background and rounded edges -->
+    <Border Background="White" CornerRadius="15" Padding="10" Margin="10">
+        <StackPanel>
+            <TextBlock Text="Weekly Statistics" Classes="heading" HorizontalAlignment="Left" Margin="10"/>
+
+            <StackPanel Margin="40,0,0,0">
+                <TextBlock Text="Heat demand" Classes="subheading" />
+                <TextBlock Text="{Binding HeatDemand, StringFormat='{}{0} MWh'}" Classes="normaltext" />
+                
+                <TextBlock Text="Maximum electricity production" Classes="subheading" />
+                <TextBlock Text="{Binding MaxProduction, StringFormat='{}+{0} MWh'}" Classes="normaltext" />
+
+                <TextBlock Text="Peak electricity consumption" Classes="subheading" />
+                <TextBlock Text="{Binding PeakConsumption, StringFormat='{}-{0} MWh'}" Classes="normaltext" />
+
+                <TextBlock Text="Expenses" Classes="subheading" />
+                <TextBlock Text="{Binding Expenses, StringFormat='{}{0} DKK'}" Classes="normaltext" />
+
+                <TextBlock Text="Profit" Classes="subheading" />
+                <TextBlock Text="{Binding Profit, StringFormat='{}{0} DKK'}" Classes="normaltext" />                                        
+            </StackPanel>            
+        </StackPanel>
+    </Border>
+</UserControl>

@@ -1,7 +1,8 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using HeatManager.Core.Views;
+using MainWindow = HeatManager.Views.MainWindow;
+
 namespace HeatManager
 {
     public partial class App : Application

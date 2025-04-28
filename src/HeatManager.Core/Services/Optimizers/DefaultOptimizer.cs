@@ -1,12 +1,13 @@
 using HeatManager.Core.Models.Producers;
 using HeatManager.Core.Models.Schedules;
 using HeatManager.Core.Models.SourceData;
+using HeatManager.Core.ResultData;
 using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.SourceDataProviders;
 
 namespace HeatManager.Core.Services.Optimizers;
 
-internal class DefaultOptimizer : IOptimizer
+public class DefaultOptimizer : IOptimizer
 {
     private readonly IAssetManager _assetManager;
     private readonly ISourceDataProvider _sourceDataProvider;
