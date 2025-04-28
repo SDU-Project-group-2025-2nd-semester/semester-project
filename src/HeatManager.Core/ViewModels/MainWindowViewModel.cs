@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.Services.SourceDataProviders;
 using HeatManager.Core.Views;
+// ReSharper disable InconsistentNaming
 
 namespace HeatManager.Core.ViewModels;
 
@@ -11,12 +12,13 @@ public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOpti
 {   
     [ObservableProperty]
     private UserControl? currentView;
+    
+    // public MainWindowViewModel() : this(default, default)
+    // {
+    //     // Set the default view to OverviewView
+    //     CurrentView = new OverviewView { DataContext = new OverviewViewModel(this) };
+    // }
 
-    public MainWindowViewModel()
-    {
-        // Set the default view to OverviewView
-        CurrentView = new OverviewView { DataContext = new OverviewViewModel(this) };
-    }
 
     [RelayCommand]
     internal void SetConfigPanelView()
