@@ -21,7 +21,7 @@ public class ProjectManager(
 
         var projectData = CurrentProject.ProjectData;
 
-        projectData.HeatProductionUnits = assetManager.HeatProductionUnits.ToList();
+        //projectData.HeatProductionUnits = assetManager.HeatProductionUnits.ToList();
 
         projectData.ProductionUnits = assetManager.ProductionUnits.ToList();
 

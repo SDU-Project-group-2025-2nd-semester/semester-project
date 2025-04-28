@@ -4,7 +4,6 @@ using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.Services.ProjectManagers;
 using HeatManager.Core.Services.ResourceManagers;
 using HeatManager.Core.Services.SourceDataProviders;
-using HeatManager.Core.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,14 +13,6 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddCommonServices(this IServiceCollection services)
     {
-        #region Views
-
-        services
-            .AddSingleton<IAssetManagerViewModel, AssetManagerViewModel>()
-            .AddSingleton<IDataOptimizerViewModel, DataOptimizerViewModel>();
-
-        #endregion
-
         #region Services
 
         services

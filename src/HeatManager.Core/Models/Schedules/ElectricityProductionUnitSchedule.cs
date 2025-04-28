@@ -1,3 +1,5 @@
+using HeatManager.Core.ResultData;
+
 namespace HeatManager.Core.Models.Schedules;
 
 public class ElectricityProductionUnitSchedule
