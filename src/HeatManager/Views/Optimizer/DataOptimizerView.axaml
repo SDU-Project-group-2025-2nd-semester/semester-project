@@ -8,7 +8,37 @@
         x:Class="HeatManager.Views.Optimizer.DataOptimizerView"
         x:DataType="optimizer:DataOptimizerViewModel">
         
-    <Grid>
-        <avalonia:CartesianChart Series="{Binding Series}" />
-    </Grid>
+    <Grid RowDefinitions="Auto,*">
+
+		<StackPanel Orientation="Horizontal" Margin="10" Grid.Row="0">
+
+			<StackPanel Orientation="Vertical">
+
+				<TextBlock Text="Select Minimum Date:"/>
+				<DatePicker SelectedDate="{Binding SelectedMinDate}" />
+
+				<TextBlock Text="Select Minimum Time:" Margin="0,10,0,0"/>
+				<TimePicker SelectedTime="{Binding SelectedMinTimeOfDay}" />
+				
+			</StackPanel>
+
+			<StackPanel Orientation="Vertical">
+
+				<TextBlock Text="Select Maximum Date:" Margin="0,20,0,0"/>
+				<DatePicker SelectedDate="{Binding SelectedMaxDate}" />
+
+				<TextBlock Text="Select Maximum Time:" Margin="0,10,0,0"/>
+				<TimePicker SelectedTime="{Binding SelectedMaxTimeOfDay}" />
+
+			</StackPanel>
+
+		</StackPanel>
+
+		<avalonia:CartesianChart
+                Series="{Binding Series}"
+                XAxes="{Binding XAxes}"
+                YAxes="{Binding YAxes}"
+				Grid.Row="1"/>
+
+	</Grid>
 </UserControl>
