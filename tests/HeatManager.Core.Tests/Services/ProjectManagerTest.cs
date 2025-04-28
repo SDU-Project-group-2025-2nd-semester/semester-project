@@ -107,7 +107,6 @@ public class ProjectManagerTest : DatabaseAccess
 
         var testResource = new Resource("Oil");
         
-        _assetManager.HeatProductionUnits.Add(new HeatProductionUnit { Name = "Test", Resource = testResource });
         _assetManager.ProductionUnits.Add(new HeatProductionUnit { Name = "Test", Resource = testResource });
 
         _resourceManager.Resources.Add(new Resource("Electricity"));
