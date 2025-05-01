@@ -7,8 +7,33 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="HeatManager.Views.Optimizer.DataOptimizerView"
         x:DataType="optimizer:DataOptimizerViewModel">
-        
-    <Grid>
-        <avalonia:CartesianChart Series="{Binding Series}" />
-    </Grid>
+
+	<Grid RowDefinitions="Auto,*">
+
+		<!-- Toggle Button -->
+		<Button Content="Toggle View"
+                Margin="10"
+                Click="ToggleView_Click" />
+
+		<!-- Main Content -->
+		<Grid Grid.Row="1">
+			<!-- Chart View -->
+			<avalonia:CartesianChart IsVisible="{Binding IsChartVisible}" Series="{Binding Series}" />
+
+			<!-- Data Table View -->
+			<DataGrid IsVisible="{Binding IsTableVisible}"
+                      Margin="20"
+                      ItemsSource="{Binding TableData}"
+                      IsReadOnly="True"
+                      GridLinesVisibility="All">
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="Unit Name" Binding="{Binding Name}" />
+					<DataGridTextColumn Header="Total Heat Production [MW]" Binding="{Binding HeatProduction}" />
+					<DataGridTextColumn Header="Total Cost [DKK/ MWh(th)]" Binding="{Binding Cost}" />
+					<DataGridTextColumn Header="Total Emissions [kg/ MWh(th)]" Binding="{Binding Emissions}" />
+				</DataGrid.Columns>
+			</DataGrid>
+		</Grid>
+
+	</Grid>
 </UserControl>
