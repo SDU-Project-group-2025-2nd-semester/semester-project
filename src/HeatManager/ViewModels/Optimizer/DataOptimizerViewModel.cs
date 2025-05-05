@@ -12,13 +12,14 @@ namespace HeatManager.ViewModels.Optimizer;
 
 internal class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel, INotifyPropertyChanged
 {
-    public ObservableCollection<ISeries> Series { get; } = new ObservableCollection<ISeries>();
-    public ObservableCollection<ScheduleData> TableData { get; } = new ObservableCollection<ScheduleData>();  // Data for the table
+    public ObservableCollection<ISeries> Series { get; } = new();
+    public ObservableCollection<ScheduleData> TableData { get; } = new();
 
     private readonly IOptimizer _optimizer;
 
     private bool _isChartVisible = true; // Default to chart view
-    private bool _isTableVisible = false;  
+    private bool _isTableVisible = false;
+
     public bool IsChartVisible
     {
         get => _isChartVisible;
@@ -26,6 +27,7 @@ internal class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel, 
         {
             if (SetProperty(ref _isChartVisible, value))
             {
+                // Toggle table visibility based on chart view
                 IsTableVisible = !value;
             }
         }
@@ -42,14 +44,8 @@ internal class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel, 
 
     public void ToggleView()
     {
-        if (IsChartVisible)
-        {
-            IsChartVisible = false;
-        }
-        else
-        {
-            IsChartVisible = true;
-        }
+        // Switch between chart and table view
+        IsChartVisible = !IsChartVisible;
     }
 
     public DataOptimizerViewModel(IOptimizer optimizer)
@@ -60,68 +56,63 @@ internal class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel, 
 
     public void OptimizeData()
     {
-        Console.WriteLine("Optimizing data...");
         var schedule = _optimizer.Optimize();
         var schedules = schedule.HeatProductionUnitSchedules.ToList();
 
-        for (int i = 0; i < schedules.Count; i++)
-        {
-            var unitSchedule = schedules[i];
+        Series.Clear();
+        TableData.Clear();
 
-            // Add series for chart
+        foreach (var unitSchedule in schedules)
+        {
+            // Add data to chart
             Series.Add(new StackedColumnSeries<double>
             {
                 Values = unitSchedule.HeatProduction,
                 Name = unitSchedule.Name,
-                Fill = new SolidColorPaint(Colors[i % Colors.Length])
+                Fill = new SolidColorPaint(Colors[schedules.IndexOf(unitSchedule) % Colors.Length])
             });
-            
 
+            // Add data to table
             TableData.Add(new ScheduleData
             {
                 Name = unitSchedule.Name,
-                HeatProduction = Convert.ToDecimal(unitSchedule.TotalHeatProduction),
-                Cost = unitSchedule.TotalCost,
-                Emissions = Convert.ToDecimal(unitSchedule.TotalEmissions)
-
+                HeatProduction = Math.Round(Convert.ToDecimal(unitSchedule.TotalHeatProduction), 3),
+                MaxHeatProduction = Math.Round(Convert.ToDecimal(unitSchedule.MaxHeatProduction), 3),
+                Emissions = Math.Round(Convert.ToDecimal(unitSchedule.TotalEmissions), 3),
+                MaxEmissions = Math.Round(Convert.ToDecimal(unitSchedule.MaxEmissions), 3),
+                Cost = Math.Round(unitSchedule.TotalCost, 2),
+                MaxCost = Math.Round(unitSchedule.MaxCost, 2),
+                ResourceConsumption = Math.Round(Convert.ToDecimal(unitSchedule.TotalResourceConsumption), 3),
+                MaxResourceConsumption = Math.Round(Convert.ToDecimal(unitSchedule.MaxResourceConsumption), 3),
+                Utilization = Math.Round(Convert.ToDecimal(unitSchedule.TotalUtilization), 3),
+                MaxUtilization = Math.Round(Convert.ToDecimal(unitSchedule.MaxUtilization), 3)
             });
-
         }
     }
 
+    // Chart color palette
     public static readonly SKColor[] Colors = new[]
     {
-            SKColors.Red,
-            SKColors.Green,
-            SKColors.Blue,
-            SKColors.Yellow,
-            SKColors.Orange,
-            SKColors.Purple,
-            SKColors.Pink,
-            SKColors.Brown,
-            SKColors.Gray,
-            SKColors.Black,
-            SKColors.White,
-            SKColors.Cyan,
-            SKColors.Magenta,
-            SKColors.Lime,
-            SKColors.Teal,
-            SKColors.Navy,
-            SKColors.Olive,
-            SKColors.Maroon,
-            SKColors.Aqua,
-            SKColors.Silver,
-            SKColors.Gold
-        };
+        SKColors.Red, SKColors.Green, SKColors.Blue, SKColors.Yellow, SKColors.Orange,
+        SKColors.Purple, SKColors.Pink, SKColors.Brown, SKColors.Gray, SKColors.Black,
+        SKColors.White, SKColors.Cyan, SKColors.Magenta, SKColors.Lime, SKColors.Teal,
+        SKColors.Navy, SKColors.Olive, SKColors.Maroon, SKColors.Aqua, SKColors.Silver,
+        SKColors.Gold
+    };
 }
 
-
-
+// ViewModel table row representation
 public class ScheduleData
 {
     public string Name { get; set; }
     public decimal HeatProduction { get; set; }
-    public decimal Cost { get; set; }
+    public decimal MaxHeatProduction { get; set; }
     public decimal Emissions { get; set; }
+    public decimal MaxEmissions { get; set; }
+    public decimal Cost { get; set; }
+    public decimal MaxCost { get; set; }
+    public decimal ResourceConsumption { get; set; }
+    public decimal MaxResourceConsumption { get; set; }
+    public decimal Utilization { get; set; }
+    public decimal MaxUtilization { get; set; }
 }
-

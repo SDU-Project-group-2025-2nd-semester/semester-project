@@ -11,7 +11,7 @@
 	<Grid RowDefinitions="Auto,*">
 
 		<!-- Toggle Button -->
-		<Button Content="Toggle View"
+		<Button Content="Switch View"
                 Margin="10"
                 Click="ToggleView_Click" />
 
@@ -21,18 +21,67 @@
 			<avalonia:CartesianChart IsVisible="{Binding IsChartVisible}" Series="{Binding Series}" />
 
 			<!-- Data Table View -->
+			<StackPanel Margin="20">
+			<TextBlock Text="Total Values" FontWeight="Bold" IsVisible="{Binding IsTableVisible}" />
 			<DataGrid IsVisible="{Binding IsTableVisible}"
                       Margin="20"
                       ItemsSource="{Binding TableData}"
                       IsReadOnly="True"
                       GridLinesVisibility="All">
 				<DataGrid.Columns>
-					<DataGridTextColumn Header="Unit Name" Binding="{Binding Name}" />
-					<DataGridTextColumn Header="Total Heat Production [MW]" Binding="{Binding HeatProduction}" />
-					<DataGridTextColumn Header="Total Cost [DKK/ MWh(th)]" Binding="{Binding Cost}" />
-					<DataGridTextColumn Header="Total Emissions [kg/ MWh(th)]" Binding="{Binding Emissions}" />
+					<DataGridTextColumn Header="Unit" Binding="{Binding Name}" />
+
+					<!-- Heat Production -->
+					<DataGridTextColumn Header="Heat Production [MW]" Binding="{Binding HeatProduction}" />
+
+					<!-- Emissions -->
+					<DataGridTextColumn Header="Emissions [kg/MWh(th)]" Binding="{Binding Emissions}" />
+
+					<!-- Cost -->
+					<DataGridTextColumn Header="Cost [DKK/MWh(th)]" Binding="{Binding Cost}" />
+
+					<!-- Resource Consumption -->
+					<DataGridTextColumn Header="Resource Consumption [MWh/MWh(th)]" Binding="{Binding ResourceConsumption}" />
+
+					<!-- Utilization -->
+					<DataGridTextColumn Header="Utilization [%]" Binding="{Binding Utilization}" />
+
+					
 				</DataGrid.Columns>
+
 			</DataGrid>
+
+
+			<TextBlock Text="Maximum Values" FontWeight="Bold" IsVisible="{Binding IsTableVisible}" />
+			<DataGrid IsVisible="{Binding IsTableVisible}"
+                      Margin="20"
+                      ItemsSource="{Binding TableData}"
+                      IsReadOnly="True"
+                      GridLinesVisibility="All">
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="Unit" Binding="{Binding Name}" />
+
+					<!-- Heat Production -->
+					<DataGridTextColumn Header="Heat Production [MW]" Binding="{Binding MaxHeatProduction}" />
+
+					<!-- Emissions -->
+					<DataGridTextColumn Header="Emissions [kg/MWh(th)]" Binding="{Binding MaxEmissions}" />
+
+					<!-- Cost -->
+					<DataGridTextColumn Header="Cost [DKK/MWh(th)]" Binding="{Binding MaxCost}" />
+
+					<!-- Resource Consumption -->
+					<DataGridTextColumn Header="Resource Consumption [MWh/MWh(th)]" Binding="{Binding MaxResourceConsumption}" />
+
+					<!-- Utilization -->
+					<DataGridTextColumn Header="Utilization [%]" Binding="{Binding MaxUtilization}" />
+
+
+				</DataGrid.Columns>
+
+			</DataGrid>
+			</StackPanel>
+			
 		</Grid>
 
 	</Grid>
