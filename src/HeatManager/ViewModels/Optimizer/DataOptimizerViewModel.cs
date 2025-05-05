@@ -1,232 +1,223 @@
-﻿using HeatManager.Core.ResultData;
-using HeatManager.Core.Services.Optimizers;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
+using LiveChartsCore.Defaults;
+using LiveChartsCore.Kernel.Events;
+using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+using HeatManager.Core.ResultData;
+using HeatManager.Core.Services.Optimizers;
 
 namespace HeatManager.ViewModels.Optimizer;
 
-internal class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel
+public partial class DataOptimizerViewModel : ViewModelBase, INotifyPropertyChanged
 {
-    public ObservableCollection<ISeries> Series { get; } = [];
-    public List<Axis> XAxes { get; private set; } = [];
-    public List<Axis> YAxes { get; private set; } = [];
-
     private readonly IOptimizer _optimizer;
-
-    private DateTimeOffset? _selectedMinTime;
-    public DateTimeOffset? SelectedMinTime
-    {
-        get => _selectedMinTime;
-        set
-        {
-            _selectedMinTime = value;
-            OptimizeData(); // reoptimize whenever time selection changes
-        }
-    }
-
-    private DateTimeOffset? _selectedMaxTime;
-    public DateTimeOffset? SelectedMaxTime
-    {
-        get => _selectedMaxTime;
-        set
-        {
-            _selectedMaxTime = value;
-            OptimizeData(); // reoptimize whenever time selection changes
-        }
-    }
-
-    private DateTimeOffset? _selectedMinDate;
-    public DateTimeOffset? SelectedMinDate
-    {
-        get => _selectedMinDate;
-        set
-        {
-            if (SetProperty(ref _selectedMinDate, value))
-                UpdateSelectedMinTime();
-        }
-    }
-
-    private TimeSpan? _selectedMinTimeOfDay;
-    public TimeSpan? SelectedMinTimeOfDay
-    {
-        get => _selectedMinTimeOfDay;
-        set
-        {
-            if (SetProperty(ref _selectedMinTimeOfDay, value))
-                UpdateSelectedMinTime();
-        }
-    }
-
-    // Same for Max
-    private DateTimeOffset? _selectedMaxDate;
-    public DateTimeOffset? SelectedMaxDate
-    {
-        get => _selectedMaxDate;
-        set
-        {
-            if (SetProperty(ref _selectedMaxDate, value))
-                UpdateSelectedMaxTime();
-        }
-    }
-
-    private TimeSpan? _selectedMaxTimeOfDay;
-    public TimeSpan? SelectedMaxTimeOfDay
-    {
-        get => _selectedMaxTimeOfDay;
-        set
-        {
-            if (SetProperty(ref _selectedMaxTimeOfDay, value))
-                UpdateSelectedMaxTime();
-        }
-    }
-
-    // Combine them
-    private void UpdateSelectedMinTime()
-    {
-        if (SelectedMinDate.HasValue && SelectedMinTimeOfDay.HasValue)
-        {
-            SelectedMinTime = SelectedMinDate.Value.Date + SelectedMinTimeOfDay.Value;
-        }
-        else
-        {
-            SelectedMinTime = null;
-        }
-    }
-
-    private void UpdateSelectedMaxTime()
-    {
-        if (SelectedMaxDate.HasValue && SelectedMaxTimeOfDay.HasValue)
-        {
-            SelectedMaxTime = SelectedMaxDate.Value.Date + SelectedMaxTimeOfDay.Value;
-        }
-        else
-        {
-            SelectedMaxTime = null;
-        }
-    }
-
-
+    private readonly ObservableCollection<ObservablePoint> _values = new();
+    private DateTimeOffset? _selectedDate;
+    private string? _lastLabel;
 
     public DataOptimizerViewModel(IOptimizer optimizer)
     {
         _optimizer = optimizer;
-
-        OptimizeData();
+        OptimizeData(); // Initialize chart data
     }
 
-    public void OptimizeData()
+    // Currently selected date in the UI
+    public DateTimeOffset? SelectedDate
+    {
+        get => _selectedDate;
+        set
+        {
+            SetProperty(ref _selectedDate, value);
+            OnDateSelected();
+        }
+    }
+
+    // Earliest and latest available dates in the dataset
+    public DateTimeOffset? MinDate { get; private set; }
+    public DateTimeOffset? MaxDate { get; private set; }
+
+    // Displays the available date range in the UI
+    public string DateRangeText =>
+        (MinDate.HasValue && MaxDate.HasValue)
+            ? $"Available data: {MinDate.Value:dd MMM yyyy} - {MaxDate.Value:dd MMM yyyy}"
+            : "No data range available";
+
+    public ObservableCollection<ISeries> Series { get; } = new();
+    public List<Axis> XAxes { get; private set; } = new();
+    public List<Axis> YAxes { get; private set; } = new();
+    public Margin Margin { get; set; }
+
+
+    [RelayCommand]
+    public void ChartUpdated(ChartCommandArgs args)
+    {
+        var cartesianChart = (ICartesianChartView)args.Chart;
+    }
+
+    // Runs optimization and populates chart data and axes
+    private void OptimizeData()
     {
         var schedule = _optimizer.Optimize();
         var schedules = schedule.HeatProductionUnitSchedules.ToList();
 
         Series.Clear();
+        _values.Clear();
 
+        // Gather all time points from all unit schedules
         var timeslots = new List<IHeatProductionUnitResultDataPoint>();
-
         foreach (var unitSchedule in schedules)
         {
             timeslots.AddRange(unitSchedule.DataPoints);
         }
 
-        // Build a list of unique sorted times
+        // Extract unique, sorted time values
         var orderedTimes = timeslots
             .Select(t => t.TimeFrom)
             .Distinct()
             .OrderBy(t => t)
             .ToList();
 
-        var filteredTimes = orderedTimes.AsEnumerable();
+        // Set available date range
+        if (orderedTimes.Any())
+        {
+            MinDate = new DateTimeOffset(orderedTimes.First());
+            MaxDate = new DateTimeOffset(orderedTimes.Last());
+        }
 
-        if (SelectedMinTime.HasValue)
-            filteredTimes = filteredTimes.Where(t => t >= SelectedMinTime.Value.DateTime);
+        // Map time points to index values for chart X-axis
+        var timeIndexMap = orderedTimes
+            .Select((time, index) => new { time, index })
+            .ToDictionary(x => x.time, x => (double)x.index);
 
-        if (SelectedMaxTime.HasValue)
-            filteredTimes = filteredTimes.Where(t => t <= SelectedMaxTime.Value.DateTime);
+        int i = 0;
+        foreach (var unitSchedule in schedules)
+        {
+            i++;
+            Series.Add(new StackedColumnSeries<double>
+            {
+                Values = unitSchedule.HeatProduction,
+                Name = unitSchedule.Name,
+                Fill = new SolidColorPaint(Colors[i])
+            });
+        }
 
-        var filteredTimeslots = timeslots
-            .Where(dp =>
-                (!SelectedMinTime.HasValue || dp.TimeFrom >= SelectedMinTime.Value) &&
-                (!SelectedMaxTime.HasValue || dp.TimeFrom <= SelectedMaxTime.Value))
-            .ToList();
+        // Define dynamic X-axis with formatted labels and scroll range
+        XAxes = new List<Axis>
+        {
+            new Axis
+            {
+                MinLimit = 0,
+                MaxLimit = orderedTimes.Count > 0 ? orderedTimes.Count - 1 : 0,
+                Labeler = value =>
+                {
+                    int index = (int)Math.Round(value);
+                    if (index >= 0 && index < orderedTimes.Count)
+                    {
+                        var dateAxis = XAxes.FirstOrDefault();
+                        var visibleRange = dateAxis?.MaxLimit - dateAxis?.MinLimit;
+                        var t = orderedTimes[index];
 
-        orderedTimes = filteredTimeslots
+                        string currentLabel = visibleRange > 45
+                            ? t.ToString("dd/MM/yy")
+                            : t.ToString("HH:mm dd/MM/yy");
+
+                        // Avoid repeating the same date label when zoomed out
+                        if (visibleRange > 45)
+                        {
+                            if (currentLabel == _lastLabel)
+                                return string.Empty;
+
+                            _lastLabel = currentLabel;
+                        }
+
+                        return currentLabel;
+                    }
+
+                    return string.Empty;
+                }
+            }
+        };
+
+        // Y-axis configuration
+        YAxes = new List<Axis>
+        {
+            new Axis
+            {
+                Name = "Heat Production [ MW ]"
+            }
+        };
+
+        // Apply chart margin for layout alignment
+        Margin = new Margin(100, Margin.Auto, 50, Margin.Auto);
+
+        // Set initial selected date
+        SelectedDate = MinDate;
+    }
+
+    // Triggered when a new date is selected
+    private void OnDateSelected()
+    {
+        if (SelectedDate.HasValue)
+        {
+            SetXMinLimit();
+        }
+    }
+
+    // Scrolls X-axis to the index corresponding to the selected date
+    private void SetXMinLimit()
+    {
+        var orderedTimes = _optimizer.Optimize().HeatProductionUnitSchedules
+            .SelectMany(unitSchedule => unitSchedule.DataPoints)
             .Select(t => t.TimeFrom)
             .Distinct()
             .OrderBy(t => t)
             .ToList();
 
+        var index = orderedTimes.FindIndex(t => t >= SelectedDate.Value.DateTime);
 
-        // Create a dictionary to map times to indexes
-        var timeIndexMap = orderedTimes
-            .Select((time, index) => new { time, index })
-            .ToDictionary(x => x.time, x => (double)x.index);
-
-        for (int i = 0; i < schedules.Count; i++)
+        if (index != -1)
         {
-            var unitSchedule = schedules[i];
-
-            var filteredDataPoints = unitSchedule.DataPoints
-                .Where(dp =>
-                    (!SelectedMinTime.HasValue || dp.TimeFrom >= SelectedMinTime.Value) &&
-                    (!SelectedMaxTime.HasValue || dp.TimeFrom <= SelectedMaxTime.Value))
-                .OrderBy(dp => dp.TimeFrom)
-                .ToList();
-
-            var values = orderedTimes
-                .Select(time =>
-                {
-                    var dataPoint = filteredDataPoints.FirstOrDefault(dp => dp.TimeFrom == time);
-                    return dataPoint?.HeatProduction ?? 0;
-                })
-                .ToList();
-
-
-
-            Series.Add(new StackedColumnSeries<double>
-            {
-                Values = values,
-                Name = unitSchedule.Name,
-                Fill = new SolidColorPaint(Colors[i % Colors.Length])
-            });
+            XAxes[0].MinLimit = index;
+            XAxes[0].MaxLimit = Math.Min(index + 30, orderedTimes.Count - 1);
         }
-
-        // Update X axis
-        XAxes = new List<Axis>
+        else
         {
-            new Axis
-            {
-                Name = "Time",
-                Labels = orderedTimes.Select(t => t.ToString("HH:mm dd/MM")).ToArray(),
-                LabelsRotation = 15,
-                MinLimit = 0,
-                MaxLimit = orderedTimes.Count > 0 ? orderedTimes.Count - 1 : 0
-            }
-        };
-
-
-        YAxes = new List<Axis>
-        {
-            new Axis
-            {
-                Name = "Heat Production"
-            }
-        };
+            XAxes[0].MinLimit = 0;
+        }
     }
 
-
-
-    public static readonly SKColor[] Colors = new[]
+    // Predefined chart colors
+    private static readonly SKColor[] Colors =
     {
-        SKColors.Red, SKColors.Green, SKColors.Blue, SKColors.Yellow, SKColors.Orange,
-        SKColors.Purple, SKColors.Pink, SKColors.Brown, SKColors.Gray, SKColors.Black,
-        SKColors.White, SKColors.Cyan, SKColors.Magenta, SKColors.Lime, SKColors.Teal,
-        SKColors.Navy, SKColors.Olive, SKColors.Maroon, SKColors.Aqua, SKColors.Silver,
+        SKColors.White,
+        SKColors.Maroon,
+        SKColors.Red,
+        SKColors.Magenta,
+        SKColors.Pink,
+        SKColors.Green,
+        SKColors.Blue,
+        SKColors.Yellow,
+        SKColors.Orange,
+        SKColors.Purple,
+        SKColors.Brown,
+        SKColors.Gray,
+        SKColors.Black,
+        SKColors.Cyan,
+        SKColors.Lime,
+        SKColors.Teal,
+        SKColors.Navy,
+        SKColors.Olive,
+        SKColors.Aqua,
+        SKColors.Silver,
         SKColors.Gold
     };
 }
