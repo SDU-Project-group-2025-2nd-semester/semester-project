@@ -11,13 +11,14 @@
 		<Style Selector="TextBlock">
 			<Setter Property="Foreground" Value="Black"/>
 		</Style>
+		<StyleInclude Source="/Views/styles.axaml" />
 	</UserControl.Styles>
 
 	<StackPanel Background="#FFDDDF">
 
 		<ScrollViewer HorizontalAlignment="Right" VerticalScrollBarVisibility="Auto" Height="800" Margin="0,0,20,0">
 			<StackPanel>
-				<ItemsControl ItemsSource="{Binding Units}">
+				<ItemsControl ItemsSource="{Binding CombinedUnits}">
 					<ItemsControl.ItemsPanel>
 						<ItemsPanelTemplate>
 							<WrapPanel Orientation="Horizontal"/>
@@ -31,10 +32,10 @@
 										<Image Source="/Assets/units.png" Width="200"/>
 									</Border>
 									<StackPanel Orientation="Horizontal">
-										<Ellipse Width="16" Height="16" Fill="#0F7B0F" Margin="0,0,5,0"/>
+										<Image Source="{Binding Icon}" Width="18" Height="18" Grid.Row="0" Grid.Column="0" Margin="0,0,10,0" /> 
 										<StackPanel Margin="10,5,0,15">
 											<TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14"/>
-											<TextBlock Text="Active" Opacity="0.7"/>
+											<TextBlock Text="{Binding Status}" Classes="normaltext" Opacity="0.7"/> 
 										</StackPanel>
 									</StackPanel>
 

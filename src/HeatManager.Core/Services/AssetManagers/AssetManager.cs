@@ -1,3 +1,4 @@
+using HeatManager.Core.Models;
 using HeatManager.Core.Models.Producers;
 using System.Collections.ObjectModel;
 using System.Text.Json;
@@ -42,5 +43,32 @@ public class AssetManager : IAssetManager
 
         ProductionUnits = new ObservableCollection<ProductionUnitBase>(allUnits);
 
+    }
+
+    // New method to combine data for the UI (AssetManager view)
+    public ObservableCollection<CombinedProductionUnit> GetCombinedUnits()
+    {
+        var combinedUnits = new ObservableCollection<CombinedProductionUnit>();
+
+        foreach (var unit in ProductionUnits)
+        {
+            if (ProductionUnitData.Units.AllUnits.TryGetValue(unit.Name, out var isActive))
+            {
+                var status = isActive ? ProductionUnitStatus.Active : ProductionUnitStatus.Offline;
+
+                combinedUnits.Add(new CombinedProductionUnit
+                {
+                    Name = unit.Name,
+                    Status = status,
+                    Cost = unit.Cost,
+                    MaxHeatProduction = unit.MaxHeatProduction,
+                    Emissions = unit.Emissions,
+                    ResourceConsumption = unit.ResourceConsumption,
+                    Resource = unit.Resource
+                });
+            }
+        }
+
+        return combinedUnits;
     }
 }

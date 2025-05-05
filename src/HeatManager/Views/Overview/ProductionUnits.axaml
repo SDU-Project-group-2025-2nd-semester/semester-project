@@ -11,7 +11,19 @@
     <Grid>
         <Border Background="White" CornerRadius="15" Padding="10" Margin="10,10,10,10">
             <StackPanel> 
-                <TextBlock Text="Production Units" Classes="heading" HorizontalAlignment="Left" Margin="10"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" /> 
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="Production Units" Classes="heading" HorizontalAlignment="Left" Margin="10"/>
+                    <RadioButton Grid.Column="1" Content="Scenario 1" IsChecked="true"/> <!-- nem biztos, hogy ez a jó módja a default value beállításának -->
+                    <RadioButton Grid.Column="2" Content="Scenario 2" Margin="10"/>
+                </Grid>
+
+                <!-- <TextBlock Text="For manual setting, please click on the units." Classes="normaltext"/> -->
 
                 <ItemsControl ItemsSource="{Binding ProductionUnits}">
                     <ItemsControl.ItemsPanel>
