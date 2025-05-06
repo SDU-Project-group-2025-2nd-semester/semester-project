@@ -186,6 +186,22 @@ public class DefaultOptimizer : IOptimizer
         {
             heatSourcePriorityList = availableUnitsList.OrderBy(unit => unit.Emissions).ThenBy(unit => unit.Cost);
         }
+        else if (strategy.Optimization == OptimizationType.BalancedOptimization)
+        {
+            //let's see what will happen
+            var maxEmissions = availableUnitsList.Max(unit => unit.Emissions);
+            var maxCost = availableUnitsList.Max(unit => unit.Cost);
+
+            heatSourcePriorityList = availableUnitsList
+                .OrderBy(unit =>
+                {
+                    double normalizedEmissions = unit.Emissions / maxEmissions; // Normalize emissions based on the max value in the list
+                    decimal normalizedCost = unit.Cost / maxCost; // Normalize cost similarly
+                    
+                    var score = (normalizedCost + (decimal)normalizedEmissions) / 2;
+                    return score;
+                }); 
+        }
         else
         {
             throw new Exception("Optimization strategy not selected, caught in DefaultOptimizer.GetHeatSourcePriorityList"); 

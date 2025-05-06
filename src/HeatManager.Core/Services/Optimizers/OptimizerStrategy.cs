@@ -4,7 +4,8 @@ namespace HeatManager.Core.Services.Optimizers;
 public enum OptimizationType
 {
     PriceOptimization,
-    Co2Optimization
+    Co2Optimization, 
+    BalancedOptimization
 }
 
 public interface IOptimizerStrategy
