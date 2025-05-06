@@ -1,4 +1,7 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
+using HeatManager.ViewModels.Optimizer;
+using System;
 
 namespace HeatManager.Views.Optimizer
 {
@@ -9,5 +12,15 @@ namespace HeatManager.Views.Optimizer
             InitializeComponent();
             
         }
+
+        private void ToggleView_Click(object? sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("ToggleView_Click");
+            if (DataContext is DataOptimizerViewModel vm)
+            {
+                vm.ToggleView();
+            }
+        }
+
     }
 }
