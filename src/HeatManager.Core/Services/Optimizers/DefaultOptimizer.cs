@@ -186,6 +186,10 @@ public class DefaultOptimizer : IOptimizer
         {
             heatSourcePriorityList = availableUnitsList.OrderBy(unit => unit.Emissions).ThenBy(unit => unit.Cost);
         }
+        else if (strategy.Optimization == OptimizationType.BalancedOptimization)
+        {
+            heatSourcePriorityList = availableUnitsList.OrderBy(unit => ((decimal)unit.Emissions / unit.Cost));
+        }
         else
         {
             throw new Exception("Optimization strategy not selected, caught in DefaultOptimizer.GetHeatSourcePriorityList"); 
