@@ -35,13 +35,13 @@
 					<DataGridTextColumn Header="Heat Production [MW]" Binding="{Binding HeatProduction}" />
 
 					<!-- Emissions -->
-					<DataGridTextColumn Header="Emissions [kg/MWh(th)]" Binding="{Binding Emissions}" />
+					<DataGridTextColumn Header="Emissions [kg]" Binding="{Binding Emissions}" />
 
 					<!-- Cost -->
-					<DataGridTextColumn Header="Cost [DKK/MWh(th)]" Binding="{Binding Cost}" />
+					<DataGridTextColumn Header="Cost [DKK]" Binding="{Binding Cost}" />
 
 					<!-- Resource Consumption -->
-					<DataGridTextColumn Header="Resource Consumption [MWh/MWh(th)]" Binding="{Binding ResourceConsumption}" />
+					<DataGridTextColumn Header="Resource Consumption [MWh]" Binding="{Binding ResourceConsumption}" />
 
 					<!-- Utilization -->
 					<DataGridTextColumn Header="Utilization [%]" Binding="{Binding Utilization}" />
@@ -65,13 +65,13 @@
 					<DataGridTextColumn Header="Heat Production [MW]" Binding="{Binding MaxHeatProduction}" />
 
 					<!-- Emissions -->
-					<DataGridTextColumn Header="Emissions [kg/MWh(th)]" Binding="{Binding MaxEmissions}" />
+					<DataGridTextColumn Header="Emissions [kg]" Binding="{Binding MaxEmissions}" />
 
 					<!-- Cost -->
-					<DataGridTextColumn Header="Cost [DKK/MWh(th)]" Binding="{Binding MaxCost}" />
+					<DataGridTextColumn Header="Cost [DKK]" Binding="{Binding MaxCost}" />
 
 					<!-- Resource Consumption -->
-					<DataGridTextColumn Header="Resource Consumption [MWh/MWh(th)]" Binding="{Binding MaxResourceConsumption}" />
+					<DataGridTextColumn Header="Resource Consumption [MWh]" Binding="{Binding MaxResourceConsumption}" />
 
 					<!-- Utilization -->
 					<DataGridTextColumn Header="Utilization [%]" Binding="{Binding MaxUtilization}" />
