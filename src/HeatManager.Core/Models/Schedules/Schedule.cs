@@ -1,4 +1,6 @@
-﻿namespace HeatManager.Core.Models.Schedules;
+﻿using HeatManager.Core.Models.Resources;
+
+namespace HeatManager.Core.Models.Schedules;
 
 public class Schedule
 {
@@ -48,7 +50,7 @@ public class Schedule
     } 
     
     //Resource consumption related data
-    
+    public Dictionary<ResourceType, double[]> ResourceConsumption => GetResourceConsumptionByHour(HeatProductionUnitSchedules);
 
     public Schedule(IEnumerable<HeatProductionUnitSchedule> heatProductionUnitSchedules,
         IEnumerable<ElectricityProductionUnitSchedule> electricityProductionUnitSchedules)
@@ -135,9 +137,35 @@ public class Schedule
         {
             foreach (var schedule in schedules)
             {
-                electricityProduction[i] = schedule.ElectricityProduction.ElementAt(i);
+                electricityProduction[i] += schedule.ElectricityProduction.ElementAt(i);
             }
         }
         return electricityProduction;
+    }
+
+    private Dictionary<ResourceType, double[]> GetResourceConsumptionByHour(
+        IEnumerable<HeatProductionUnitSchedule> heatProductionUnitSchedules)
+    {
+        var schedules = heatProductionUnitSchedules.ToList();
+        var resourceConsumption = new Dictionary<ResourceType, double[]>();
+
+        for (int i = 0; i < Length; i++)
+        {
+            foreach (var schedule in schedules)
+            {
+                var key = schedule.ResourceConsumptionTyped.Key;
+                var value = schedule.ResourceConsumptionTyped.Value[i];
+                
+                if (!resourceConsumption.ContainsKey(key))
+                {
+                    resourceConsumption[key] = new double[Length];
+                }
+                
+                resourceConsumption[key][i] += value;
+            }
+        }
+
+        return resourceConsumption;
+        
     }
 }

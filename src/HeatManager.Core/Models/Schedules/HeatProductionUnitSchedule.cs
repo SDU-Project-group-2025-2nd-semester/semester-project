@@ -25,11 +25,10 @@ public class HeatProductionUnitSchedule
     public decimal MaxCost => Costs.Max();
     
     //Resources
-    public double[] ResourceConsumptionUntyped => DataPoints.Select(x => x.ResourceConsumption).ToArray();
-    public List<KeyValuePair<ResourceType, double>> ResourceConsumptionTyped => 
-        GetResourceConsumptionByHour(DataPoints.Select(x => x.ResourceConsumption).ToArray());
-    public KeyValuePair<ResourceType, double> TotalResourceConsumption => new (ResourceType, ResourceConsumptionUntyped.Sum()) ;
-    public KeyValuePair<ResourceType, double> MaxResourceConsumption => new (ResourceType, ResourceConsumptionUntyped.Max()) ;
+    public double[] ResourceConsumption => DataPoints.Select(x => x.ResourceConsumption).ToArray();
+    public KeyValuePair<ResourceType, double[]> ResourceConsumptionTyped => new(ResourceType, ResourceConsumption); 
+    public KeyValuePair<ResourceType, double> TotalResourceConsumption => new (ResourceType, ResourceConsumption.Sum()) ;
+    public KeyValuePair<ResourceType, double> MaxResourceConsumption => new (ResourceType, ResourceConsumption.Max()) ;
     
     //Utilization 
     public double[] Utilization => DataPoints.Select(x => x.Utilization).ToArray();
