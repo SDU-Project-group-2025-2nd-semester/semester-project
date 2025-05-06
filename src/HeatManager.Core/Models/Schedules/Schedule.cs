@@ -13,19 +13,41 @@ public class Schedule
     public TimeSpan Resolution { get; private set; }
 
     //Cost related data
-    public decimal[] Costs { get; private set; }
+    public decimal[] Costs => GetCostsByHour(HeatProductionUnitSchedules); 
     public decimal TotalCost => Costs.Sum();
     
     //Emissions related data
-    public double[] Emissions { get; private set;}
+    public double[] Emissions => GetEmissionsByHour(HeatProductionUnitSchedules); 
     public double TotalEmissions => Emissions.Sum(); 
     
     //Heat related data
-    public double[] HeatProduction { get; set; }
+    public double[] HeatProduction => GetHeatProductionByHour(HeatProductionUnitSchedules);
     public double TotalHeatProduction => HeatProduction.Sum();
     
     //Electricity related data
-    public decimal[] ElectricityPrice { get; set; }
+    public decimal[] ElectricityPrice
+    {
+        get
+        {
+            if (ElectricityProductionUnitSchedules.Any())
+            {
+                return GetElectricityCostsByHour(ElectricityProductionUnitSchedules.ElementAt(0));
+            } else return new decimal[Length];
+        }
+    }
+
+    public double[] ElectricityProduction
+    {
+        get
+        {
+            if (ElectricityProductionUnitSchedules.Any())
+            {
+                return GetElectricityProductionByHour(ElectricityProductionUnitSchedules);
+            } else return new double[Length];
+        }
+    } 
+    
+    //Resource consumption related data
 
     public Schedule(IEnumerable<HeatProductionUnitSchedule> heatProductionUnitSchedules,
         IEnumerable<ElectricityProductionUnitSchedule> electricityProductionUnitSchedules)
@@ -39,20 +61,12 @@ public class Schedule
     private void CreateProperties()
     {
         Length = HeatProductionUnitSchedules.ElementAt(0).DataPoints.Count();
-        Start = HeatProductionUnitSchedules.ElementAt(0).DataPoints.ElementAt(0).TimeFrom; 
+        Start = HeatProductionUnitSchedules.ElementAt(0).DataPoints.ElementAt(0).TimeFrom;
         End = HeatProductionUnitSchedules.ElementAt(0).DataPoints
             .ElementAt(Length - 1).TimeTo; //TODO: make this actually readable
-        Resolution = End - Start; 
-        
-        
-        
-        Costs = GetCostsByHour(HeatProductionUnitSchedules);
-        Emissions = GetEmissionsByHour(HeatProductionUnitSchedules); 
-        HeatProduction = GetHeatProductionByHour(HeatProductionUnitSchedules);
-        
-        
+        Resolution = End - Start;
     }
-    
+
     private double[] GetEmissionsByHour(IEnumerable<HeatProductionUnitSchedule> heatProductionUnitSchedules)
     {
         IEnumerable<HeatProductionUnitSchedule> productionUnitSchedules = heatProductionUnitSchedules.ToList();
@@ -96,5 +110,33 @@ public class Schedule
             }
         }
         return heatProduction; 
+    }
+
+    private decimal[] GetElectricityCostsByHour(ElectricityProductionUnitSchedule electricityProductionUnitSchedule)
+    {
+        var electricityCosts = new decimal[Length];
+        var dataPoints = electricityProductionUnitSchedule.DataPoints.ToList();
+        for (int i = 0; i < Length; i++)
+        {
+            electricityCosts[i] = dataPoints.ElementAt(i).ElectricityPrice;
+        }
+        
+        return electricityCosts;
+    }
+
+    private double[] GetElectricityProductionByHour(
+        IEnumerable<ElectricityProductionUnitSchedule> electricityProductionUnitSchedules)
+    {
+        var electricityProduction = new double[Length];
+        var schedules = electricityProductionUnitSchedules.ToList();
+
+        for (int i = 0; i < Length; i++)
+        {
+            foreach (var schedule in schedules)
+            {
+                electricityProduction[i] = schedule.ElectricityProduction.ElementAt(i);
+            }
+        }
+        return electricityProduction;
     }
 }
