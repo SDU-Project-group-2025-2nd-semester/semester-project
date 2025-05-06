@@ -4,6 +4,7 @@ using HeatManager.Core.Db;
 using HeatManager.Core.Models.Projects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HeatManager.Core.Migrations
 {
     [DbContext(typeof(HeatManagerDbContext))]
-    partial class HeatManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250428094035_Removed HeatProductionUnits")]
+    partial class RemovedHeatProductionUnits
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

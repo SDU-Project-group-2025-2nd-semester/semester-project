@@ -1,4 +1,4 @@
-namespace HeatManager.Core.Models.Schedules;
+namespace HeatManager.Core.ResultData;
 
 /// <summary>
 /// Represents a concrete implementation of electricity production result data point.

@@ -1,4 +1,4 @@
-namespace HeatManager.Core.Models.Schedules;
+namespace HeatManager.Core.ResultData;
 
 /// <summary>
 /// Represents a data point for heat production unit results.

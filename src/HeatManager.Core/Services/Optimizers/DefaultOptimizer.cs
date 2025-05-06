@@ -1,16 +1,18 @@
 using HeatManager.Core.Models.Producers;
 using HeatManager.Core.Models.Schedules;
 using HeatManager.Core.Models.SourceData;
+using HeatManager.Core.ResultData;
 using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.SourceDataProviders;
 
 namespace HeatManager.Core.Services.Optimizers;
+
 ///  <summary>
 /// Default implementation of the IOptimizer interface.
 /// Responsible for optimizing heat and electricity production schedules
 /// based on available production units, source data, and optimization strategies.
 /// </summary>
-internal class DefaultOptimizer : IOptimizer
+public class DefaultOptimizer : IOptimizer
 {
     private readonly IAssetManager _assetManager;
     private readonly ISourceDataProvider _sourceDataProvider;
