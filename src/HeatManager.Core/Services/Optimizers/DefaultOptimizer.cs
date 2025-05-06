@@ -188,7 +188,19 @@ public class DefaultOptimizer : IOptimizer
         }
         else if (strategy.Optimization == OptimizationType.BalancedOptimization)
         {
-            heatSourcePriorityList = availableUnitsList.OrderBy(unit => ((decimal)unit.Emissions / unit.Cost));
+            //let's see what will happen
+            var maxEmissions = availableUnitsList.Max(unit => unit.Emissions);
+            var maxCost = availableUnitsList.Max(unit => unit.Cost);
+
+            heatSourcePriorityList = availableUnitsList
+                .OrderBy(unit =>
+                {
+                    double normalizedEmissions = unit.Emissions / maxEmissions; // Normalize emissions based on the max value in the list
+                    decimal normalizedCost = unit.Cost / maxCost; // Normalize cost similarly
+                    
+                    var score = (normalizedCost + (decimal)normalizedEmissions) / 2;
+                    return score;
+                }); 
         }
         else
         {
