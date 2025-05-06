@@ -1,3 +1,5 @@
+using HeatManager.Core.Models.Producers;
+using HeatManager.Core.Models.Resources;
 using HeatManager.Core.ResultData;
 
 namespace HeatManager.Core.Models.Schedules;
@@ -5,6 +7,7 @@ namespace HeatManager.Core.Models.Schedules;
 public class HeatProductionUnitSchedule
 {
     public string Name { get; }
+    public ResourceType ResourceType { get; }
     public List<IHeatProductionUnitResultDataPoint> DataPoints { get; }
     //Heat Production
     public double[] HeatProduction => DataPoints.Select(x => x.HeatProduction).ToArray();
@@ -34,9 +37,10 @@ public class HeatProductionUnitSchedule
     
 
 
-    public HeatProductionUnitSchedule(string name)
+    public HeatProductionUnitSchedule(string name, ResourceType resourceType)
     {
         Name = name;
+        ResourceType = resourceType;
         DataPoints = new List<IHeatProductionUnitResultDataPoint>();
     }
 

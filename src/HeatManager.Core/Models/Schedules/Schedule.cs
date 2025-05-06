@@ -48,6 +48,7 @@ public class Schedule
     } 
     
     //Resource consumption related data
+    
 
     public Schedule(IEnumerable<HeatProductionUnitSchedule> heatProductionUnitSchedules,
         IEnumerable<ElectricityProductionUnitSchedule> electricityProductionUnitSchedules)

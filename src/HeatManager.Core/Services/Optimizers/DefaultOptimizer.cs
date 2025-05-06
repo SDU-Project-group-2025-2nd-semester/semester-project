@@ -201,7 +201,7 @@ public class DefaultOptimizer : IOptimizer
         List<HeatProductionUnitSchedule> schedules = new List<HeatProductionUnitSchedule>();
         foreach (var unit in heatProductionUnits)
         {
-            var schedule = new HeatProductionUnitSchedule(unit.Name);
+            var schedule = new HeatProductionUnitSchedule(unit.Name, unit.Resource.Type);
             schedules.Add(schedule);
         }
 
