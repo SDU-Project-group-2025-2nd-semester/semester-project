@@ -1,132 +1,102 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
-        xmlns:optimizer="clr-namespace:HeatManager.ViewModels.Optimizer"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="HeatManager.Views.Optimizer.DataOptimizerView"
-        x:DataType="optimizer:DataOptimizerViewModel">
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:optimizer="clr-namespace:HeatManager.ViewModels.Optimizer"
+    mc:Ignorable="d"
+    d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="HeatManager.Views.Optimizer.DataOptimizerView"
+    x:DataType="optimizer:DataOptimizerViewModel">
 
-	<Grid Margin="20">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="50"/>
-			<RowDefinition Height="*"/>
-		</Grid.RowDefinitions>
-		
-		<StackPanel Grid.Row="0" Orientation="Horizontal">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-			<!-- Display of Data Range -->
-			<TextBlock Text="{Binding DateRangeText}"
-               FontWeight="SemiBold"
-               FontSize="14"
-               Margin="10"
-	           VerticalAlignment="Center"/>
+        <!-- ========================== Header Section ========================== -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <TextBlock Text="{Binding DateRangeText}"
+                       FontWeight="SemiBold"
+                       FontSize="14"
+                       Margin="10"
+                       VerticalAlignment="Center"
+                       IsVisible="{Binding IsChartVisible}" />
 
-			<!-- Date Navigation -->
-			<TextBlock Text="|     Navigate to Date:"
-               FontWeight="SemiBold"
-               FontSize="14"
-               Margin="10"
-	           VerticalAlignment="Center"/>
-			
-			<DatePicker Name="DatePickerControl"
-						SelectedDate="{Binding SelectedDate, Mode=TwoWay}"
-						HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10"/>
+            <TextBlock Text="|     Navigate to Date:"
+                       FontWeight="SemiBold"
+                       FontSize="14"
+                       Margin="10"
+                       VerticalAlignment="Center"
+                       IsVisible="{Binding IsChartVisible}" />
 
-		</StackPanel>
-		
+            <DatePicker Name="DatePickerControl"
+                        SelectedDate="{Binding SelectedDate, Mode=TwoWay}"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Margin="10"
+                        IsVisible="{Binding IsChartVisible}" />
+        </StackPanel>
 
-		<!-- Main Chart -->
-		<avalonia:CartesianChart
-            Grid.Row="1"
-            Series="{Binding Series}"
-            XAxes="{Binding XAxes}"
-            YAxes="{Binding YAxes}"
-            ZoomMode="X"
-            TooltipPosition="Top"
-            DrawMargin="{Binding Margin}"
-            UpdateStartedCommand="{Binding ChartUpdatedCommand}">
-		</avalonia:CartesianChart>
-
-	</Grid>
-</UserControl>
-
-	<Grid RowDefinitions="Auto,*">
-
-		<!-- Toggle Button -->
-		<Button Content="Switch View"
+        <!-- Toggle Button -->
+        <Button Content="Switch View"
                 Margin="10"
-                Click="ToggleView_Click" />
+                Click="ToggleView_Click"
+                Grid.Row="0"
+                HorizontalAlignment="Right" />
 
-		<!-- Main Content -->
-		<Grid Grid.Row="1">
-			<!-- Chart View -->
-			<avalonia:CartesianChart IsVisible="{Binding IsChartVisible}" Series="{Binding Series}" />
+        <!-- ========================== Chart Section ========================== -->
+        <avalonia:CartesianChart Grid.Row="1"
+                                 Series="{Binding Series}"
+                                 XAxes="{Binding XAxes}"
+                                 YAxes="{Binding YAxes}"
+                                 ZoomMode="X"
+                                 TooltipPosition="Top"
+                                 DrawMargin="{Binding Margin}"
+                                 UpdateStartedCommand="{Binding ChartUpdatedCommand}"
+                                 IsVisible="{Binding IsChartVisible}" />
 
-			<!-- Data Table View -->
-			<StackPanel Margin="20">
-			<TextBlock Text="Total Values" FontWeight="Bold" IsVisible="{Binding IsTableVisible}" />
-			<DataGrid IsVisible="{Binding IsTableVisible}"
-                      Margin="20"
-                      ItemsSource="{Binding TableData}"
-                      IsReadOnly="True"
-                      GridLinesVisibility="All">
-				<DataGrid.Columns>
-					<DataGridTextColumn Header="Unit" Binding="{Binding Name}" />
+        <!-- ========================== Table Section ========================== -->
+        <Grid Grid.Row="1" IsVisible="{Binding IsTableVisible}">
+            <StackPanel Margin="20">
+                <!-- Total Values Table -->
+                <TextBlock Text="Total Values"
+                           FontWeight="Bold" />
+                
+                <DataGrid Margin="20"
+                          ItemsSource="{Binding TableData}"
+                          IsReadOnly="True"
+                          GridLinesVisibility="All">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Unit" Binding="{Binding Name}" />
+                        <DataGridTextColumn Header="Heat Production [MW]" Binding="{Binding HeatProduction}" />
+                        <DataGridTextColumn Header="Emissions [kg]" Binding="{Binding Emissions}" />
+                        <DataGridTextColumn Header="Cost [DKK]" Binding="{Binding Cost}" />
+                        <DataGridTextColumn Header="Resource Consumption [MWh]" Binding="{Binding ResourceConsumption}" />
+                        <DataGridTextColumn Header="Utilization [%]" Binding="{Binding Utilization}" />
+                    </DataGrid.Columns>
+                </DataGrid>
 
-					<!-- Heat Production -->
-					<DataGridTextColumn Header="Heat Production [MW]" Binding="{Binding HeatProduction}" />
+                <!-- Maximum Values Table -->
+                <TextBlock Text="Maximum Values"
+                           FontWeight="Bold" />
 
-					<!-- Emissions -->
-					<DataGridTextColumn Header="Emissions [kg]" Binding="{Binding Emissions}" />
-
-					<!-- Cost -->
-					<DataGridTextColumn Header="Cost [DKK]" Binding="{Binding Cost}" />
-
-					<!-- Resource Consumption -->
-					<DataGridTextColumn Header="Resource Consumption [MWh]" Binding="{Binding ResourceConsumption}" />
-
-					<!-- Utilization -->
-					<DataGridTextColumn Header="Utilization [%]" Binding="{Binding Utilization}" />
-
-					
-				</DataGrid.Columns>
-
-			</DataGrid>
-
-
-			<TextBlock Text="Maximum Values" FontWeight="Bold" IsVisible="{Binding IsTableVisible}" />
-			<DataGrid IsVisible="{Binding IsTableVisible}"
-                      Margin="20"
-                      ItemsSource="{Binding TableData}"
-                      IsReadOnly="True"
-                      GridLinesVisibility="All">
-				<DataGrid.Columns>
-					<DataGridTextColumn Header="Unit" Binding="{Binding Name}" />
-
-					<!-- Heat Production -->
-					<DataGridTextColumn Header="Heat Production [MW]" Binding="{Binding MaxHeatProduction}" />
-
-					<!-- Emissions -->
-					<DataGridTextColumn Header="Emissions [kg]" Binding="{Binding MaxEmissions}" />
-
-					<!-- Cost -->
-					<DataGridTextColumn Header="Cost [DKK]" Binding="{Binding MaxCost}" />
-
-					<!-- Resource Consumption -->
-					<DataGridTextColumn Header="Resource Consumption [MWh]" Binding="{Binding MaxResourceConsumption}" />
-
-					<!-- Utilization -->
-					<DataGridTextColumn Header="Utilization [%]" Binding="{Binding MaxUtilization}" />
-
-
-				</DataGrid.Columns>
-
-			</DataGrid>
-			</StackPanel>
-			
-		</Grid>
-
-	</Grid>
+                <DataGrid Margin="20"
+                          ItemsSource="{Binding TableData}"
+                          IsReadOnly="True"
+                          GridLinesVisibility="All">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Unit" Binding="{Binding Name}" />
+                        <DataGridTextColumn Header="Heat Production [MW]" Binding="{Binding MaxHeatProduction}" />
+                        <DataGridTextColumn Header="Emissions [kg]" Binding="{Binding MaxEmissions}" />
+                        <DataGridTextColumn Header="Cost [DKK]" Binding="{Binding MaxCost}" />
+                        <DataGridTextColumn Header="Resource Consumption [MWh]" Binding="{Binding MaxResourceConsumption}" />
+                        <DataGridTextColumn Header="Utilization [%]" Binding="{Binding MaxUtilization}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        </Grid>
+    </Grid>
 </UserControl>

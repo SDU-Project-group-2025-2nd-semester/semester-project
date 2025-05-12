@@ -12,65 +12,49 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using System.Collections.ObjectModel;
-using System.Linq;
 using HeatManager.Core.Services.Optimizers;
-using LiveChartsCore;
-using System;
-using System.ComponentModel;
-using HeatManager.Core.ResultData;
-using HeatManager.Core.Services.Optimizers;
+using HeatManager.Core.Models.Schedules;
 
 namespace HeatManager.ViewModels.Optimizer;
 
-internal class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel, INotifyPropertyChanged
+internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel, INotifyPropertyChanged
 {
-    public ObservableCollection<ISeries> Series { get; } = new();
-    public ObservableCollection<ScheduleData> TableData { get; } = new();
 
     private readonly IOptimizer _optimizer;
     private readonly ObservableCollection<ObservablePoint> _values = new();
     private DateTimeOffset? _selectedDate;
     private string? _lastLabel;
 
-    private bool _isChartVisible = true; // Default to chart view
+    private bool _isChartVisible = true;
     private bool _isTableVisible = false;
 
-    public bool IsChartVisible
-    {
-        get => _isChartVisible;
-        set
-        {
-            if (SetProperty(ref _isChartVisible, value))
-            {
-                // Toggle table visibility based on chart view
-                IsTableVisible = !value;
-            }
-        }
-    }
 
-    public bool IsTableVisible
-    {
-        get => !_isChartVisible;
-        set
-        {
-            SetProperty(ref _isTableVisible, value);
-        }
-    }
 
-    public void ToggleView()
-    {
-        // Switch between chart and table view
-        IsChartVisible = !IsChartVisible;
-    }
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DataOptimizerViewModel"/> class.
+    /// </summary>
+    /// <param name="optimizer">Injected optimizer service.</param>
     public DataOptimizerViewModel(IOptimizer optimizer)
     {
         _optimizer = optimizer;
-        OptimizeData(); // Initialize chart data
+        OptimizeData();
     }
 
-    // Currently selected date in the UI
+    
+
+    /// <summary>
+    /// Gets the chart series collection.
+    /// </summary>
+    public ObservableCollection<ISeries> Series { get; } = new();
+
+    /// <summary>
+    /// Gets the tabular schedule data.
+    /// </summary>
+    public ObservableCollection<ScheduleData> TableData { get; } = new();
+
+    /// <summary>
+    /// Gets or sets the selected date for filtering.
+    /// </summary>
     public DateTimeOffset? SelectedDate
     {
         get => _selectedDate;
@@ -81,74 +65,156 @@ internal class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel, 
         }
     }
 
-    // Earliest and latest available dates in the dataset
+    /// <summary>
+    /// Gets the minimum date in the dataset.
+    /// </summary>
     public DateTimeOffset? MinDate { get; private set; }
+
+    /// <summary>
+    /// Gets the maximum date in the dataset.
+    /// </summary>
     public DateTimeOffset? MaxDate { get; private set; }
 
-    // Displays the available date range in the UI
+    /// <summary>
+    /// Gets the date range text for display.
+    /// </summary>
     public string DateRangeText =>
         (MinDate.HasValue && MaxDate.HasValue)
             ? $"Available data: {MinDate.Value:dd MMM yyyy} - {MaxDate.Value:dd MMM yyyy}"
             : "No data range available";
 
-    public ObservableCollection<ISeries> Series { get; } = new();
+    /// <summary>
+    /// Gets the X-axis configuration.
+    /// </summary>
     public List<Axis> XAxes { get; private set; } = new();
+
+    /// <summary>
+    /// Gets the Y-axis configuration.
+    /// </summary>
     public List<Axis> YAxes { get; private set; } = new();
+
+    /// <summary>
+    /// Gets or sets the chart margin.
+    /// </summary>
     public Margin Margin { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether the chart is visible.
+    /// </summary>
+    public bool IsChartVisible
+    {
+        get => _isChartVisible;
+        set
+        {
+            if (SetProperty(ref _isChartVisible, value))
+            {
+                IsTableVisible = !value;
+            }
+        }
+    }
 
+    /// <summary>
+    /// Gets or sets whether the table is visible.
+    /// </summary>
+    public bool IsTableVisible
+    {
+        get => !_isChartVisible;
+        set => SetProperty(ref _isTableVisible, value);
+    }
+
+    
+
+    /// <summary>
+    /// Toggles between chart and table views.
+    /// </summary>
+    public void ToggleView()
+    {
+        IsChartVisible = !IsChartVisible;
+    }
+
+    /// <summary>
+    /// Handles chart update events.
+    /// </summary>
+    /// <param name="args">Chart event arguments.</param>
     [RelayCommand]
     public void ChartUpdated(ChartCommandArgs args)
     {
         var cartesianChart = (ICartesianChartView)args.Chart;
     }
 
-    // Runs optimization and populates chart data and axes
+    
+
+    /// <summary>
+    /// Runs the optimization and sets up chart and table data.
+    /// </summary>
     private void OptimizeData()
     {
         var schedule = _optimizer.Optimize();
-        var schedules = schedule.HeatProductionUnitSchedules.ToList();
+        List<HeatProductionUnitSchedule> schedules = schedule.HeatProductionUnitSchedules.ToList();
 
         Series.Clear();
         _values.Clear();
 
-        // Gather all time points from all unit schedules
-        var timeslots = new List<IHeatProductionUnitResultDataPoint>();
-        foreach (var unitSchedule in schedules)
-        {
-            timeslots.AddRange(unitSchedule.DataPoints);
-        }
+        List<DateTime> orderedTimes = OrderTimeSlots(schedules);
 
-        // Extract unique, sorted time values
+        BuildChartSeries(schedules);
+        BuildTableData(schedules);
+        ConfigureAxes(orderedTimes, schedules);
+    }
+
+    private List<DateTime> OrderTimeSlots(List<HeatProductionUnitSchedule> schedules)
+    {
+        var timeslots = schedules
+            .SelectMany(unitSchedule => unitSchedule.DataPoints)
+            .ToList();
         var orderedTimes = timeslots
             .Select(t => t.TimeFrom)
             .Distinct()
             .OrderBy(t => t)
             .ToList();
-
-        // Set available date range
-        if (orderedTimes.Any())
+        if (orderedTimes.Count > 0)
         {
-            MinDate = new DateTimeOffset(orderedTimes.First());
-            MaxDate = new DateTimeOffset(orderedTimes.Last());
+            SetDateRange(orderedTimes);
         }
 
-        // Map time points to index values for chart X-axis
-        var timeIndexMap = orderedTimes
-            .Select((time, index) => new { time, index })
-            .ToDictionary(x => x.time, x => (double)x.index);
+        return orderedTimes;
+    }
 
+    private void SetDateRange(List<DateTime> times)
+    {
+        if (times.Count > 0)
+        {
+            MinDate = new DateTimeOffset(times.First());
+            MaxDate = new DateTimeOffset(times.Last());
+        }
+    }
+
+    private void BuildChartSeries(List<HeatProductionUnitSchedule> schedules)
+    {
+        Series.Clear();
         int i = 0;
+
         foreach (var unitSchedule in schedules)
         {
             i++;
             Series.Add(new StackedColumnSeries<double>
-            // Add data to table
-            TableData.Add(new ScheduleData
             {
                 Values = unitSchedule.HeatProduction,
                 Name = unitSchedule.Name,
                 Fill = new SolidColorPaint(Colors[i])
+            });
+        }
+    }
+
+    private void BuildTableData(List<HeatProductionUnitSchedule> schedules)
+    {
+        TableData.Clear();
+
+        foreach (var unitSchedule in schedules)
+        {
+            TableData.Add(new ScheduleData
+            {
+                Name = unitSchedule.Name,
                 HeatProduction = Math.Round(Convert.ToDecimal(unitSchedule.TotalHeatProduction), 3),
                 MaxHeatProduction = Math.Round(Convert.ToDecimal(unitSchedule.MaxHeatProduction), 3),
                 Emissions = Math.Round(Convert.ToDecimal(unitSchedule.TotalEmissions), 3),
@@ -161,61 +227,69 @@ internal class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel, 
                 MaxUtilization = Math.Round(Convert.ToDecimal(unitSchedule.MaxUtilization), 3)
             });
         }
-
-        // Define dynamic X-axis with formatted labels and scroll range
-        XAxes = new List<Axis>
-        {
-            new Axis
-            {
-                MinLimit = 0,
-                MaxLimit = orderedTimes.Count > 0 ? orderedTimes.Count - 1 : 0,
-                Labeler = value =>
-                {
-                    int index = (int)Math.Round(value);
-                    if (index >= 0 && index < orderedTimes.Count)
-                    {
-                        var dateAxis = XAxes.FirstOrDefault();
-                        var visibleRange = dateAxis?.MaxLimit - dateAxis?.MinLimit;
-                        var t = orderedTimes[index];
-
-                        string currentLabel = visibleRange > 45
-                            ? t.ToString("dd/MM/yy")
-                            : t.ToString("HH:mm dd/MM/yy");
-
-                        // Avoid repeating the same date label when zoomed out
-                        if (visibleRange > 45)
-                        {
-                            if (currentLabel == _lastLabel)
-                                return string.Empty;
-
-                            _lastLabel = currentLabel;
-                        }
-
-                        return currentLabel;
-                    }
-
-                    return string.Empty;
-                }
-            }
-        };
-
-        // Y-axis configuration
-        YAxes = new List<Axis>
-        {
-            new Axis
-            {
-                Name = "Heat Production [ MW ]"
-            }
-        };
-
-        // Apply chart margin for layout alignment
-        Margin = new Margin(100, Margin.Auto, 50, Margin.Auto);
-
-        // Set initial selected date
-        SelectedDate = MinDate;
     }
 
-    // Triggered when a new date is selected
+    private void ConfigureAxes(List<DateTime> orderedTimes, List<HeatProductionUnitSchedule> schedules)
+    {
+        int i = 0;
+        foreach (var unitSchedule in schedules)
+        {
+            i++;
+
+            XAxes = new List<Axis>
+            {
+                new Axis
+                {
+                    Name = "[ h ]",
+                    MinLimit = 0,
+                    MaxLimit = orderedTimes.Count > 0 ? orderedTimes.Count - 1 : 0,
+                    Labeler = value =>
+                    {
+                        int index = (int)Math.Round(value);
+                        if (index >= 0 && index < orderedTimes.Count)
+                        {
+                            var dateAxis = XAxes.FirstOrDefault();
+                            var visibleRange = dateAxis?.MaxLimit - dateAxis?.MinLimit;
+                            var t = orderedTimes[index];
+
+                            string currentLabel = visibleRange > 45
+                                ? t.ToString("dd/MM/yy")
+                                : t.ToString("HH:mm dd/MM/yy");
+
+                            if (visibleRange > 45)
+                            {
+                                if (currentLabel == _lastLabel)
+                                    return string.Empty;
+
+                                _lastLabel = currentLabel;
+                            }
+
+                            return currentLabel;
+                        }
+
+                        return string.Empty;
+                    }
+                }
+            };
+
+            YAxes = new List<Axis>
+            {
+                new Axis
+                {
+                    Name = "Heat Production [ MW ]"
+                }
+            };
+
+            Margin = new Margin(100, Margin.Auto, 50, Margin.Auto);
+            SelectedDate = MinDate;
+        }
+    }
+
+
+
+    /// <summary>
+    /// Called when a new date is selected.
+    /// </summary>
     private void OnDateSelected()
     {
         if (SelectedDate.HasValue)
@@ -224,7 +298,9 @@ internal class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel, 
         }
     }
 
-    // Scrolls X-axis to the index corresponding to the selected date
+    /// <summary>
+    /// Sets the X-axis window based on selected date.
+    /// </summary>
     private void SetXMinLimit()
     {
         var orderedTimes = _optimizer.Optimize().HeatProductionUnitSchedules
@@ -234,12 +310,19 @@ internal class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel, 
             .OrderBy(t => t)
             .ToList();
 
-        var index = orderedTimes.FindIndex(t => t >= SelectedDate.Value.DateTime);
-
-        if (index != -1)
+        if (SelectedDate.HasValue)
         {
-            XAxes[0].MinLimit = index;
-            XAxes[0].MaxLimit = Math.Min(index + 30, orderedTimes.Count - 1);
+            var index = orderedTimes.FindIndex(t => t >= SelectedDate.Value.DateTime);
+
+            if (index != -1)
+            {
+                XAxes[0].MinLimit = index;
+                XAxes[0].MaxLimit = Math.Min(index + 30, orderedTimes.Count - 1);
+            }
+            else
+            {
+                XAxes[0].MinLimit = 0;
+            }
         }
         else
         {
@@ -247,37 +330,29 @@ internal class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel, 
         }
     }
 
-    // Predefined chart colors
+
+    
+
+    /// <summary>
+    /// Predefined chart color palette.
+    /// </summary>
     private static readonly SKColor[] Colors =
     {
-        SKColors.White,
-        SKColors.Maroon,
-        SKColors.Red,
-        SKColors.Magenta,
-        SKColors.Pink,
-        SKColors.Green,
-        SKColors.Blue,
-        SKColors.Yellow,
-        SKColors.Orange,
-        SKColors.Purple,
-        SKColors.Brown,
-        SKColors.Gray,
-        SKColors.Black,
-        SKColors.Cyan,
-        SKColors.Lime,
-        SKColors.Teal,
-        SKColors.Navy,
-        SKColors.Olive,
-        SKColors.Aqua,
-        SKColors.Silver,
+        SKColors.White, SKColors.Maroon, SKColors.Red, SKColors.Magenta, SKColors.Pink,
+        SKColors.Green, SKColors.Blue, SKColors.Yellow, SKColors.Orange, SKColors.Purple,
+        SKColors.Brown, SKColors.Gray, SKColors.Black, SKColors.Cyan, SKColors.Lime,
+        SKColors.Teal, SKColors.Navy, SKColors.Olive, SKColors.Aqua, SKColors.Silver,
         SKColors.Gold
     };
+
 }
 
-// ViewModel table row representation
+/// <summary>
+/// Represents a row of schedule data for the UI.
+/// </summary>
 public class ScheduleData
 {
-    public string Name { get; set; }
+    public required string Name { get; set; }
     public decimal HeatProduction { get; set; }
     public decimal MaxHeatProduction { get; set; }
     public decimal Emissions { get; set; }
