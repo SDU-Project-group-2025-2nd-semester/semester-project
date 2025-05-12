@@ -15,7 +15,7 @@ public interface IOptimizer
     /// Changes the optimization settings
     /// </summary>
     /// <param name="optimizerSettings">The new optimization settings</param>
-    void ChangeOptimizationSettings(IOptimizerSettings optimizerSettings);
+    public void ChangeOptimizationSettings(IOptimizerSettings optimizerSettings);
 
     /// <summary>
     /// Gets the available production units based on the current settings

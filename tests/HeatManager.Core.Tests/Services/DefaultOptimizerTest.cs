@@ -30,14 +30,12 @@ public class DefaultOptimizerTest
         _mockSourceDataProvider = new Mock<ISourceDataProvider>();
         _mockOptimizerSettings = new Mock<IOptimizerSettings>();
         _mockOptimizerStrategy = new Mock<IOptimizerStrategy>();
-        _mockResultManager = new Mock<object>();
 
         _optimizer = new DefaultOptimizer(
             _mockAssetManager.Object,
             _mockSourceDataProvider.Object,
             _mockOptimizerSettings.Object,
-            _mockOptimizerStrategy.Object,
-            _mockResultManager.Object);
+            _mockOptimizerStrategy.Object);
     }
 
     [Fact]

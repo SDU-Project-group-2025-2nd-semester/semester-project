@@ -13,16 +13,14 @@ public class DefaultOptimizer : IOptimizer
     private readonly ISourceDataProvider _sourceDataProvider;
     private IOptimizerSettings _optimizerSettings;
     private readonly IOptimizerStrategy _optimizerStrategy;
-    private object _resultManager;
 
     public DefaultOptimizer(IAssetManager assetManager,
-        ISourceDataProvider sourceDataProvider, IOptimizerSettings optimizerSettings, IOptimizerStrategy optimizerStrategy, object resultManager)
+        ISourceDataProvider sourceDataProvider, IOptimizerSettings optimizerSettings, IOptimizerStrategy optimizerStrategy)
     {
         _assetManager = assetManager;
         _sourceDataProvider = sourceDataProvider;
         _optimizerSettings = optimizerSettings;
         _optimizerStrategy = optimizerStrategy;
-        _resultManager = resultManager;
     }
 
     public Schedule Optimize()
@@ -120,6 +118,7 @@ public class DefaultOptimizer : IOptimizer
     {
         _optimizerSettings = optimizerSettings;
     }
+
 
     public static IEnumerable<ProductionUnitBase> GetHeatSourcePriorityList(IEnumerable<ProductionUnitBase> availableUnits,
         SourceDataPoint entry, IOptimizerStrategy strategy)
