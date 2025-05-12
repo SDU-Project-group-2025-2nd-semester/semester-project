@@ -38,8 +38,7 @@ public class DefaultOptimizer : IOptimizer
         for (int i = 0; i < scheduledEntries.Count(); i++)
         {
             var entry = scheduledEntries.ElementAt(i);
-            var priorityList =
-                GetHeatSourcePriorityList(heatSources, entry, _optimizerStrategy);
+            var priorityList = GetHeatSourcePriorityList(heatSources, entry);
 
             double remainingDemand = entry.HeatDemand;
             foreach (var heatSource in priorityList)
@@ -119,9 +118,8 @@ public class DefaultOptimizer : IOptimizer
         _optimizerSettings = optimizerSettings;
     }
 
-
-    public static IEnumerable<ProductionUnitBase> GetHeatSourcePriorityList(IEnumerable<ProductionUnitBase> availableUnits,
-        SourceDataPoint entry, IOptimizerStrategy strategy)
+    private IEnumerable<ProductionUnitBase> GetHeatSourcePriorityList(IEnumerable<ProductionUnitBase> availableUnits,
+        SourceDataPoint entry)
     {
         // Data setup from the source data entry 
         decimal electricityPrice = entry.ElectricityPrice;
@@ -177,15 +175,15 @@ public class DefaultOptimizer : IOptimizer
         // Sort the units based on the strategy
         IEnumerable<ProductionUnitBase> heatSourcePriorityList;
         
-        if (strategy.Optimization == OptimizationType.PriceOptimization)
+        if (_optimizerStrategy.Optimization == OptimizationType.PriceOptimization)
         {
             heatSourcePriorityList = availableUnitsList.OrderBy(unit => unit.Cost).ThenBy(unit => unit.Emissions);
         }
-        else if (strategy.Optimization == OptimizationType.Co2Optimization)
+        else if (_optimizerStrategy.Optimization == OptimizationType.Co2Optimization)
         {
             heatSourcePriorityList = availableUnitsList.OrderBy(unit => unit.Emissions).ThenBy(unit => unit.Cost);
         }
-        else if (strategy.Optimization == OptimizationType.BalancedOptimization)
+        else if (_optimizerStrategy.Optimization == OptimizationType.BalancedOptimization)
         {
             //let's see what will happen
             var maxEmissions = availableUnitsList.Max(unit => unit.Emissions);

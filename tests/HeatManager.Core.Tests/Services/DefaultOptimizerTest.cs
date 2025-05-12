@@ -6,6 +6,7 @@ using Moq;
 using System.Collections.ObjectModel;
 using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.SourceDataProviders;
+using HeatManager.Core.Models.Schedules;
 
 namespace HeatManager.Core.Tests.Services;
 /*
@@ -122,218 +123,6 @@ public class DefaultOptimizerTest
     }
 
     [Fact]
-    public void GetHeatSourcePriorityList_WithPriceOptimization_OrdersByCost()
-    {
-        // Arrange
-        var units = new List<HeatProductionUnit>
-        {
-            new HeatProductionUnit { Name = "Unit1", Cost = 2, Emissions = 1, Resource = _oil },
-            new HeatProductionUnit { Name = "Unit2", Cost = 1, Emissions = 2, Resource = _oil }
-        };
-        var strategy = new OptimizerStrategy(true);
-        var sourceDataPoint = new SourceDataPoint();
-
-        // Act
-        var result = DefaultOptimizer.GetHeatSourcePriorityList(units, sourceDataPoint, strategy);
-
-        // Assert
-        Assert.Equal("Unit2", result.First().Name); // Cheaper unit should be first
-        Assert.Equal("Unit1", result.Last().Name);
-    }
-
-    [Fact]
-    public void GetHeatSourcePriorityList_WithCo2Optimization_OrdersByEmissions()
-    {
-        // Arrange
-        var units = new List<HeatProductionUnit>
-        {
-            new HeatProductionUnit { Name = "Unit1", Cost = 1, Emissions = 2, Resource = _oil },
-            new HeatProductionUnit { Name = "Unit2", Cost = 2, Emissions = 1, Resource = _oil }
-        };
-        var strategy = new OptimizerStrategy(false);
-        var mockSourceDataPoint = new SourceDataPoint();
-
-        // Act
-        var result = DefaultOptimizer.GetHeatSourcePriorityList(units, mockSourceDataPoint, strategy);
-
-        // Assert
-        Assert.Equal("Unit2", result.First().Name); // Lower emissions unit should be first
-        Assert.Equal("Unit1", result.Last().Name);
-    }
-
-    [Fact]
-    public void GetHeatSourcePriorityList_WithElectricityBasedUnits_AdjustsCosts()
-    {
-        // Arrange
-
-        var unit = new HeatProductionUnit
-        {
-            Name = "Unit1",
-            Cost = 1,
-            Emissions = 1,
-            Resource = _electricity
-        };
-
-        var strategy = new OptimizerStrategy(true);
-        var sourceDataPoint = new SourceDataPoint { ElectricityPrice = 2 };
-
-        // Act
-        var result = DefaultOptimizer.GetHeatSourcePriorityList([unit], sourceDataPoint, strategy);
-
-        // Assert
-        Assert.Equal(3, result.First().Cost); // Original cost + electricity price
-    }
-
-    [Fact]
-    public void GetHeatSourcePriorityList_WithMixedResourceTypes_HandlesCorrectly()
-    {
-        // Arrange
-
-        var units = new List<HeatProductionUnit>
-        {
-            new HeatProductionUnit { Name = "GasUnit", Cost = 2, Emissions = 1, Resource = _gas},
-            new HeatProductionUnit { Name = "ElectricUnit", Cost = 1, Emissions = 2, Resource = _electricity }
-        };
-
-        var strategy = new OptimizerStrategy(true);
-
-        var sourceDataPoint = new SourceDataPoint();
-
-        // Act
-        var result = DefaultOptimizer.GetHeatSourcePriorityList(units, sourceDataPoint, strategy);
-
-        // Assert
-        Assert.Equal("ElectricUnit", result.First().Name); // Should be first despite higher emissions due to lower cost
-    }
-
-    [Fact]
-    public void GetHeatSourcePriorityList_WithNegativeCost_HandlesCorrectly()
-    {
-        // Arrange
-        var units = new List<HeatProductionUnit>
-        {
-            new HeatProductionUnit { Name = "Unit1", Cost = -1, Emissions = 1, Resource = _oil },
-            new HeatProductionUnit { Name = "Unit2", Cost = 1, Emissions = 1, Resource = _oil }
-        };
-
-        var strategy = new OptimizerStrategy(true);
-        var sourceDataPoint = new SourceDataPoint();
-
-        // Act
-        var result = DefaultOptimizer.GetHeatSourcePriorityList(units, sourceDataPoint, strategy);
-
-        // Assert
-        Assert.Equal("Unit1", result.First().Name); // Negative cost should be first
-    }
-
-    [Fact]
-    public void GetHeatSourcePriorityList_WithEqualCosts_OrdersByEmissions()
-    {
-        // Arrange
-        var units = new List<HeatProductionUnit>
-        {
-            new() { Name = "Unit1", Cost = 1, Emissions = 2, Resource = _oil },
-            new() { Name = "Unit2", Cost = 1, Emissions = 1, Resource = _oil }
-        };
-
-        var strategy = new OptimizerStrategy(true);
-        var sourceDataPoint = new SourceDataPoint();
-
-        // Act
-        var result = DefaultOptimizer.GetHeatSourcePriorityList(units, sourceDataPoint, strategy);
-
-        // Assert
-        Assert.Equal("Unit2", result.First().Name); // Lower emissions should be first when costs are equal
-    }
-
-    [Fact]
-    public void GetHeatSourcePriorityList_WithElectricityProduction_AdjustsCostsCorrectly()
-    {
-        // Arrange
-        var electricityProductionUnit = new ElectricityProductionUnit()
-        {
-            Name = "ProducingUnit",
-            Cost = 1,
-            Emissions = 1,
-            Resource = _electricity,
-            MaxHeatProduction = 3,
-            MaxElectricity = 3
-        };
-
-
-        var units = new List<ProductionUnitBase> { electricityProductionUnit };
-        var strategy = new OptimizerStrategy(true);
-
-        var sourceDataPoint = new SourceDataPoint
-        {
-            ElectricityPrice = 2,
-            HeatDemand = 2
-        };
-        
-        // Act
-        var result = DefaultOptimizer.GetHeatSourcePriorityList(units, sourceDataPoint, strategy);
-
-        // Assert
-        var resultUnit = result.First();
-        Assert.Equal("ProducingUnit", resultUnit.Name);
-        Assert.Equal(-1, resultUnit.Cost); // Original cost (1) - electricity price (2) = -1
-    }
-
-    [Fact]
-    public void GetHeatSourcePriorityList_WithMixedElectricityUnits_AdjustsCostsCorrectly()
-    {
-        // Arrange
-
-        // Unit that only consumes electricity
-        var heatProductionUnit = new HeatProductionUnit
-        {
-            Name = "ConsumingUnit",
-            Cost = 1,
-            Emissions = 1,
-            Resource = _electricity,
-            MaxHeatProduction = 3
-        };
-
-        // Unit that produces electricity
-        var electricityProductionUnit = new ElectricityProductionUnit()
-        {
-            Name = "ProducingUnit",
-            Cost = 1,
-            Emissions = 1,
-            Resource = _electricity,
-            MaxHeatProduction = 3,
-            MaxElectricity = 3
-        };
-
-        var units = new List<ProductionUnitBase> { heatProductionUnit, electricityProductionUnit };
-        var strategy = new OptimizerStrategy(true);
-
-        var sourceDataPoint = new SourceDataPoint
-        {
-            ElectricityPrice = 2,
-            HeatDemand = 2
-        };
-
-        // Act
-        var result = DefaultOptimizer.GetHeatSourcePriorityList(units, sourceDataPoint, strategy);
-
-        var amazingName = result.ElementAt(0);
-        var amazingName2 = result.ElementAt(1);
-
-        // Assert
-        var resultList = result.ToList();
-        Assert.Equal(2, resultList.Count);
-
-        // Consuming unit should have increased cost
-        var consumingUnit = resultList.First(u => u.Name == "ConsumingUnit");
-        Assert.Equal(3, amazingName2.Cost); // Original cost (1) + electricity price (2) = 3
-
-        // Producing unit should have decreased cost
-        var producingUnit = resultList.First(u => u.Name == "ProducingUnit");
-        Assert.Equal(-1, amazingName.Cost); // Original cost (1) - electricity price (2) = -1
-    }
-
-    [Fact]
     public void GenerateHeatProductionUnitSchedules_WithEmptyList_ReturnsEmptyList()
     {
         // Arrange
@@ -426,17 +215,24 @@ public class DefaultOptimizerTest
         _mockSourceDataProvider.Setup(p => p.SourceDataCollection).Returns(sourceDataCollection);
         _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<ProductionUnitBase> { unit });
         _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames()).Returns(new List<string> { "Unit1" });
+        _mockOptimizerStrategy.Setup(s => s.Optimization).Returns(OptimizationType.PriceOptimization);
 
         // Act
-        _optimizer.Optimize();
+        var schedule = _optimizer.Optimize();
 
         // Assert
-        // Note: Since we don't have access to the result manager, we can't verify the actual schedule
-        // This test is more of a smoke test to ensure the method runs without exceptions
+        Assert.NotNull(schedule);
+        Assert.Single(schedule.HeatProductionUnitSchedules);
+        var unitSchedule = schedule.HeatProductionUnitSchedules.First();
+        Assert.Equal("Unit1", unitSchedule.Name);
+        Assert.Single(unitSchedule.DataPoints);
+        var dataPoint = unitSchedule.DataPoints[0];
+        Assert.Equal(0.5, dataPoint.Utilization);
+        Assert.Equal(50, dataPoint.HeatProduction);
     }
 
     [Fact]
-    public void Optimize_WithMultipleUnits_HandlesDemandDistribution()
+    public void Optimize_WithPriceOptimizationAndMultipleUnits_ProducesCorrectSchedule()
     {
         // Arrange
         var productionUnit1 = new HeatProductionUnit
@@ -472,34 +268,57 @@ public class DefaultOptimizerTest
         _mockSourceDataProvider.Setup(p => p.SourceDataCollection).Returns(sourceDataCollection);
         _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<ProductionUnitBase> { productionUnit1, productionUnit2 });
         _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames()).Returns(new List<string> { "Unit1", "Unit2" });
+        _mockOptimizerStrategy.Setup(s => s.Optimization).Returns(OptimizationType.PriceOptimization);
 
         // Act
-        _optimizer.Optimize();
+        var schedule = _optimizer.Optimize();
 
         // Assert
-        // Note: Since we don't have access to the result manager, we can't verify the actual schedule
-        // This test is more of a smoke test to ensure the method runs without exceptions
+        Assert.NotNull(schedule);
+        Assert.Equal(2, schedule.HeatProductionUnitSchedules.Count());
+        
+        var unit1Schedule = schedule.HeatProductionUnitSchedules.First(s => s.Name == "Unit1");
+        var unit2Schedule = schedule.HeatProductionUnitSchedules.First(s => s.Name == "Unit2");
+        
+        // Unit1 should be fully utilized (50/50) because it's cheaper
+        Assert.Single(unit1Schedule.DataPoints);
+        Assert.Equal(1.0, unit1Schedule.DataPoints[0].Utilization);
+        Assert.Equal(50, unit1Schedule.DataPoints[0].HeatProduction);
+        
+        // Unit2 should be partially utilized (25/50) as it's more expensive
+        Assert.Single(unit2Schedule.DataPoints);
+        Assert.Equal(0.5, unit2Schedule.DataPoints[0].Utilization);
+        Assert.Equal(25, unit2Schedule.DataPoints[0].HeatProduction);
     }
 
     [Fact]
-    public void Optimize_WithExcessDemand_HandlesCorrectly()
+    public void Optimize_WithCo2OptimizationAndMultipleUnits_ProducesCorrectSchedule()
     {
         // Arrange
-
-        var heatProductionUnit = new HeatProductionUnit
+        var productionUnit1 = new HeatProductionUnit
         {
             Name = "Unit1",
             MaxHeatProduction = 50,
             Cost = 1,
+            Emissions = 2,
+            ResourceConsumption = 1,
+            Resource = _oil
+        };
+
+        var productionUnit2 = new HeatProductionUnit
+        {
+            Name = "Unit2",
+            MaxHeatProduction = 50,
+            Cost = 2,
             Emissions = 1,
             ResourceConsumption = 1,
             Resource = _oil
         };
 
-        var sourceDataPoint = new SourceDataPoint
+        var sourceDataPoint = new SourceDataPoint()
         {
-            HeatDemand = 100,
             ElectricityPrice = 0,
+            HeatDemand = 75,
             TimeFrom = DateTime.Now,
             TimeTo = DateTime.Now.AddHours(1)
         };
@@ -507,14 +326,81 @@ public class DefaultOptimizerTest
         var sourceDataCollection = new SourceDataCollection([sourceDataPoint]);
 
         _mockSourceDataProvider.Setup(p => p.SourceDataCollection).Returns(sourceDataCollection);
-        _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<ProductionUnitBase> { heatProductionUnit });
-        _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames()).Returns(["Unit1"]);
+        _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<ProductionUnitBase> { productionUnit1, productionUnit2 });
+        _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames()).Returns(new List<string> { "Unit1", "Unit2" });
+        _mockOptimizerStrategy.Setup(s => s.Optimization).Returns(OptimizationType.Co2Optimization);
 
         // Act
-        _optimizer.Optimize();
+        var schedule = _optimizer.Optimize();
 
         // Assert
-        // Note: Since we don't have access to the result manager, we can't verify the actual schedule
-        // This test is more of a smoke test to ensure the method runs without exceptions
+        Assert.NotNull(schedule);
+        Assert.Equal(2, schedule.HeatProductionUnitSchedules.Count());
+        
+        var unit1Schedule = schedule.HeatProductionUnitSchedules.First(s => s.Name == "Unit1");
+        var unit2Schedule = schedule.HeatProductionUnitSchedules.First(s => s.Name == "Unit2");
+        
+        // Unit2 should be fully utilized (50/50) because it has lower emissions
+        Assert.Single(unit2Schedule.DataPoints);
+        Assert.Equal(1.0, unit2Schedule.DataPoints[0].Utilization);
+        Assert.Equal(50, unit2Schedule.DataPoints[0].HeatProduction);
+        
+        // Unit1 should be partially utilized (25/50) as it has higher emissions
+        Assert.Single(unit1Schedule.DataPoints);
+        Assert.Equal(0.5, unit1Schedule.DataPoints[0].Utilization);
+        Assert.Equal(25, unit1Schedule.DataPoints[0].HeatProduction);
+    }
+
+    [Fact]
+    public void Optimize_WithElectricityProducingUnit_ProducesCorrectSchedules()
+    {
+        // Arrange
+        var electricityUnit = new ElectricityProductionUnit
+        {
+            Name = "CHP",
+            MaxHeatProduction = 100,
+            MaxElectricity = 50,
+            Cost = 2,
+            Emissions = 1,
+            ResourceConsumption = 1,
+            Resource = _gas
+        };
+
+        var sourceDataPoint = new SourceDataPoint
+        {
+            HeatDemand = 50,
+            ElectricityPrice = 3,
+            TimeFrom = DateTime.Now,
+            TimeTo = DateTime.Now.AddHours(1)
+        };
+
+        var sourceDataCollection = new SourceDataCollection([sourceDataPoint]);
+
+        _mockSourceDataProvider.Setup(p => p.SourceDataCollection).Returns(sourceDataCollection);
+        _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<ProductionUnitBase> { electricityUnit });
+        _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames()).Returns(new List<string> { "CHP" });
+        _mockOptimizerStrategy.Setup(s => s.Optimization).Returns(OptimizationType.PriceOptimization);
+
+        // Act
+        var schedule = _optimizer.Optimize();
+
+        // Assert
+        Assert.NotNull(schedule);
+        
+        // Verify heat production schedule
+        Assert.Single(schedule.HeatProductionUnitSchedules);
+        var heatSchedule = schedule.HeatProductionUnitSchedules.First();
+        Assert.Equal("CHP", heatSchedule.Name);
+        Assert.Single(heatSchedule.DataPoints);
+        Assert.Equal(0.5, heatSchedule.DataPoints[0].Utilization); // 50/100
+        Assert.Equal(50, heatSchedule.DataPoints[0].HeatProduction);
+        
+        // Verify electricity production schedule
+        Assert.Single(schedule.ElectricityProductionUnitSchedules);
+        var electricitySchedule = schedule.ElectricityProductionUnitSchedules.First();
+        Assert.Equal("CHP", electricitySchedule.Name);
+        Assert.Single(electricitySchedule.DataPoints);
+        Assert.Equal(25, electricitySchedule.DataPoints[0].ElectricityProduction); // 50% utilization * 50 max
+        Assert.Equal(3, electricitySchedule.DataPoints[0].ElectricityPrice);
     }
 }
