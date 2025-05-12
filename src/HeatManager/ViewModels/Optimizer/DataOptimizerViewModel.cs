@@ -12,17 +12,57 @@ using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
+using System.Collections.ObjectModel;
+using System.Linq;
+using HeatManager.Core.Services.Optimizers;
+using LiveChartsCore;
+using System;
+using System.ComponentModel;
 using HeatManager.Core.ResultData;
 using HeatManager.Core.Services.Optimizers;
 
 namespace HeatManager.ViewModels.Optimizer;
 
-public partial class DataOptimizerViewModel : ViewModelBase, INotifyPropertyChanged
+internal class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel, INotifyPropertyChanged
 {
+    public ObservableCollection<ISeries> Series { get; } = new();
+    public ObservableCollection<ScheduleData> TableData { get; } = new();
+
     private readonly IOptimizer _optimizer;
     private readonly ObservableCollection<ObservablePoint> _values = new();
     private DateTimeOffset? _selectedDate;
     private string? _lastLabel;
+
+    private bool _isChartVisible = true; // Default to chart view
+    private bool _isTableVisible = false;
+
+    public bool IsChartVisible
+    {
+        get => _isChartVisible;
+        set
+        {
+            if (SetProperty(ref _isChartVisible, value))
+            {
+                // Toggle table visibility based on chart view
+                IsTableVisible = !value;
+            }
+        }
+    }
+
+    public bool IsTableVisible
+    {
+        get => !_isChartVisible;
+        set
+        {
+            SetProperty(ref _isTableVisible, value);
+        }
+    }
+
+    public void ToggleView()
+    {
+        // Switch between chart and table view
+        IsChartVisible = !IsChartVisible;
+    }
 
     public DataOptimizerViewModel(IOptimizer optimizer)
     {
@@ -103,10 +143,22 @@ public partial class DataOptimizerViewModel : ViewModelBase, INotifyPropertyChan
         {
             i++;
             Series.Add(new StackedColumnSeries<double>
+            // Add data to table
+            TableData.Add(new ScheduleData
             {
                 Values = unitSchedule.HeatProduction,
                 Name = unitSchedule.Name,
                 Fill = new SolidColorPaint(Colors[i])
+                HeatProduction = Math.Round(Convert.ToDecimal(unitSchedule.TotalHeatProduction), 3),
+                MaxHeatProduction = Math.Round(Convert.ToDecimal(unitSchedule.MaxHeatProduction), 3),
+                Emissions = Math.Round(Convert.ToDecimal(unitSchedule.TotalEmissions), 3),
+                MaxEmissions = Math.Round(Convert.ToDecimal(unitSchedule.MaxEmissions), 3),
+                Cost = Math.Round(unitSchedule.TotalCost, 2),
+                MaxCost = Math.Round(unitSchedule.MaxCost, 2),
+                ResourceConsumption = Math.Round(Convert.ToDecimal(unitSchedule.TotalResourceConsumption), 3),
+                MaxResourceConsumption = Math.Round(Convert.ToDecimal(unitSchedule.MaxResourceConsumption), 3),
+                Utilization = Math.Round(Convert.ToDecimal(unitSchedule.TotalUtilization), 3),
+                MaxUtilization = Math.Round(Convert.ToDecimal(unitSchedule.MaxUtilization), 3)
             });
         }
 
@@ -220,4 +272,20 @@ public partial class DataOptimizerViewModel : ViewModelBase, INotifyPropertyChan
         SKColors.Silver,
         SKColors.Gold
     };
+}
+
+// ViewModel table row representation
+public class ScheduleData
+{
+    public string Name { get; set; }
+    public decimal HeatProduction { get; set; }
+    public decimal MaxHeatProduction { get; set; }
+    public decimal Emissions { get; set; }
+    public decimal MaxEmissions { get; set; }
+    public decimal Cost { get; set; }
+    public decimal MaxCost { get; set; }
+    public decimal ResourceConsumption { get; set; }
+    public decimal MaxResourceConsumption { get; set; }
+    public decimal Utilization { get; set; }
+    public decimal MaxUtilization { get; set; }
 }
