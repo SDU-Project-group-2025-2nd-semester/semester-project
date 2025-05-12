@@ -1,11 +1,13 @@
-﻿namespace HeatManager.Core.Models.Schedules;
+﻿using System.Collections.Immutable;
+
+namespace HeatManager.Core.Models.Schedules;
 
 public class Schedule
 {
     public int Length { get; private set; }
     //Main Data
-    public IEnumerable<HeatProductionUnitSchedule> HeatProductionUnitSchedules { get; }
-    public IEnumerable<ElectricityProductionUnitSchedule> ElectricityProductionUnitSchedules { get; }
+    public ImmutableList<HeatProductionUnitSchedule> HeatProductionUnitSchedules { get; }
+    public ImmutableList<ElectricityProductionUnitSchedule> ElectricityProductionUnitSchedules { get; }
     
     //Time Data
     public DateTime Start { get; private set; }
@@ -30,37 +32,28 @@ public class Schedule
     public Schedule(IEnumerable<HeatProductionUnitSchedule> heatProductionUnitSchedules,
         IEnumerable<ElectricityProductionUnitSchedule> electricityProductionUnitSchedules)
     {
-        HeatProductionUnitSchedules = heatProductionUnitSchedules;
-        ElectricityProductionUnitSchedules = electricityProductionUnitSchedules;
+        HeatProductionUnitSchedules = heatProductionUnitSchedules.ToImmutableList();
+        ElectricityProductionUnitSchedules = electricityProductionUnitSchedules.ToImmutableList();
 
-        CreateProperties(); 
-    }
-
-    private void CreateProperties()
-    {
-        Length = HeatProductionUnitSchedules.ElementAt(0).DataPoints.Count();
-        Start = HeatProductionUnitSchedules.ElementAt(0).DataPoints.ElementAt(0).TimeFrom; 
-        End = HeatProductionUnitSchedules.ElementAt(0).DataPoints
-            .ElementAt(Length - 1).TimeTo; //TODO: make this actually readable
+        Length = HeatProductionUnitSchedules[0].DataPoints.Count();
+        Start = HeatProductionUnitSchedules[0].DataPoints[0].TimeFrom; 
+        End = HeatProductionUnitSchedules[0].DataPoints[^1].TimeTo; 
         Resolution = End - Start; 
-        
-        
         
         Costs = GetCostsByHour(HeatProductionUnitSchedules);
         Emissions = GetEmissionsByHour(HeatProductionUnitSchedules); 
         HeatProduction = GetHeatProductionByHour(HeatProductionUnitSchedules);
-        
-        
+
     }
-    
-    private double[] GetEmissionsByHour(IEnumerable<HeatProductionUnitSchedule> heatProductionUnitSchedules)
+
+    private double[] GetEmissionsByHour(ImmutableList<HeatProductionUnitSchedule> heatProductionUnitSchedules)
     {
-        IEnumerable<HeatProductionUnitSchedule> productionUnitSchedules = heatProductionUnitSchedules.ToList();
+
         var emissions = new double[Length];
         
         for (int i = 0; i < Length; i++)
         {
-            foreach (var schedule in productionUnitSchedules)
+            foreach (var schedule in heatProductionUnitSchedules)
             {
                 emissions[i] += schedule.Emissions.ElementAt(i);
             }
@@ -68,14 +61,13 @@ public class Schedule
         return emissions; 
     }
     
-    private decimal[] GetCostsByHour(IEnumerable<HeatProductionUnitSchedule> heatProductionUnitSchedules)
+    private decimal[] GetCostsByHour(ImmutableList<HeatProductionUnitSchedule> heatProductionUnitSchedules)
     {
-        IEnumerable<HeatProductionUnitSchedule> productionUnitSchedules = heatProductionUnitSchedules.ToList();
         var costs = new decimal[Length];
         
         for (int i = 0; i < Length; i++)
         {
-            foreach (var schedule in productionUnitSchedules)
+            foreach (var schedule in heatProductionUnitSchedules)
             {
                 costs[i] += schedule.Costs.ElementAt(i);
             }
@@ -83,16 +75,15 @@ public class Schedule
         return costs; 
     }
 
-    private double[] GetHeatProductionByHour(IEnumerable<HeatProductionUnitSchedule> heatProductionUnitSchedules)
+    private double[] GetHeatProductionByHour(ImmutableList<HeatProductionUnitSchedule> heatProductionUnitSchedules)
     {
-        IEnumerable<HeatProductionUnitSchedule> productionUnitSchedules = HeatProductionUnitSchedules.ToList();
         var heatProduction = new double[Length];
         
         for (int i = 0; i < Length; i++)
         {
-            foreach (var schedule in productionUnitSchedules)
+            foreach (var schedule in heatProductionUnitSchedules)
             {
-                heatProduction[i] += schedule.HeatProduction.ElementAt(i);
+                heatProduction[i] += schedule.HeatProduction[i];
             }
         }
         return heatProduction; 

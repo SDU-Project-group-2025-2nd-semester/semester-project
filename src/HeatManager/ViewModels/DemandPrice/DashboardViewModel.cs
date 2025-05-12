@@ -38,7 +38,7 @@ public partial class GridProductionViewModel : ViewModelBase
 
     public GridProductionViewModel(ISourceDataProvider provider)
     {
-        var dataPoints = provider.SourceDataCollection?.DataPoints;
+        var dataPoints = provider.SourceDataCollection?.DataPoints?? throw new InvalidOperationException("Source data need to be imported before their visualization.");
 
 
 
@@ -124,27 +124,21 @@ public partial class GridProductionViewModel : ViewModelBase
                 {
                     var date = new DateTime((long)value);
 
-                    if (ScrollableAxes != null &&
-                        ScrollableAxes.Length > 0 &&
-                        ScrollableAxes[0] is DateTimeAxis dateAxis)
+                    if (ScrollableAxes is not { Length: > 0 } ||
+                        ScrollableAxes[0] is not DateTimeAxis dateAxis)
                     {
-                        var visibleRange = dateAxis.MaxLimit - dateAxis.MinLimit;
-                        var rangeDays = TimeSpan.FromTicks((long)visibleRange).TotalDays;
-
-                        if (rangeDays < 1)
-                        {
-                            return date.ToString("HH:mm");
-                        }
-                        else if(rangeDays <7)
-                        {
-                            return date.ToString("MMM/dd HH:mm");
-                        }
-                        else
-                        {
-                            return date.ToString("MMM/dd/yy");
-                        }
+                        return date.ToString("MMM/dd/yy");
                     }
-                    return date.ToString("MMM/dd/yy");
+
+                    var visibleRange = dateAxis.MaxLimit - dateAxis ?.MinLimit ?? throw new InvalidOperationException("Max and/or min limit not set.");
+                    var rangeDays = TimeSpan.FromTicks((long)visibleRange).TotalDays;
+
+                    return rangeDays switch
+                    {
+                        < 1 => date.ToString("HH:mm"),
+                        < 7 => date.ToString("MMM/dd HH:mm"),
+                        _ => date.ToString("MMM/dd/yy")
+                    };
                 }
             }
         ];
