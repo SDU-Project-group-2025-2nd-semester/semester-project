@@ -4,6 +4,10 @@
     <option name="projectPerEditor">
       <map>
         <entry key="src/HeatManager/Views/ConfigPanel/AssetManagerView.axaml" value="src/HeatManager/HeatManager.csproj" />
+        <entry key="src/HeatManager/Views/DemandPrice/DashboardView.axaml" value="src/HeatManager/HeatManager.csproj" />
+        <entry key="src/HeatManager/Views/MainWindow.axaml" value="src/HeatManager/HeatManager.csproj" />
+        <entry key="src/HeatManager/Views/Optimizer/DataOptimizerView.axaml" value="src/HeatManager/HeatManager.csproj" />
+        <entry key="src/HeatManager/Views/Overview/Map.axaml" value="src/HeatManager/HeatManager.csproj" />
       </map>
     </option>
   </component>
