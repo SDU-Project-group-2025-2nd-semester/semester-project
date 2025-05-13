@@ -34,7 +34,7 @@ public class OptimizerSettings : IOptimizerSettings
     /// Constructor that initializes the optimizer settings with a list of unit names.
     /// All units are initially set to inactive (false).
     /// </summary>
-    /// <param name="unitsNames">A list of unit
+    /// <param name="unitsNames">A list of unit names used to initialize the settings. Each unit is added to the AllUnits dictionary with an initial inactive (false) status.</param>
     public OptimizerSettings(List<string> unitsNames)  
     {
         AllUnits = new Dictionary<string, bool>(); 
