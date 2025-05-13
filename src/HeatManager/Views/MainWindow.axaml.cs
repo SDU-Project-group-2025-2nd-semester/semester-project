@@ -29,7 +29,7 @@ namespace HeatManager.Views
             optimizerSettings.SetActive("GB2");
             optimizerSettings.SetActive("OB1");
             
-            var optimizer = new DefaultOptimizer( assetManager, sourceDataProvider, optimizerSettings,new OptimizerStrategy(true), new object());
+            var optimizer = new DefaultOptimizer( assetManager, sourceDataProvider, optimizerSettings,new OptimizerStrategy(true));
             
             DataContext = new MainWindowViewModel(sourceDataProvider, optimizer);
         }
