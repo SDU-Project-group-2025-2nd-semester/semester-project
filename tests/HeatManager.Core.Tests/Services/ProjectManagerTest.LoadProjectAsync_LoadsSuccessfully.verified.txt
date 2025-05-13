@@ -13,15 +13,6 @@
         }
       }
     ],
-    HeatProductionUnits: [
-      {
-        Name: Test,
-        Resource: {
-          Name: Oil,
-          Type: Oil
-        }
-      }
-    ],
     Resources: [
       {
         Name: Electricity,
