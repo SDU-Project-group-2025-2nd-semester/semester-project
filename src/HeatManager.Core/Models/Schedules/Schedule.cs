@@ -78,11 +78,25 @@ public class Schedule
     {
         HeatProductionUnitSchedules = heatProductionUnitSchedules.ToImmutableList();
         ElectricityProductionUnitSchedules = electricityProductionUnitSchedules.ToImmutableList();
+    }
 
-        Length = HeatProductionUnitSchedules[0].DataPoints.Count();
-        Start = HeatProductionUnitSchedules[0].DataPoints[0].TimeFrom; 
-        End = HeatProductionUnitSchedules[0].DataPoints[^1].TimeTo; 
-        Resolution = End - Start; 
+    private void CreateProperties()
+    {
+        if (HeatProductionUnitSchedules.IsEmpty) 
+        { 
+            Length = 0; 
+            Start = new DateTime(0);
+            End = new DateTime(0); 
+            Resolution = Start - End;  
+        } 
+        else 
+        { 
+            Length = HeatProductionUnitSchedules.ElementAt(0).DataPoints.Count();
+            Start = HeatProductionUnitSchedules.ElementAt(0).DataPoints.ElementAt(0).TimeFrom; 
+            End = HeatProductionUnitSchedules.ElementAt(0).DataPoints
+                .ElementAt(Length - 1).TimeTo; //TODO: make this actually readable
+            Resolution = End - Start; 
+        }
         
         Costs = GetCostsByHour(HeatProductionUnitSchedules);
         Emissions = GetEmissionsByHour(HeatProductionUnitSchedules); 
