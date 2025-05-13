@@ -31,7 +31,7 @@ namespace HeatManager.Views
             
             var optimizer = new DefaultOptimizer( assetManager, sourceDataProvider, optimizerSettings,new OptimizerStrategy(true), new object());
             
-            DataContext = new MainWindowViewModel(sourceDataProvider, optimizer);
+            DataContext = new MainWindowViewModel(sourceDataProvider, optimizer, assetManager);
         }
     }
 }

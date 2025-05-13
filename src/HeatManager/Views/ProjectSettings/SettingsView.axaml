@@ -1,0 +1,77 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="650"
+             x:Class="HeatManager.Views.ProjectSettings.SettingsView"
+			 xmlns:settingsmodel="clr-namespace:HeatManager.ViewModels.ProjectSettings"
+			 xmlns:settingsview="clr-namespace:HeatManager.Views.ProjectSettings"
+			 x:DataType="settingsmodel:SettingsViewModel"
+			 >
+			
+
+	<StackPanel>
+		
+		<TextBlock HorizontalAlignment="Center" FontWeight="DemiBold" FontSize="20" Margin="10 25 10 10" >Create a new project</TextBlock>
+		
+		<StackPanel>
+			
+			<TextBox Watermark="Enter Title here" Padding="10" Margin="30 10 300 10"/>
+		
+			<TextBox Watermark="Enter Description here" Padding="10" Margin="30 10 300 10"/>
+		
+		</StackPanel>
+
+		<StackPanel Orientation="Horizontal"  Margin="30 10 0 0">
+			
+			<StackPanel Margin="0 0 30 0" Spacing="15">
+				
+				<TextBlock FontWeight="DemiBold" FontSize="18" Margin="0 10 0 5">Select Time</TextBlock>
+				
+				<RadioButton GroupName="Time" Content="Summer Time" IsEnabled="True"/>
+				
+				<RadioButton GroupName="Time" Content="Winter Time"/>
+				
+				<RadioButton GroupName="Time" Content="Custom Time Data" IsEnabled="False"/>
+			</StackPanel>
+			
+			<StackPanel Spacing="15">
+				
+				<TextBlock FontWeight="DemiBold" FontSize="18" Margin="0 10 0 5">Select Asset Manager*</TextBlock>
+				
+				<RadioButton GroupName="AssetManager" Content="Scenario 1" IsEnabled="True"/>
+				
+				<RadioButton GroupName="AssetManager" Content="Scenario 2"/>
+
+				<RadioButton GroupName="AssetManager" Content="Custom Scenario"/>
+
+				<TextBlock FontSize="11" TextDecorations="Underline" >*This can be changer after project creation</TextBlock>
+			</StackPanel>
+			
+		</StackPanel>
+
+		<StackPanel Spacing="10" Background="LightGray">
+			
+			<TextBlock FontWeight="DemiBold" FontSize="18" Margin="30 0 0 0">Heating Units</TextBlock>
+
+			<Panel>
+				<Carousel Name="slides" >
+					<Carousel.PageTransition >
+						<CompositePageTransition>
+							<PageSlide Duration="0:00:01.500" Orientation="Horizontal" />
+						</CompositePageTransition>
+					</Carousel.PageTransition>
+					<Carousel.Items>
+						
+					</Carousel.Items>
+				</Carousel>
+				<Panel Margin="20">
+					<Button Background="White" >&lt;</Button>
+					<Button Background="White" HorizontalAlignment="Right">&gt;</Button>
+				</Panel>
+			</Panel>
+		</StackPanel>
+	</StackPanel>
+  
+  
+</UserControl>

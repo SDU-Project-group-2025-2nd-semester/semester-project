@@ -6,6 +6,11 @@ namespace HeatManager.ViewModels.ConfigPanel;
 
 internal class AssetManagerViewModel : ViewModelBase, IAssetManagerViewModel
 {   
-    private readonly IAssetManager _assetManager = new AssetManager();
+    private readonly IAssetManager _assetManager;
+
+    public AssetManagerViewModel(IAssetManager assetManager)
+    {
+        _assetManager = assetManager;
+    }
     internal ObservableCollection<ProductionUnitBase> Units => _assetManager.ProductionUnits;
 }

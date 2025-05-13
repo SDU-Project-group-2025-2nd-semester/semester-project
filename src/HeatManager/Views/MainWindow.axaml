@@ -26,6 +26,8 @@
                     <!-- Configuration panel is Asset Manager in the code, I will change the naming later -->
             
                     <Button Content="Optimiser" Command="{Binding SetOptimizerViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
+
+					<Button Content="Project settings" Command="{Binding SetSettingsViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
             
 
                 </StackPanel>

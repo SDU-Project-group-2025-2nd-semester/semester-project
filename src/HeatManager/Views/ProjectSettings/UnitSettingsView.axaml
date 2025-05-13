@@ -1,0 +1,60 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="380" d:DesignHeight="600"
+             x:Class="HeatManager.Views.ProjectSettings.UnitSettingsView"
+			 xmlns:unitsettingsmodel="clr-namespace:HeatManager.ViewModels.ProjectSettings"
+			 x:DataType="unitsettingsmodel:UnitSettingsViewModel">
+
+	<StackPanel>
+		<StackPanel Spacing="10" Margin="0 10 0 15" HorizontalAlignment="Center">	
+		<TextBlock FontSize="18" FontWeight="DemiBold" >Name</TextBlock>
+		<TextBox Watermark="Enter Name here"/>
+
+		<TextBlock FontSize="18" FontWeight="DemiBold" >Operation Cost</TextBlock>
+		<TextBox Watermark="Enter Operation Cost here"/>
+
+		<TextBlock FontSize="18" FontWeight="DemiBold" >Resource Consumption</TextBlock>
+		<TextBox Watermark="Enter Resource Consumption here"/>
+
+		<TextBlock FontSize="18" FontWeight="DemiBold" >Emissions</TextBlock>
+		<TextBox Watermark="Enter Emissions here"/>
+
+		<TextBlock FontSize="18" FontWeight="DemiBold" >Maximum Heat Production</TextBlock>
+		<TextBox Watermark="Enter Max. Heat Production here"/>
+
+		<TextBlock FontSize="18" FontWeight="DemiBold" >Resource type</TextBlock>
+		<ComboBox>
+
+			<ComboBoxItem>Gas</ComboBoxItem>
+
+			<ComboBoxItem>Oil</ComboBoxItem>
+
+		</ComboBox>
+
+
+		<TextBlock FontSize="18" FontWeight="DemiBold" >Produces Electricity</TextBlock>
+		<ComboBox>
+
+			<ComboBoxItem>Yes</ComboBoxItem>
+
+			<ComboBoxItem>No</ComboBoxItem>
+
+			<ComboBoxItem></ComboBoxItem>
+
+		</ComboBox>
+		
+		</StackPanel>
+		
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="40">
+
+			<Button Content="Save Changes" Background="Red" Foreground="White" />
+
+			<Button Content="Discard Changes" />
+			
+		</StackPanel>
+
+	</StackPanel>
+
+</UserControl>

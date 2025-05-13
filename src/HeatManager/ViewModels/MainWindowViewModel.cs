@@ -1,22 +1,25 @@
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.Services.SourceDataProviders;
 using HeatManager.ViewModels.ConfigPanel;
 using HeatManager.ViewModels.DemandPrice;
 using HeatManager.ViewModels.Optimizer;
 using HeatManager.ViewModels.Overview;
+using HeatManager.ViewModels.ProjectSettings;
 using HeatManager.Views.ConfigPanel;
 using HeatManager.Views.DemandPrice;
 using HeatManager.Views.Optimizer;
 using HeatManager.Views.Overview;
+using HeatManager.Views.ProjectSettings;
 
 // ReSharper disable InconsistentNaming
 
 namespace HeatManager.ViewModels;
 
-public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOptimizer optimizer) : ViewModelBase
+public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOptimizer optimizer, IAssetManager assetManager) : ViewModelBase
 {   
     [ObservableProperty]
     private UserControl? currentView;
@@ -31,7 +34,7 @@ public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOpti
     [RelayCommand]
     internal void SetConfigPanelView()
     {
-        CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel() };
+        CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel(assetManager) };
     }
     
     [RelayCommand]
@@ -50,5 +53,11 @@ public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOpti
     private void SetOverviewView()
     {
         CurrentView = new OverviewView { DataContext = new OverviewViewModel(this) };
+    }
+
+    [RelayCommand]
+    private void SetSettingsView()
+    {
+        CurrentView = new SettingsView { DataContext = new SettingsViewModel() };
     }
 }
