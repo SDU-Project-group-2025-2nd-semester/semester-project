@@ -61,8 +61,6 @@ public class CombinedProductionUnit : INotifyPropertyChanged
                     ProductionUnitData.Units.SetOffline(Name);
                 }
 
-                // Status = isActive ? ProductionUnitStatus.Active : ProductionUnitStatus.Offline;
-
                 // Notify the ViewModel to refresh the ProductionUnits collection
                 OnToggle?.Invoke();
                 

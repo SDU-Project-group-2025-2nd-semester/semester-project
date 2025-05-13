@@ -32,7 +32,7 @@
 										<Image Source="/Assets/units.png" Width="200"/>
 									</Border>
 									<StackPanel Orientation="Horizontal">
-										<ToggleButton IsChecked="{Binding IsActive}" Background="#66000000" BorderThickness="0">
+										<ToggleButton IsChecked="{Binding IsActive}" Background="#66000000" BorderThickness="0"> <!-- transparent background not working -->
 											<ToggleButton.Content>
 												<Panel>
 													<!-- Active Icon -->

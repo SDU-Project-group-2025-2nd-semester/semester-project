@@ -20,15 +20,11 @@ public partial class ProductionUnitsViewModel : ViewModelBase
 
     public ProductionUnitsViewModel()
     { 
+        // Reflect the current state of ProductionUnitData.Units
+        RefreshProductionUnits();
+
+        // Set the scenario state without resetting the units
         IsScenario1Selected = IsScenario1SelectedState;
-        if (IsScenario1Selected)
-        {
-            LoadScenario1();
-        }
-        else
-        {
-            LoadScenario2();
-        }
     }
 
     partial void OnIsScenario1SelectedChanged(bool value)
