@@ -44,7 +44,7 @@ public class DefaultOptimizer : IOptimizer
     public Schedule Optimize()
     {
         //Set up the data
-        var scheduledEntries = _sourceDataProvider.SourceDataCollection.DataPoints;
+        var scheduledEntries = _sourceDataProvider.SourceDataCollection?.DataPoints?? throw new Exception("Source data need to be imported before optimization!");
         var heatSources = GetAvailableUnits(_assetManager, _optimizerSettings);
         var electricitySources = heatSources
             .OfType<ElectricityProductionUnit>()
