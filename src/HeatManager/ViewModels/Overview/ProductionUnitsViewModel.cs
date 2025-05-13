@@ -29,16 +29,20 @@ public partial class ProductionUnitsViewModel : ViewModelBase
 
     partial void OnIsScenario1SelectedChanged(bool value)
     {
-        // Persist the state
-        IsScenario1SelectedState = value;
-        
-        if (value) // If Scenario 1 is selected
+        // Only load scenarios if the user explicitly changes the selection
+        if (value != IsScenario1SelectedState)
         {
-            LoadScenario1();
-        }
-        else // If Scenario 2 is selected
-        {
-            LoadScenario2();
+            // Persist the state
+            IsScenario1SelectedState = value;
+            
+            if (value) // If Scenario 1 is selected
+            {
+                LoadScenario1();
+            }
+            else // If Scenario 2 is selected
+            {
+                LoadScenario2();
+            }
         }
     }
 
