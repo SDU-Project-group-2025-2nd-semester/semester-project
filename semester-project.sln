@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeatManager.Core", "src\Hea
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeatManager.Core.Tests", "tests\HeatManager.Core.Tests\HeatManager.Core.Tests.csproj", "{572F4460-853E-483D-9FE5-EE96458C3EDD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeatManager.Tests", "tests\HeatManager.Tests\HeatManager.Tests.csproj", "{05D0C7B9-B4D4-4463-8A0E-171D0C43C10F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,10 @@ Global
 		{572F4460-853E-483D-9FE5-EE96458C3EDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{572F4460-853E-483D-9FE5-EE96458C3EDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{572F4460-853E-483D-9FE5-EE96458C3EDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05D0C7B9-B4D4-4463-8A0E-171D0C43C10F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05D0C7B9-B4D4-4463-8A0E-171D0C43C10F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05D0C7B9-B4D4-4463-8A0E-171D0C43C10F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05D0C7B9-B4D4-4463-8A0E-171D0C43C10F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
