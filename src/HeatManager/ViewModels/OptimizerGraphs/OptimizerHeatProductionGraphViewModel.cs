@@ -13,19 +13,24 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HeatManager.ViewModels.OptimizerGraphs;
+
+/// <summary>
+/// ViewModel for displaying a heat production graph using LiveCharts.
+/// </summary>
 internal partial class OptimizerHeatProductionGraphViewModel : ViewModelBase, IDataOptimizerViewModel, INotifyPropertyChanged
 {
-
-
     private DateTimeOffset? _selectedDate;
     private string? _lastLabel;
     private List<DateTime> orderedTimes;
 
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="OptimizerHeatProductionGraphViewModel"/> class.
+    /// </summary>
+    /// <param name="schedules">The list of heat production unit schedules.</param>
+    /// <param name="OrderedTimes">The ordered time slots for chart axis labeling.</param>
+    /// <param name="minDate">The minimum date in the dataset.</param>
     public OptimizerHeatProductionGraphViewModel(List<HeatProductionUnitSchedule> schedules, List<DateTime> OrderedTimes, DateTimeOffset? minDate)
     {
         MinDate = minDate;
@@ -33,7 +38,6 @@ internal partial class OptimizerHeatProductionGraphViewModel : ViewModelBase, ID
         BuildChartSeries(schedules);
         ConfigureAxes(orderedTimes, schedules);
     }
-
 
     /// <summary>
     /// Gets the chart series collection.
@@ -76,12 +80,17 @@ internal partial class OptimizerHeatProductionGraphViewModel : ViewModelBase, ID
     /// <summary>
     /// Handles chart update events.
     /// </summary>
+    /// <param name="args">The chart command arguments.</param>
     [RelayCommand]
     public void ChartUpdated(ChartCommandArgs args)
     {
         var cartesianChart = (ICartesianChartView)args.Chart;
     }
 
+    /// <summary>
+    /// Builds the chart series based on provided schedule data.
+    /// </summary>
+    /// <param name="schedules">The list of schedules.</param>
     private void BuildChartSeries(List<HeatProductionUnitSchedule> schedules)
     {
         Series.Clear();
@@ -99,6 +108,11 @@ internal partial class OptimizerHeatProductionGraphViewModel : ViewModelBase, ID
         }
     }
 
+    /// <summary>
+    /// Configures the chart's X and Y axes using provided time and schedule data.
+    /// </summary>
+    /// <param name="orderedTimes">The list of ordered time slots.</param>
+    /// <param name="schedules">The list of schedules.</param>
     private void ConfigureAxes(List<DateTime> orderedTimes, List<HeatProductionUnitSchedule> schedules)
     {
         int i = 0;
@@ -155,8 +169,6 @@ internal partial class OptimizerHeatProductionGraphViewModel : ViewModelBase, ID
         }
     }
 
-
-
     /// <summary>
     /// Called when a new date is selected.
     /// </summary>
@@ -169,11 +181,10 @@ internal partial class OptimizerHeatProductionGraphViewModel : ViewModelBase, ID
     }
 
     /// <summary>
-    /// Sets the X-axis window based on selected date.
+    /// Sets the X-axis window range based on the selected date.
     /// </summary>
     private void SetXMinLimit()
     {
-
         if (SelectedDate.HasValue)
         {
             var index = orderedTimes.FindIndex(t => t >= SelectedDate.Value.DateTime);
@@ -194,11 +205,8 @@ internal partial class OptimizerHeatProductionGraphViewModel : ViewModelBase, ID
         }
     }
 
-
-
-
     /// <summary>
-    /// Predefined chart color palette.
+    /// Predefined color palette for chart series.
     /// </summary>
     private static readonly SKColor[] Colors =
     {
