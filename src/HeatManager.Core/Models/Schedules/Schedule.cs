@@ -38,13 +38,22 @@ public class Schedule
 
     private void CreateProperties()
     {
-        Length = HeatProductionUnitSchedules.ElementAt(0).DataPoints.Count();
-        Start = HeatProductionUnitSchedules.ElementAt(0).DataPoints.ElementAt(0).TimeFrom; 
-        End = HeatProductionUnitSchedules.ElementAt(0).DataPoints
-            .ElementAt(Length - 1).TimeTo; //TODO: make this actually readable
-        Resolution = End - Start; 
-        
-        
+        if (HeatProductionUnitSchedules.Count() == 0) 
+        { 
+            Length = 0; 
+            Start = new DateTime(0);
+            End = new DateTime(0); 
+            Resolution = Start - End;  
+        } 
+        else 
+        { 
+            Length = HeatProductionUnitSchedules.ElementAt(0).DataPoints.Count();
+            Start = HeatProductionUnitSchedules.ElementAt(0).DataPoints.ElementAt(0).TimeFrom; 
+            End = HeatProductionUnitSchedules.ElementAt(0).DataPoints
+                .ElementAt(Length - 1).TimeTo; //TODO: make this actually readable
+            Resolution = End - Start; 
+        }
+
         
         Costs = GetCostsByHour(HeatProductionUnitSchedules);
         Emissions = GetEmissionsByHour(HeatProductionUnitSchedules); 
