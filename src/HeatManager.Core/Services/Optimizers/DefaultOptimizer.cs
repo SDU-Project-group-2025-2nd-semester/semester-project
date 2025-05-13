@@ -188,9 +188,21 @@ public class DefaultOptimizer : IOptimizer
         }
         else if (strategy.Optimization == OptimizationType.BalancedOptimization)
         {
-            //let's see what will happen
+            /*
+                For the BalancedOptimization strategy, normalize emissions and costs to a common scale
+                by dividing each unit's value by the maximum value in the list. This ensures that both
+                factors are weighted equally regardless of their original scales. Then, calculate a 
+                composite score as the average of the normalized emissions and costs. Units are prioritized
+                based on this score, with lower scores indicating higher priority.
+            */ 
             var maxEmissions = availableUnitsList.Max(unit => unit.Emissions);
             var maxCost = availableUnitsList.Max(unit => unit.Cost);
+            
+            //explicit 0 check
+            if (maxEmissions == 0 || maxCost == 0)
+            {
+                throw new InvalidOperationException("Max emissions or max cost is zero, cannot perform normalization");
+            }
 
             heatSourcePriorityList = availableUnitsList
                 .OrderBy(unit =>
