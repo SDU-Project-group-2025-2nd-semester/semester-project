@@ -22,4 +22,21 @@
         <Setter Property="Margin" Value="0,0,0,25" />
     </Style>
 
+    <!-- For the manual enabling/disabling -->
+    <Style Selector="ToggleButton Image.icon-active">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+
+    <Style Selector="ToggleButton:checked Image.icon-active">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+
+    <Style Selector="ToggleButton Image.icon-offline">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+
+    <Style Selector="ToggleButton:checked Image.icon-offline">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+
 </Styles>

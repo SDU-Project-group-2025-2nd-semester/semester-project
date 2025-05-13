@@ -59,7 +59,8 @@ public class AssetManager : IAssetManager
                 combinedUnits.Add(new CombinedProductionUnit
                 {
                     Name = unit.Name,
-                    Status = status,
+                    IsActive = isActive, 
+                    Status = isActive ? ProductionUnitStatus.Active : ProductionUnitStatus.Offline,
                     Cost = unit.Cost,
                     MaxHeatProduction = unit.MaxHeatProduction,
                     Emissions = unit.Emissions,

@@ -26,12 +26,13 @@ public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOpti
     //     // Set the default view to OverviewView
     //     CurrentView = new OverviewView { DataContext = new OverviewViewModel(this) };
     // }
-
+ 
+    private readonly ProductionUnitsViewModel productionUnitsViewModel = new ProductionUnitsViewModel();
 
     [RelayCommand]
     internal void SetConfigPanelView()
     {
-        CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel() };
+        CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel(productionUnitsViewModel) };
     }
     
     [RelayCommand]
@@ -49,6 +50,9 @@ public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOpti
     [RelayCommand]
     private void SetOverviewView()
     {
-        CurrentView = new OverviewView { DataContext = new OverviewViewModel(this) };
+        CurrentView = new OverviewView
+        {
+            DataContext = new OverviewViewModel(this, productionUnitsViewModel)
+        };
     }
 }

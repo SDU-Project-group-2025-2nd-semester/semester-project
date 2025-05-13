@@ -30,4 +30,21 @@ public static class ProductionUnitData
         }
         return productionUnits;
     }
+
+    public static void SetAllUnitsActive()
+    {
+        foreach (var unitName in Units.AllUnits.Keys)
+        {
+            Units.SetActive(unitName); 
+        }
+    }
+
+    public static void SetUnitsBackToDefault()
+    {
+        Units.SetActive("GB1");
+        Units.SetActive("GB2");
+        Units.SetActive("OB1");
+        Units.SetOffline("GM1");
+        Units.SetOffline("HP1");
+    }
 }

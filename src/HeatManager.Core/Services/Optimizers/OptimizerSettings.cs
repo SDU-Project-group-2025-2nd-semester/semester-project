@@ -30,4 +30,12 @@ public class OptimizerSettings : IOptimizerSettings
             AllUnits[name] = true;
         }
     }
+
+    public void SetOffline(string name)
+    {
+        if (AllUnits.ContainsKey(name))
+        {
+            AllUnits[name] = false;
+        }
+    }
 }

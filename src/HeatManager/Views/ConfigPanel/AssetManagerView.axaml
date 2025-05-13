@@ -32,7 +32,16 @@
 										<Image Source="/Assets/units.png" Width="200"/>
 									</Border>
 									<StackPanel Orientation="Horizontal">
-										<Image Source="{Binding Icon}" Width="18" Height="18" Grid.Row="0" Grid.Column="0" Margin="0,0,10,0" /> 
+										<ToggleButton IsChecked="{Binding IsActive}" Background="#66000000" BorderThickness="0">
+											<ToggleButton.Content>
+												<Panel>
+													<!-- Active Icon -->
+													<Image Source="/Assets/Icons/circle-check-solid.png" Width="18" Height="18" Classes="icon-active" />
+													<!-- Offline Icon -->
+													<Image Source="/Assets/Icons/circle-xmark-solid.png" Width="18" Height="18" Classes="icon-offline" />
+												</Panel>
+											</ToggleButton.Content>
+										</ToggleButton>
 										<StackPanel Margin="10,5,0,15">
 											<TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14"/>
 											<TextBlock Text="{Binding Status}" Classes="normaltext" Opacity="0.7"/> 
