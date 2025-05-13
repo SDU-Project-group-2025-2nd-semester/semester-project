@@ -8,3 +8,4 @@
 
 //    public double TotalConsumption { get; }
 //}
+
