@@ -78,10 +78,11 @@ public class Schedule
     {
         HeatProductionUnitSchedules = heatProductionUnitSchedules.ToImmutableList();
         ElectricityProductionUnitSchedules = electricityProductionUnitSchedules.ToImmutableList();
+    }
 
     private void CreateProperties()
     {
-        if (HeatProductionUnitSchedules.Count() == 0) 
+        if (HeatProductionUnitSchedules.IsEmpty) 
         { 
             Length = 0; 
             Start = new DateTime(0);
