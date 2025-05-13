@@ -10,19 +10,15 @@ public enum ResourceType
 
 public interface IBasicResource
 {
-    public string Name { get; set; }
-    public ResourceType Type { get; set; } //TODO: change it to this please
+    public string Name { get; }
+    public ResourceType Type { get; } 
 }
 
 internal class BasicResource : IBasicResource
 {
-    public string Name { get; set; }
+    public string Name => Type.ToString();
 
-    public override string ToString()
-    {
-            return Name;
-    }
-    
-    public ResourceType Type { get; set; }
+    public override string ToString() => Name;
 
+    public ResourceType Type { get; }
 }
