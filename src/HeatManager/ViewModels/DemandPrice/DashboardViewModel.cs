@@ -1,17 +1,26 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using HeatManager.Core.Models.SourceData;
-using HeatManager.Core.Services.SourceDataProviders;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 using SkiaSharp;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Avalonia.Controls;
+using Avalonia;
+using System.IO;
+using Avalonia.Platform.Storage;
+using Avalonia.Controls.ApplicationLifetimes;
+
+using HeatManager.Core.Models.SourceData;
+using HeatManager.Core.Services.SourceDataProviders;
+using HeatManager.Services.FileServices;
+using System.Threading.Tasks;
 
 namespace HeatManager.ViewModels.DemandPrice;
 
@@ -27,7 +36,7 @@ public partial class GridProductionViewModel : ViewModelBase
     private readonly ObservableCollection<DateTimePoint> _heatValues = [];
     private readonly ObservableCollection<DateTimePoint> _priceValues = [];
 
-    public ISeries[] Series { get; set; }
+    public ISeries[] ChartSeries { get; set; }
     public ICartesianAxis[] ScrollableAxes { get; set; }
     public ICartesianAxis[] YAxes { get; set; }
     public ISeries[] ScrollbarSeries { get; set; }
@@ -47,8 +56,8 @@ public partial class GridProductionViewModel : ViewModelBase
             _priceValues.Add(new DateTimePoint(dataPoint.TimeFrom, (double)dataPoint.ElectricityPrice));
             _heatValues.Add(new DateTimePoint(dataPoint.TimeFrom, dataPoint.HeatDemand));
         }
-            
-        Series = [
+
+        ChartSeries = [
             new ColumnSeries<DateTimePoint>
             {
                 Values = _priceValues,
@@ -204,4 +213,78 @@ public partial class GridProductionViewModel : ViewModelBase
     [RelayCommand]
     public void PointerUp(PointerCommandArgs args) =>
         _isDown = false;
+
+    [RelayCommand]
+    public void Export()
+    {
+        ExportToImage(new object());
+    }
+
+    public async Task ExportToImage(object chartParam)
+    {
+        try
+        {
+            var chartControl = chartParam as LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart;
+
+            if (chartControl == null)
+            {
+                Console.WriteLine("Chart control not found");
+                return;
+            }
+
+            // Create a SkiaSharp version of the chart
+            var skChart = new SKCartesianChart()
+            {
+                Width = (int)chartControl.Bounds.Width,
+                Height = (int)chartControl.Bounds.Height,
+                Series = ChartSeries,
+                XAxes = ScrollableAxes,
+                YAxes = YAxes
+            };
+
+            // Generate temp file
+            var tempDirectory = Path.GetTempPath();
+            var tempFilename = Path.Combine(tempDirectory, $"GridProduction{DateTime.Now:MMdd_HHmmss}.png");
+            skChart.SaveImage(tempFilename);
+
+            var topLevel = TopLevel.GetTopLevel((App.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow);
+
+            // File Dialog
+            var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            {
+                Title = "Save Chart As Image",
+                SuggestedFileName = $"GridProduction{DateTime.Now:MMdd_HHmmss}",
+                DefaultExtension = "png",
+                FileTypeChoices = new[]
+                {
+                new FilePickerFileType("PNG Image") { Patterns = new[] { "*.png" } },
+                new FilePickerFileType("JPEG Image") { Patterns = new[] { "*.jpg", "*.jpeg" } }
+            }
+            });
+
+            if (file is not null)
+            {
+                // Copy the temporary image to the selected location
+                await using var sourceStream = File.OpenRead(tempFilename);
+                await using var destinationStream = await file.OpenWriteAsync();
+                await sourceStream.CopyToAsync(destinationStream);
+
+                Console.WriteLine($"Chart image saved successfully to {file.Path}");
+
+                // Clean up temporary file
+                try { File.Delete(tempFilename); } catch { }
+            }
+            else
+            {
+                // Clean up temporary file
+                try { File.Delete(tempFilename); } catch { }
+            }
+
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating chart image: {ex.Message}");
+        }
+    }
 }
