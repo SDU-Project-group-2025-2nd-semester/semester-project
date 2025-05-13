@@ -15,25 +15,41 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Dropdown Button 
-        < Content="Switch View"
-                Margin="10"
-                Click="ToggleView_Click"
-                Grid.Row="0"
-                HorizontalAlignment="Right" /> -->
-		<ComboBox SelectedIndex="0" MaxDropDownHeight="100">
-            <ComboBoxItem>Text Item 1</ComboBoxItem>
-            <ComboBoxItem>Text Item 2</ComboBoxItem>
-            <ComboBoxItem>Text Item 3</ComboBoxItem>
-            <ComboBoxItem>Text Item 4</ComboBoxItem>
-            <ComboBoxItem>Text Item 5</ComboBoxItem>
-            <ComboBoxItem>Text Item 6</ComboBoxItem>
-            <ComboBoxItem>Text Item 7</ComboBoxItem>
-            <ComboBoxItem>Text Item 8</ComboBoxItem>
-            <ComboBoxItem>Text Item 9</ComboBoxItem>
-         </ComboBox>
+		<Grid Grid.Row="0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
 
-        <!-- View Selection -->
+			<!-- View Selector -->
+			<ComboBox
+				Grid.Column="0"
+				ItemsSource="{Binding ViewOptions}"
+				SelectedItem="{Binding SelectedViewOption}"
+				Width="322"
+				Margin="10"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Center">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding DisplayName}" />
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
+
+			<!-- Data Range Displayed -->
+			<TextBlock
+				Grid.Column="1"
+				Text="{Binding DateRangeText}"
+				FontWeight="SemiBold"
+				FontSize="14"
+				Margin="10"
+				VerticalAlignment="Center"
+				HorizontalAlignment="Right"/>
+		</Grid>
+
+
+		<!-- Graphs -->
 			<ContentControl Grid.Row="1" Content = "{Binding CurrentView}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
     </Grid>
 </UserControl>

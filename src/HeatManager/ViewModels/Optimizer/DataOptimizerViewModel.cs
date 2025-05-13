@@ -22,12 +22,23 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
     [ObservableProperty]
     private UserControl? currentView;
 
+    [ObservableProperty]
+    private OptimizerViewType? selectedView;
+
+    [ObservableProperty]
+    private ViewOption? selectedViewOption;
+
+
+
     public DataOptimizerViewModel(IOptimizer optimizer)
     {
         _optimizer = optimizer;
         var schedule = _optimizer.Optimize();
         schedules = schedule.HeatProductionUnitSchedules.ToList();
         orderedTimes = OrderTimeSlots(schedules);
+
+        SelectedViewOption = ViewOptions.First(v => v.ViewType == OptimizerViewType.HeatProductionGraph);
+        SetHeatProductionGraphView();
     }
 
     /// <summary>
@@ -40,10 +51,26 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
     /// </summary>
     public DateTimeOffset? MaxDate { get; private set; }
 
+    public record ViewOption(string DisplayName, OptimizerViewType ViewType);
+
+    public IEnumerable<ViewOption> ViewOptions => new[]
+    {
+    new ViewOption("Heat Production", OptimizerViewType.HeatProductionGraph),
+    new ViewOption("Total and Maximum Values", OptimizerViewType.SummaryTable)
+    };
+
+    /// <summary>
+    /// Gets the date range text for display.
+    /// </summary>
+    public string DateRangeText =>
+        (MinDate.HasValue && MaxDate.HasValue)
+            ? $"Available data: {MinDate.Value:dd MMM yyyy} - {MaxDate.Value:dd MMM yyyy}"
+            : "No data range available";
+
 
 
     [RelayCommand]
-    internal void SetSummaryTableView()
+    private void SetSummaryTableView()
     {
         CurrentView = new OptimizerSummaryTableView { DataContext = new OptimizerSummaryTableViewModel(schedules) };
     }
@@ -51,8 +78,30 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
     [RelayCommand]
     private void SetHeatProductionGraphView()
     {
-        CurrentView = new OptimizerHeatProductionGraphView { DataContext = new OptimizerHeatProductionGraphViewModel(schedules, orderedTimes, MinDate, MaxDate) };
+        CurrentView = new OptimizerHeatProductionGraphView { DataContext = new OptimizerHeatProductionGraphViewModel(schedules, orderedTimes, MinDate) };
     }
+
+    partial void OnSelectedViewOptionChanged(ViewOption? value)
+    {
+        if (value is not null)
+        {
+            SelectedView = value.ViewType;
+        }
+    }
+
+    partial void OnSelectedViewChanged(OptimizerViewType? value)
+    {
+        switch (value)
+        {
+            case OptimizerViewType.HeatProductionGraph:
+                SetHeatProductionGraphView();
+                break;
+            case OptimizerViewType.SummaryTable:
+                SetSummaryTableView();
+                break;
+        }
+    }
+
 
     private List<DateTime> OrderTimeSlots(List<HeatProductionUnitSchedule> schedules)
     {
@@ -81,4 +130,10 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
         }
     }
 
+}
+
+public enum OptimizerViewType
+{
+    HeatProductionGraph,
+    SummaryTable
 }

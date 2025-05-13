@@ -26,10 +26,9 @@ internal partial class OptimizerHeatProductionGraphViewModel : ViewModelBase, ID
     private List<DateTime> orderedTimes;
 
 
-    public OptimizerHeatProductionGraphViewModel(List<HeatProductionUnitSchedule> schedules, List<DateTime> OrderedTimes, DateTimeOffset? minDate, DateTimeOffset? maxDate)
+    public OptimizerHeatProductionGraphViewModel(List<HeatProductionUnitSchedule> schedules, List<DateTime> OrderedTimes, DateTimeOffset? minDate)
     {
         MinDate = minDate;
-        MaxDate = maxDate;
         orderedTimes = OrderedTimes;
         BuildChartSeries(schedules);
         ConfigureAxes(orderedTimes, schedules);
@@ -58,19 +57,6 @@ internal partial class OptimizerHeatProductionGraphViewModel : ViewModelBase, ID
     /// Gets the minimum date in the dataset.
     /// </summary>
     public DateTimeOffset? MinDate { get; private set; }
-
-    /// <summary>
-    /// Gets the maximum date in the dataset.
-    /// </summary>
-    public DateTimeOffset? MaxDate { get; private set; }
-
-    /// <summary>
-    /// Gets the date range text for display.
-    /// </summary>
-    public string DateRangeText =>
-        (MinDate.HasValue && MaxDate.HasValue)
-            ? $"Available data: {MinDate.Value:dd MMM yyyy} - {MaxDate.Value:dd MMM yyyy}"
-            : "No data range available";
 
     /// <summary>
     /// Gets the X-axis configuration.

@@ -16,6 +16,7 @@
                            FontWeight="Bold" />
                 
                 <DataGrid Margin="20"
+                          ItemsSource="{Binding TableData}"
                           IsReadOnly="True"
                           GridLinesVisibility="All">
                     <DataGrid.Columns>
@@ -33,6 +34,7 @@
                            FontWeight="Bold" />
 
                 <DataGrid Margin="20"
+                          ItemsSource="{Binding TableData}"
                           IsReadOnly="True"
                           GridLinesVisibility="All">
                     <DataGrid.Columns>

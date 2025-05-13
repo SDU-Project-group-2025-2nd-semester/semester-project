@@ -12,9 +12,6 @@ using System.Threading.Tasks;
 namespace HeatManager.ViewModels.OptimizerGraphs;
 internal partial class OptimizerSummaryTableViewModel : ViewModelBase, IDataOptimizerViewModel, INotifyPropertyChanged
 {
-
-    private readonly ObservableCollection<ObservablePoint> _values = new();
-
     public OptimizerSummaryTableViewModel(List<HeatProductionUnitSchedule> schedules)
     {
         BuildTableData(schedules);
