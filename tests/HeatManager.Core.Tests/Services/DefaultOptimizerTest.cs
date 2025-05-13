@@ -407,4 +407,432 @@ public class DefaultOptimizerTest
         Assert.Equal(25, electricitySchedule.DataPoints[0].ElectricityProduction); // 50% utilization * 50 max
         Assert.Equal(3, electricitySchedule.DataPoints[0].ElectricityPrice);
     }
+
+    [Fact]
+    public void Optimize_WithZeroHeatDemand_ProducesScheduleWithZeroUtilization()
+    {
+        // Arrange
+        var unit = new HeatProductionUnit
+        {
+            Name = "Unit1",
+            MaxHeatProduction = 100,
+            Cost = 1,
+            Emissions = 1,
+            ResourceConsumption = 1,
+            Resource = _oil
+        };
+
+        var sourceDataPoint = new SourceDataPoint
+        {
+            HeatDemand = 0, // Zero heat demand
+            ElectricityPrice = 0,
+            TimeFrom = DateTime.Now,
+            TimeTo = DateTime.Now.AddHours(1)
+        };
+
+        var sourceDataCollection = new SourceDataCollection([sourceDataPoint]);
+
+        _mockSourceDataProvider.Setup(p => p.SourceDataCollection).Returns(sourceDataCollection);
+        _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<ProductionUnitBase> { unit });
+        _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames()).Returns(new List<string> { "Unit1" });
+        _mockOptimizerStrategy.Setup(s => s.Optimization).Returns(OptimizationType.PriceOptimization);
+
+        // Act
+        var schedule = _optimizer.Optimize();
+
+        // Assert
+        Assert.NotNull(schedule);
+        Assert.Single(schedule.HeatProductionUnitSchedules);
+        var unitSchedule = schedule.HeatProductionUnitSchedules.First();
+        Assert.Equal("Unit1", unitSchedule.Name);
+        Assert.Single(unitSchedule.DataPoints);
+        var dataPoint = unitSchedule.DataPoints[0];
+        Assert.Equal(0, dataPoint.Utilization);
+        Assert.Equal(0, dataPoint.HeatProduction);
+        Assert.Equal(0, dataPoint.Cost);
+        Assert.Equal(0, dataPoint.ResourceConsumption);
+        Assert.Equal(0, dataPoint.Emissions);
+    }
+
+    [Fact]
+    public void Optimize_WithNoActiveUnits_ReturnsEmptySchedule()
+    {
+        // Arrange
+        var unit = new HeatProductionUnit
+        {
+            Name = "Unit1",
+            MaxHeatProduction = 100,
+            Cost = 1,
+            Emissions = 1,
+            ResourceConsumption = 1,
+            Resource = _oil
+        };
+
+        var sourceDataPoint = new SourceDataPoint
+        {
+            HeatDemand = 50,
+            ElectricityPrice = 0,
+            TimeFrom = DateTime.Now,
+            TimeTo = DateTime.Now.AddHours(1)
+        };
+
+        var sourceDataCollection = new SourceDataCollection([sourceDataPoint]);
+
+        _mockSourceDataProvider.Setup(p => p.SourceDataCollection).Returns(sourceDataCollection);
+        _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<ProductionUnitBase> { unit });
+        _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames()).Returns(new List<string>()); // No active units
+
+        // Act
+        var schedule = _optimizer.Optimize();
+
+        // Assert
+        Assert.NotNull(schedule);
+        Assert.Empty(schedule.HeatProductionUnitSchedules);
+        Assert.Empty(schedule.ElectricityProductionUnitSchedules);
+    }
+
+    [Fact]
+    public void Optimize_WithMultipleDataPoints_ProducesCorrectSchedule()
+    {
+        // Arrange
+        var unit = new HeatProductionUnit
+        {
+            Name = "Unit1",
+            MaxHeatProduction = 100,
+            Cost = 1,
+            Emissions = 1,
+            ResourceConsumption = 1,
+            Resource = _oil
+        };
+
+        var now = DateTime.Now;
+        var sourceDataPoints = new List<SourceDataPoint>
+        {
+            new SourceDataPoint
+            {
+                HeatDemand = 50,
+                ElectricityPrice = 0,
+                TimeFrom = now,
+                TimeTo = now.AddHours(1)
+            },
+            new SourceDataPoint
+            {
+                HeatDemand = 75,
+                ElectricityPrice = 0,
+                TimeFrom = now.AddHours(1),
+                TimeTo = now.AddHours(2)
+            }
+        };
+
+        var sourceDataCollection = new SourceDataCollection(sourceDataPoints);
+
+        _mockSourceDataProvider.Setup(p => p.SourceDataCollection).Returns(sourceDataCollection);
+        _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<ProductionUnitBase> { unit });
+        _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames()).Returns(new List<string> { "Unit1" });
+        _mockOptimizerStrategy.Setup(s => s.Optimization).Returns(OptimizationType.PriceOptimization);
+
+        // Act
+        var schedule = _optimizer.Optimize();
+
+        // Assert
+        Assert.NotNull(schedule);
+        Assert.Single(schedule.HeatProductionUnitSchedules);
+        var unitSchedule = schedule.HeatProductionUnitSchedules.First();
+        Assert.Equal("Unit1", unitSchedule.Name);
+        
+        // Should have two data points
+        Assert.Equal(2, unitSchedule.DataPoints.Count);
+        
+        // First data point
+        Assert.Equal(0.5, unitSchedule.DataPoints[0].Utilization);
+        Assert.Equal(50, unitSchedule.DataPoints[0].HeatProduction);
+        
+        // Second data point
+        Assert.Equal(0.75, unitSchedule.DataPoints[1].Utilization);
+        Assert.Equal(75, unitSchedule.DataPoints[1].HeatProduction);
+    }
+
+    [Fact]
+    public void Optimize_WithBalancedOptimization_ProducesCorrectSchedule()
+    {
+        // Arrange
+        var unit1 = new HeatProductionUnit
+        {
+            Name = "Unit1",
+            MaxHeatProduction = 50,
+            Cost = 1,
+            Emissions = 2,
+            ResourceConsumption = 1,
+            Resource = _oil
+        };
+
+        var unit2 = new HeatProductionUnit
+        {
+            Name = "Unit2",
+            MaxHeatProduction = 50,
+            Cost = 2,
+            Emissions = 1,
+            ResourceConsumption = 1,
+            Resource = _oil
+        };
+
+        var sourceDataPoint = new SourceDataPoint
+        {
+            HeatDemand = 60,
+            ElectricityPrice = 0,
+            TimeFrom = DateTime.Now,
+            TimeTo = DateTime.Now.AddHours(1)
+        };
+
+        var sourceDataCollection = new SourceDataCollection([sourceDataPoint]);
+
+        _mockSourceDataProvider.Setup(p => p.SourceDataCollection).Returns(sourceDataCollection);
+        _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<ProductionUnitBase> { unit1, unit2 });
+        _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames()).Returns(new List<string> { "Unit1", "Unit2" });
+        _mockOptimizerStrategy.Setup(s => s.Optimization).Returns(OptimizationType.BalancedOptimization);
+
+        // Act
+        var schedule = _optimizer.Optimize();
+
+        // Assert
+        Assert.NotNull(schedule);
+        Assert.Equal(2, schedule.HeatProductionUnitSchedules.Count());
+        
+        // Check that both units are used, but exact prioritization depends on the implementation
+        var totalProduction = schedule.HeatProductionUnitSchedules.Sum(s => s.TotalHeatProduction);
+        Assert.Equal(60, totalProduction);
+    }
+
+    [Fact]
+    public void Optimize_WithHeatPump_AdjustsCostBasedOnElectricityPrice()
+    {
+        // Arrange
+        var heatPump = new HeatProductionUnit
+        {
+            Name = "HeatPump",
+            MaxHeatProduction = 100,
+            Cost = 10, // Base cost
+            Emissions = 0,
+            ResourceConsumption = 1,
+            Resource = _electricity // Heat pump uses electricity
+        };
+
+        var sourceDataPoint = new SourceDataPoint
+        {
+            HeatDemand = 50,
+            ElectricityPrice = 5, // Electricity price will be added to the base cost
+            TimeFrom = DateTime.Now,
+            TimeTo = DateTime.Now.AddHours(1)
+        };
+
+        var sourceDataCollection = new SourceDataCollection([sourceDataPoint]);
+
+        _mockSourceDataProvider.Setup(p => p.SourceDataCollection).Returns(sourceDataCollection);
+        _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<ProductionUnitBase> { heatPump });
+        _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames()).Returns(new List<string> { "HeatPump" });
+        _mockOptimizerStrategy.Setup(s => s.Optimization).Returns(OptimizationType.PriceOptimization);
+
+        // Act
+        var schedule = _optimizer.Optimize();
+
+        // Assert
+        Assert.NotNull(schedule);
+        Assert.Single(schedule.HeatProductionUnitSchedules);
+        var unitSchedule = schedule.HeatProductionUnitSchedules.First();
+        Assert.Equal("HeatPump", unitSchedule.Name);
+        Assert.Single(unitSchedule.DataPoints);
+        
+        // Cost should reflect the electricity cost addition
+        var dataPoint = unitSchedule.DataPoints[0];
+        Assert.Equal(50, dataPoint.HeatProduction);
+        // Cost should be based on heat production * (base cost + electricity price)
+        Assert.Equal(750m, dataPoint.Cost); // 50 * (10 + 5)
+    }
+
+    [Fact]
+    public void Optimize_WithHighElectricityProducerPriority_ProducesCorrectSchedule()
+    {
+        // Arrange
+        var heatUnit = new HeatProductionUnit
+        {
+            Name = "HeatOnly",
+            MaxHeatProduction = 100,
+            Cost = 5,
+            Emissions = 1,
+            ResourceConsumption = 1,
+            Resource = _gas
+        };
+
+        var chpUnit = new ElectricityProductionUnit
+        {
+            Name = "CHP",
+            MaxHeatProduction = 100,
+            MaxElectricity = 50,
+            Cost = 10, // Higher base cost than heat only
+            Emissions = 2,
+            ResourceConsumption = 1,
+            Resource = _gas
+        };
+
+        var sourceDataPoint = new SourceDataPoint
+        {
+            HeatDemand = 150,
+            ElectricityPrice = 20, // Very high electricity price makes CHP more attractive
+            TimeFrom = DateTime.Now,
+            TimeTo = DateTime.Now.AddHours(1)
+        };
+
+        var sourceDataCollection = new SourceDataCollection([sourceDataPoint]);
+
+        _mockSourceDataProvider.Setup(p => p.SourceDataCollection).Returns(sourceDataCollection);
+        _mockAssetManager.Setup(a => a.ProductionUnits)
+            .Returns(new ObservableCollection<ProductionUnitBase> { heatUnit, chpUnit });
+        _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames())
+            .Returns(new List<string> { "HeatOnly", "CHP" });
+        _mockOptimizerStrategy.Setup(s => s.Optimization).Returns(OptimizationType.PriceOptimization);
+
+        // Act
+        var schedule = _optimizer.Optimize();
+
+        // Assert
+        Assert.NotNull(schedule);
+        Assert.Equal(2, schedule.HeatProductionUnitSchedules.Count());
+        
+        // CHP should be prioritized due to high electricity price
+        var chpSchedule = schedule.HeatProductionUnitSchedules.First(s => s.Name == "CHP");
+        var heatOnlySchedule = schedule.HeatProductionUnitSchedules.First(s => s.Name == "HeatOnly");
+        
+        Assert.Equal(1.0, chpSchedule.DataPoints[0].Utilization); // CHP should be fully utilized
+        Assert.Equal(0.5, heatOnlySchedule.DataPoints[0].Utilization); // Heat only partially utilized
+        
+        // Verify electricity production
+        Assert.Single(schedule.ElectricityProductionUnitSchedules);
+        var electricitySchedule = schedule.ElectricityProductionUnitSchedules.First();
+        Assert.Equal("CHP", electricitySchedule.Name);
+        Assert.Equal(50, electricitySchedule.DataPoints[0].ElectricityProduction);
+    }
+
+    [Fact]
+    public void Optimize_WithExcessiveHeatDemand_UsesAllAvailableUnits()
+    {
+        // Arrange
+        var unit1 = new HeatProductionUnit
+        {
+            Name = "Unit1",
+            MaxHeatProduction = 50,
+            Cost = 1,
+            Emissions = 1,
+            ResourceConsumption = 1,
+            Resource = _oil
+        };
+
+        var unit2 = new HeatProductionUnit
+        {
+            Name = "Unit2",
+            MaxHeatProduction = 50,
+            Cost = 2,
+            Emissions = 2,
+            ResourceConsumption = 1,
+            Resource = _oil
+        };
+
+        var sourceDataPoint = new SourceDataPoint
+        {
+            HeatDemand = 200, // Demand exceeds total capacity of 100
+            ElectricityPrice = 0,
+            TimeFrom = DateTime.Now,
+            TimeTo = DateTime.Now.AddHours(1)
+        };
+
+        var sourceDataCollection = new SourceDataCollection([sourceDataPoint]);
+
+        _mockSourceDataProvider.Setup(p => p.SourceDataCollection).Returns(sourceDataCollection);
+        _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<ProductionUnitBase> { unit1, unit2 });
+        _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames()).Returns(new List<string> { "Unit1", "Unit2" });
+        _mockOptimizerStrategy.Setup(s => s.Optimization).Returns(OptimizationType.PriceOptimization);
+
+        // Act
+        var schedule = _optimizer.Optimize();
+
+        // Assert
+        Assert.NotNull(schedule);
+        Assert.Equal(2, schedule.HeatProductionUnitSchedules.Count());
+        
+        // Both units should be fully utilized
+        var unit1Schedule = schedule.HeatProductionUnitSchedules.First(s => s.Name == "Unit1");
+        var unit2Schedule = schedule.HeatProductionUnitSchedules.First(s => s.Name == "Unit2");
+        
+        Assert.Equal(1.0, unit1Schedule.DataPoints[0].Utilization);
+        Assert.Equal(50, unit1Schedule.DataPoints[0].HeatProduction);
+        
+        Assert.Equal(1.0, unit2Schedule.DataPoints[0].Utilization);
+        Assert.Equal(50, unit2Schedule.DataPoints[0].HeatProduction);
+        
+        // Total heat production should be 100 (max capacity)
+        Assert.Equal(100, unit1Schedule.TotalHeatProduction + unit2Schedule.TotalHeatProduction);
+    }
+
+    [Fact]
+    public void Optimize_WithNegativeElectricityPrice_ProducesCorrectSchedule()
+    {
+        // Arrange
+        var heatUnit = new HeatProductionUnit
+        {
+            Name = "HeatOnly",
+            MaxHeatProduction = 100,
+            Cost = 5,
+            Emissions = 1,
+            ResourceConsumption = 1,
+            Resource = _gas
+        };
+
+        var chpUnit = new ElectricityProductionUnit
+        {
+            Name = "CHP",
+            MaxHeatProduction = 100,
+            MaxElectricity = 50,
+            Cost = 20, // Higher base cost
+            Emissions = 2,
+            ResourceConsumption = 1,
+            Resource = _gas
+        };
+
+        var sourceDataPoint = new SourceDataPoint
+        {
+            HeatDemand = 150,
+            ElectricityPrice = -10, // Negative electricity price (pay to produce)
+            TimeFrom = DateTime.Now,
+            TimeTo = DateTime.Now.AddHours(1)
+        };
+
+        var sourceDataCollection = new SourceDataCollection([sourceDataPoint]);
+
+        _mockSourceDataProvider.Setup(p => p.SourceDataCollection).Returns(sourceDataCollection);
+        _mockAssetManager.Setup(a => a.ProductionUnits)
+            .Returns(new ObservableCollection<ProductionUnitBase> { heatUnit, chpUnit });
+        _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames())
+            .Returns(new List<string> { "HeatOnly", "CHP" });
+        _mockOptimizerStrategy.Setup(s => s.Optimization).Returns(OptimizationType.PriceOptimization);
+
+        // Act
+        var schedule = _optimizer.Optimize();
+
+        // Assert
+        Assert.NotNull(schedule);
+        Assert.Equal(2, schedule.HeatProductionUnitSchedules.Count());
+        
+        // Heat only unit should be prioritized due to negative electricity price
+        var heatOnlySchedule = schedule.HeatProductionUnitSchedules.First(s => s.Name == "HeatOnly");
+        var chpSchedule = schedule.HeatProductionUnitSchedules.First(s => s.Name == "CHP");
+        
+        Assert.Equal(1.0, heatOnlySchedule.DataPoints[0].Utilization); // Heat only should be fully utilized
+        Assert.Equal(0.5, chpSchedule.DataPoints[0].Utilization); // CHP partially utilized
+        
+        // Verify electricity production with negative price
+        Assert.Single(schedule.ElectricityProductionUnitSchedules);
+        var electricitySchedule = schedule.ElectricityProductionUnitSchedules.First();
+        Assert.Equal("CHP", electricitySchedule.Name);
+        Assert.Equal(25, electricitySchedule.DataPoints[0].ElectricityProduction); // 50% of 50 MW
+        Assert.Equal(-10, electricitySchedule.DataPoints[0].ElectricityPrice);
+    }
 }
