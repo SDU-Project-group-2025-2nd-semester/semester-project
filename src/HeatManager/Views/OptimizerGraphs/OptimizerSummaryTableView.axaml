@@ -1,0 +1,49 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:optimizerGraphs="clr-namespace:HeatManager.ViewModels.OptimizerGraphs"
+    mc:Ignorable="d"
+    d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="HeatManager.Views.OptimizerGraphs.OptimizerSummaryTableView"
+    x:DataType="optimizerGraphs:OptimizerSummaryTableViewModel">
+
+        <Grid Margin="20">
+            <StackPanel Margin="20">
+                <!-- Total Values Table -->
+                <TextBlock Text="Total Values"
+                           FontWeight="Bold" />
+                
+                <DataGrid Margin="20"
+                          IsReadOnly="True"
+                          GridLinesVisibility="All">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Unit" Binding="{Binding Name}" />
+                        <DataGridTextColumn Header="Heat Production [MW]" Binding="{Binding HeatProduction}" />
+                        <DataGridTextColumn Header="Emissions [kg]" Binding="{Binding Emissions}" />
+                        <DataGridTextColumn Header="Cost [DKK]" Binding="{Binding Cost}" />
+                        <DataGridTextColumn Header="Resource Consumption [MWh]" Binding="{Binding ResourceConsumption}" />
+                        <DataGridTextColumn Header="Utilization [%]" Binding="{Binding Utilization}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Maximum Values Table -->
+                <TextBlock Text="Maximum Values"
+                           FontWeight="Bold" />
+
+                <DataGrid Margin="20"
+                          IsReadOnly="True"
+                          GridLinesVisibility="All">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Unit" Binding="{Binding Name}" />
+                        <DataGridTextColumn Header="Heat Production [MW]" Binding="{Binding MaxHeatProduction}" />
+                        <DataGridTextColumn Header="Emissions [kg]" Binding="{Binding MaxEmissions}" />
+                        <DataGridTextColumn Header="Cost [DKK]" Binding="{Binding MaxCost}" />
+                        <DataGridTextColumn Header="Resource Consumption [MWh]" Binding="{Binding MaxResourceConsumption}" />
+                        <DataGridTextColumn Header="Utilization [%]" Binding="{Binding MaxUtilization}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+    </Grid>
+</UserControl>
