@@ -7,6 +7,11 @@ using HeatManager.Core.Services.SourceDataProviders;
 
 namespace HeatManager.Core.Services.Optimizers;
 
+///  <summary>
+/// Default implementation of the IOptimizer interface.
+/// Responsible for optimizing heat and electricity production schedules
+/// based on available production units, source data, and optimization strategies.
+/// </summary>
 public class DefaultOptimizer : IOptimizer
 {
     private readonly IAssetManager _assetManager;
@@ -14,6 +19,15 @@ public class DefaultOptimizer : IOptimizer
     private IOptimizerSettings _optimizerSettings;
     private readonly IOptimizerStrategy _optimizerStrategy;
 
+    
+    /// <summary>
+    /// Initializes a new instance of the DefaultOptimizer class.
+    /// </summary>
+    /// <param name="assetManager">The asset manager providing production units.</param>
+    /// <param name="sourceDataProvider">The source data provider for input data points.</param>
+    /// <param name="optimizerSettings">The settings for optimization.</param>
+    /// <param name="optimizerStrategy">The strategy used for optimization.</param>
+    /// <param name="resultManager">The result manager for handling optimization results.</param>
     public DefaultOptimizer(IAssetManager assetManager,
         ISourceDataProvider sourceDataProvider, IOptimizerSettings optimizerSettings, IOptimizerStrategy optimizerStrategy)
     {
@@ -22,19 +36,24 @@ public class DefaultOptimizer : IOptimizer
         _optimizerSettings = optimizerSettings;
         _optimizerStrategy = optimizerStrategy;
     }
-
+    /// <summary>
+    /// Optimizes the heat and electricity production schedules based on the provided data and strategy.
+    /// </summary>
+    /// <returns>A <see cref="Schedule"/> object containing the optimized schedules for heat and electricity production units.</returns>
     public Schedule Optimize()
     {
         //Set up the data
         var scheduledEntries = _sourceDataProvider.SourceDataCollection.DataPoints;
         var heatSources = GetAvailableUnits();
+
         var electricitySources = heatSources
             .OfType<ElectricityProductionUnit>()
             .ToList();
 
         var heatProductionUnitSchedules = GenerateHeatProductionUnitSchedules(heatSources);
         var electricityProductionUnitSchedules = GenerateElectricityProductionUnitSchedules(electricitySources);
-
+        
+        // Iterate through each scheduled entry and optimize production
         for (int i = 0; i < scheduledEntries.Count(); i++)
         {
             var entry = scheduledEntries.ElementAt(i);
@@ -57,7 +76,8 @@ public class DefaultOptimizer : IOptimizer
                     ));
                     continue;
                 }
-
+                
+                // Calculate production and associated metrics
                 double production = Math.Min(heatSource.MaxHeatProduction, remainingDemand);
 
                 double utilization = production / heatSource.MaxHeatProduction;
@@ -76,7 +96,8 @@ public class DefaultOptimizer : IOptimizer
                 );
 
                 heatProductionUnitSchedules.Find(unit => unit.Name == heatSource.Name)?.AddDataPoint(dataPoint);
-
+                
+                // Handle electricity production for electricity-producing units
                 if (heatSource is ElectricityProductionUnit electricityProductionUnit)
                 {
                     var electricityProduction = utilization * electricityProductionUnit.MaxElectricity;
@@ -93,12 +114,13 @@ public class DefaultOptimizer : IOptimizer
                 remainingDemand -= production;
             }
         }
-
+        // Return the final optimized schedule
         var resultSchedule = new Schedule(heatProductionUnitSchedules, electricityProductionUnitSchedules);
         return resultSchedule; 
     }
 
     private List<ProductionUnitBase> GetAvailableUnits()
+
     {
         List<string> activeUnitsNames = _optimizerSettings.GetActiveUnitsNames(); 
         List<ProductionUnitBase> availableUnits = [];
@@ -113,6 +135,10 @@ public class DefaultOptimizer : IOptimizer
         return availableUnits;
     }
     
+    /// <summary>
+    /// Updates the optimization settings for the optimizer.
+    /// </summary>
+    /// <param name="optimizerSettings">The new optimization settings. <see cref="OptimizerSettings"/>></param>
     public void ChangeOptimizationSettings(IOptimizerSettings optimizerSettings)
     {
         _optimizerSettings = optimizerSettings;
@@ -120,6 +146,7 @@ public class DefaultOptimizer : IOptimizer
 
     private IEnumerable<ProductionUnitBase> GetHeatSourcePriorityList(IEnumerable<ProductionUnitBase> availableUnits,
         SourceDataPoint entry)
+
     {
         // Data setup from the source data entry 
         decimal electricityPrice = entry.ElectricityPrice;
@@ -185,9 +212,21 @@ public class DefaultOptimizer : IOptimizer
         }
         else if (_optimizerStrategy.Optimization == OptimizationType.BalancedOptimization)
         {
-            //let's see what will happen
+            /*
+                For the BalancedOptimization strategy, normalize emissions and costs to a common scale
+                by dividing each unit's value by the maximum value in the list. This ensures that both
+                factors are weighted equally regardless of their original scales. Then, calculate a 
+                composite score as the average of the normalized emissions and costs. Units are prioritized
+                based on this score, with lower scores indicating higher priority.
+            */ 
             var maxEmissions = availableUnitsList.Max(unit => unit.Emissions);
             var maxCost = availableUnitsList.Max(unit => unit.Cost);
+            
+            //explicit 0 check
+            if (maxEmissions == 0 || maxCost == 0)
+            {
+                throw new InvalidOperationException("Max emissions or max cost is zero, cannot perform normalization");
+            }
 
             heatSourcePriorityList = availableUnitsList
                 .OrderBy(unit =>
@@ -207,8 +246,8 @@ public class DefaultOptimizer : IOptimizer
         return heatSourcePriorityList; 
     }
 
-
     private List<HeatProductionUnitSchedule> GenerateHeatProductionUnitSchedules(
+
         IEnumerable<ProductionUnitBase> heatProductionUnits)
     {
         List<HeatProductionUnitSchedule> schedules = new List<HeatProductionUnitSchedule>();
@@ -232,5 +271,4 @@ public class DefaultOptimizer : IOptimizer
         }
         return schedules;
     }
-
 }
