@@ -43,6 +43,10 @@ public class DefaultOptimizer : IOptimizer
     public Schedule Optimize()
     {
         //Set up the data
+        if (_sourceDataProvider.SourceDataCollection == null)
+        {
+            throw new InvalidOperationException("SourceDataCollection is null. Ensure that it is properly initialized before calling Optimize.");
+        }
         var scheduledEntries = _sourceDataProvider.SourceDataCollection.DataPoints;
         var heatSources = GetAvailableUnits();
 
