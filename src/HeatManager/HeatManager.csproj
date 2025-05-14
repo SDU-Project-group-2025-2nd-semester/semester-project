@@ -43,4 +43,13 @@
       </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Views\ConfigPanel\DeletionDialogView.axaml.cs">
+      <DependentUpon>DeletionDialogView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ConfigPanel\Dialogs\DeletionDialog.axaml.cs">
+      <DependentUpon>DeletionDialog.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

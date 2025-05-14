@@ -25,7 +25,13 @@
 					</ItemsControl.ItemsPanel>
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
-							<Border Padding="25,20,25,20" Margin="10" Background="#B3ffffff" Width="250" CornerRadius="7">
+							<Border Padding="25,20,25,20"
+								Margin="10"
+								Background="#B3ffffff"
+								Width="250"
+								CornerRadius="7"
+								PointerPressed="UnitBorder_PointerPressed"
+								Tag="{Binding}">
 								<StackPanel>
 									<Border CornerRadius="7" ClipToBounds="True"  Margin="0,0,0,10">
 										<Image Source="/Assets/units.png" Width="200"/>

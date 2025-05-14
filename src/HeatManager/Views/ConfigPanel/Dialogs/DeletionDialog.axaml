@@ -1,0 +1,19 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:dialogs="clr-namespace:HeatManager.Views.ConfigPanel.Dialogs"
+		x:Class="HeatManager.Views.ConfigPanel.Dialogs.DeletionDialog"
+		x:DataType="dialogs:DeletionDialog"
+        Width="350" Height="120"
+        WindowStartupLocation="CenterOwner"
+		ShowActivated="False"
+		CanResize="False"
+        Title="Confirm Delete">
+    <StackPanel Margin="20">
+        <TextBlock Text="Are you sure you want to remove this unit?" Margin="0,0,0,10"/>
+		<TextBlock Text="{Binding UnitName}" FontSize="14" FontWeight="700" Foreground="Red"  Margin="0,0,0,10"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+            <Button Content="Cancel" Click="Cancel_Click"/>
+            <Button Content="Delete" Click="Delete_Click"/>
+        </StackPanel>
+    </StackPanel>
+</Window>
