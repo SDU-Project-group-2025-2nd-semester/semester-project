@@ -9,4 +9,6 @@ public interface IAssetManager
     public ObservableCollection<HeatProductionUnit> HeatProductionUnits { get; }
 
     public void LoadUnits(string filepath);
+    public void AddUnit(ProductionUnitBase unit);
+    public void RemoveUnit(ProductionUnitBase unit);
 }

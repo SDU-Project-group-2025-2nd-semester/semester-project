@@ -12,7 +12,7 @@ public class AssetManager : IAssetManager
     // This is just for parity, as the ProjectManager requires it.
     // Created after removing HeatSourceManager
     public ObservableCollection<HeatProductionUnit> HeatProductionUnits =>
-        new(ProductionUnits.OfType<HeatProductionUnit>()); 
+        new(ProductionUnits.OfType<HeatProductionUnit>());
 
     public AssetManager()
     {
@@ -42,5 +42,15 @@ public class AssetManager : IAssetManager
 
         ProductionUnits = new ObservableCollection<ProductionUnitBase>(allUnits);
 
+    }
+
+    public void AddUnit(ProductionUnitBase unit)
+    {
+        ProductionUnits.Add(unit);
+    }
+
+    public void RemoveUnit(ProductionUnitBase unit)
+    {
+        ProductionUnits.Remove(unit);
     }
 }
