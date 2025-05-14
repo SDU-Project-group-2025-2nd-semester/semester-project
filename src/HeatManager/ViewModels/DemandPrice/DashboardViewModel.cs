@@ -219,14 +219,7 @@ public partial class GridProductionViewModel : ViewModelBase
     [RelayCommand]
     public async Task ExportButton(object chartObject)
     {
-        // 1st- Internal
-        // ExportToImage(new object());
-
-        //2nd
-
-        //3rd
         var mainChart = chartObject as LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart;
-        Console.WriteLine($"mainChart: {mainChart}");
 
         // Execute Export logic
         if (mainChart == null)
@@ -234,75 +227,7 @@ public partial class GridProductionViewModel : ViewModelBase
             Console.WriteLine("ChartControl not found");
             return;
         }
-        await chartExporter.Export(mainChart, ChartSeries, ScrollableAxes, YAxes);
+        await chartExporter.ExportControl(mainChart, ChartSeries, ScrollableAxes, YAxes, "SummerDataChart");
     }
 
-    // public async Task ExportToImage(object chartParam)
-    // {
-    //     try
-    //     {
-    //         Console.WriteLine(chartParam);
-    //         var chartControl = chartParam as LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart;
-    //         Console.WriteLine(chartControl);
-    //         if (chartControl == null)
-    //         {
-    //             Console.WriteLine("Chart control not found");
-    //             return;
-    //         }
-
-    //         // Create a SkiaSharp version of the chart
-    //         var skChart = new SKCartesianChart()
-    //         {
-    //             Width = (int)chartControl.Bounds.Width,
-    //             Height = (int)chartControl.Bounds.Height,
-    //             Series = ChartSeries,
-    //             XAxes = ScrollableAxes,
-    //             YAxes = YAxes
-    //         };
-
-    //         // Generate temp file
-    //         var tempDirectory = Path.GetTempPath();
-    //         var tempFilename = Path.Combine(tempDirectory, $"GridProduction{DateTime.Now:MMdd_HHmmss}.png");
-    //         skChart.SaveImage(tempFilename);
-
-    //         var topLevel = TopLevel.GetTopLevel((App.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow);
-
-    //         // File Dialog
-    //         var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
-    //         {
-    //             Title = "Save Chart As Image",
-    //             SuggestedFileName = $"GridProduction{DateTime.Now:MMdd_HHmmss}",
-    //             DefaultExtension = "png",
-    //             FileTypeChoices = new[]
-    //             {
-    //             new FilePickerFileType("PNG Image") { Patterns = new[] { "*.png" } },
-    //             new FilePickerFileType("JPEG Image") { Patterns = new[] { "*.jpg", "*.jpeg" } }
-    //         }
-    //         });
-
-    //         if (file is not null)
-    //         {
-    //             // Copy the temporary image to the selected location
-    //             await using var sourceStream = File.OpenRead(tempFilename);
-    //             await using var destinationStream = await file.OpenWriteAsync();
-    //             await sourceStream.CopyToAsync(destinationStream);
-
-    //             Console.WriteLine($"Chart image saved successfully to {file.Path}");
-
-    //             // Clean up temporary file
-    //             try { File.Delete(tempFilename); } catch { }
-    //         }
-    //         else
-    //         {
-    //             // Clean up temporary file
-    //             try { File.Delete(tempFilename); } catch { }
-    //         }
-
-
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Console.WriteLine($"Error creating chart image: {ex.Message}");
-    //     }
-    // }
 }
