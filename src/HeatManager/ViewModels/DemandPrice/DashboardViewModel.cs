@@ -46,6 +46,7 @@ public partial class GridProductionViewModel : ViewModelBase
     public RectangularSection[] Thumbs { get; set; }
 
     public ChartExporter chartExporter = new ChartExporter();
+    private string _filenamePrefixOnExport = "SummerDataChart";
 
     public GridProductionViewModel(ISourceDataProvider provider)
     {
@@ -227,7 +228,7 @@ public partial class GridProductionViewModel : ViewModelBase
             Console.WriteLine("ChartControl not found");
             return;
         }
-        await chartExporter.ExportControl(mainChart, ChartSeries, ScrollableAxes, YAxes, "SummerDataChart");
+        await chartExporter.ExportControl(mainChart, ChartSeries, ScrollableAxes, YAxes, _filenamePrefixOnExport);
     }
 
 }
