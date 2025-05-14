@@ -48,7 +48,7 @@
 
                 <Button
                         Grid.Row="3"
-                        Command="{Binding ExportToImage}"
+                        Command="{Binding ExportButton}"
                         CommandParameter="{Binding ElementName=mainChart}"
                         Content="Export Chart" />
         </Grid>
