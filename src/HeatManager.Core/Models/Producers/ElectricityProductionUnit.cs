@@ -8,5 +8,7 @@ public class ElectricityProductionUnit : ProductionUnitBase
     /// </summary>
     public double MaxElectricity { get; set; }
 
+    public override double? MaxElectricitySafe => MaxElectricity;
+
     public new ElectricityProductionUnit Clone() => (ElectricityProductionUnit)MemberwiseClone();
 }

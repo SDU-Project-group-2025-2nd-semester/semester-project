@@ -19,9 +19,8 @@ public partial class AssetManagerView : UserControl
         {
             if (border.Tag is ProductionUnitBase unit)
             {
-                var dialog = new DeletionDialog(unit.Name); // your custom dialog window
+                var dialog = new DeletionDialog(unit.Name);
 
-                // This gets the parent Window, needed for ShowDialog
                 var parentWindow = (Window)this.VisualRoot!;
 
                 await dialog.ShowDialog(parentWindow);
@@ -30,6 +29,23 @@ public partial class AssetManagerView : UserControl
                 {
                     vm.RemoveUnit(unit);
                 }
+            }
+        }
+    }
+
+    private async void AddNewUnit_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (DataContext is AssetManagerViewModel vm)
+        {
+            var dialog = new AdditionDialog();
+
+            var parentWindow = (Window)this.VisualRoot!;
+
+            await dialog.ShowDialog(parentWindow);
+
+            if (dialog.Confirmed)
+            {
+                vm.AddUnit(dialog.Unit);
             }
         }
     }
