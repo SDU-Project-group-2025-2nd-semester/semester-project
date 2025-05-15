@@ -97,13 +97,22 @@ public class Schedule
 
     private void CreateProperties()
     {
-        if (HeatProductionUnitSchedules.IsEmpty) 
+        if (HeatProductionUnitSchedules.IsEmpty && ElectricityProductionUnitSchedules.IsEmpty) 
         { 
             Length = 0; 
             Start = new DateTime(0);
             End = new DateTime(0); 
             Resolution = Start - End;  
         } 
+        else if (HeatProductionUnitSchedules.IsEmpty && ElectricityProductionUnitSchedules.Any())
+        {
+            // Use electricity schedules for initialization if no heat schedules exist
+            Length = ElectricityProductionUnitSchedules.ElementAt(0).DataPoints.Count();
+            Start = ElectricityProductionUnitSchedules.ElementAt(0).DataPoints.ElementAt(0).TimeFrom;
+            End = ElectricityProductionUnitSchedules.ElementAt(0).DataPoints
+                .ElementAt(Length - 1).TimeTo;
+            Resolution = End - Start;
+        }
         else 
         { 
             Length = HeatProductionUnitSchedules.ElementAt(0).DataPoints.Count();
@@ -112,7 +121,6 @@ public class Schedule
                 .ElementAt(Length - 1).TimeTo; //TODO: make this actually readable
             Resolution = End - Start; 
         }
-
     } 
 
     private double[] GetEmissionsByHour(IEnumerable<HeatProductionUnitSchedule> heatProductionUnitSchedules)
