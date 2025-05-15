@@ -70,6 +70,7 @@ public class AssetManager : IAssetManager
     /// <param name="unit">The production unit to add.</param>
     public void AddUnit(ProductionUnitBase unit)
     {
+        if (unit == null) throw new ArgumentNullException(nameof(unit));
         ProductionUnits.Add(unit);
     }
 
@@ -79,6 +80,7 @@ public class AssetManager : IAssetManager
     /// <param name="unit">The production unit to remove.</param>
     public void RemoveUnit(ProductionUnitBase unit)
     {
+        if (unit == null) throw new ArgumentNullException(nameof(unit));
         ProductionUnits.Remove(unit);
     }
 }

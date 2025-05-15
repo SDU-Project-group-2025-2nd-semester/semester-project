@@ -21,7 +21,6 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
 {
 
     private readonly IOptimizer _optimizer;
-    private readonly ObservableCollection<ObservablePoint> _values = new();
     private DateTimeOffset? _selectedDate;
     private string? _lastLabel;
 
@@ -153,7 +152,6 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
         List<HeatProductionUnitSchedule> schedules = schedule.HeatProductionUnitSchedules.ToList();
 
         Series.Clear();
-        _values.Clear();
 
         List<DateTime> orderedTimes = OrderTimeSlots(schedules);
 

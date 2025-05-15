@@ -835,4 +835,57 @@ public class DefaultOptimizerTest
         Assert.Equal(25, electricitySchedule.DataPoints[0].ElectricityProduction); // 50% of 50 MW
         Assert.Equal(-10, electricitySchedule.DataPoints[0].ElectricityPrice);
     }
+
+    [Fact]
+    public void UpdateProductionUnits_Updates_AssetManager_OptimizerSettings()
+    {
+        // Arrange
+        var unit1 = new HeatProductionUnit
+        {
+            Name = "Unit1",
+            MaxHeatProduction = 50,
+            Cost = 1,
+            Emissions = 1,
+            ResourceConsumption = 1,
+            Resource = _oil
+        };
+
+        var unit2 = new HeatProductionUnit
+        {
+            Name = "Unit2",
+            MaxHeatProduction = 50,
+            Cost = 2,
+            Emissions = 2,
+            ResourceConsumption = 1,
+            Resource = _oil
+        };
+
+        var sourceDataPoint = new SourceDataPoint
+        {
+            HeatDemand = 10,
+            ElectricityPrice = 0,
+            TimeFrom = DateTime.Now,
+            TimeTo = DateTime.Now.AddHours(1)
+        };
+
+        var sourceDataCollection = new SourceDataCollection([sourceDataPoint]);
+
+        _mockSourceDataProvider.Setup(p => p.SourceDataCollection).Returns(sourceDataCollection);
+        _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<ProductionUnitBase> { unit1, unit2 });
+        _mockOptimizerSettings.SetupProperty(s => s.AllUnits);
+        _mockOptimizerStrategy.Setup(s => s.Optimization).Returns(OptimizationType.PriceOptimization);
+
+        Mock<IAssetManager>_newmockAssetManager = new Mock<IAssetManager>();
+        _newmockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<ProductionUnitBase> { unit1 });
+
+        // Act
+        _optimizer.UpdateProductionUnits(_newmockAssetManager.Object);
+
+        // Assert
+        Assert.NotNull(_optimizer._assetManager);
+        Assert.Single(_optimizer._assetManager.ProductionUnits);
+
+        Assert.NotNull(_optimizer._optimizerSettings);
+        Assert.Single(_optimizer._optimizerSettings.AllUnits);
+    }
 }

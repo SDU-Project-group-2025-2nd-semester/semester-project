@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.Services.SourceDataProviders;
+using HeatManager.Core.Services.AssetManagers;
 using HeatManager.ViewModels.ConfigPanel;
 using HeatManager.ViewModels.DemandPrice;
 using HeatManager.ViewModels.Optimizer;
@@ -16,7 +17,7 @@ using HeatManager.Views.Overview;
 
 namespace HeatManager.ViewModels;
 
-public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOptimizer optimizer) : ViewModelBase
+public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOptimizer optimizer, IAssetManager assetManager) : ViewModelBase
 {   
     [ObservableProperty]
     private UserControl? currentView;
@@ -31,7 +32,7 @@ public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOpti
     [RelayCommand]
     internal void SetConfigPanelView()
     {
-        CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel() };
+        CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel(assetManager, optimizer) };
     }
     
     [RelayCommand]

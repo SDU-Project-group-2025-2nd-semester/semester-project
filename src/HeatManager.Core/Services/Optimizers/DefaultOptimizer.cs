@@ -14,9 +14,9 @@ namespace HeatManager.Core.Services.Optimizers;
 /// </summary>
 public class DefaultOptimizer : IOptimizer
 {
-    private readonly IAssetManager _assetManager;
+    internal IAssetManager _assetManager { get; private set; }
     private readonly ISourceDataProvider _sourceDataProvider;
-    private IOptimizerSettings _optimizerSettings;
+    internal IOptimizerSettings _optimizerSettings { get; private set; }
     private readonly IOptimizerStrategy _optimizerStrategy;
 
     
@@ -146,6 +146,23 @@ public class DefaultOptimizer : IOptimizer
     public void ChangeOptimizationSettings(IOptimizerSettings optimizerSettings)
     {
         _optimizerSettings = optimizerSettings;
+    }
+
+    /// <summary>
+    /// Updates the production units in the optimizer.
+    /// </summary>
+    /// <param name="assetManager"></param>
+    public void UpdateProductionUnits(IAssetManager assetManager)
+    {
+        _assetManager = assetManager
+            ?? throw new ArgumentNullException(nameof(assetManager));
+
+        if (assetManager.ProductionUnits == null)
+            throw new ArgumentNullException(nameof(assetManager.ProductionUnits));
+
+        _optimizerSettings.AllUnits = assetManager.ProductionUnits
+            .Select(u => u.Name)
+            .ToDictionary(name => name, name => true);
     }
 
     private IEnumerable<ProductionUnitBase> GetHeatSourcePriorityList(IEnumerable<ProductionUnitBase> availableUnits,
