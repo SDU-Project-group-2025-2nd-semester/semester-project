@@ -7,7 +7,7 @@ namespace HeatManager.Core.Models;
 
 public class ProductionUnit
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public ProductionUnitStatus Status { get; set; }
 
     // Get the Bitmap icon based on the Status

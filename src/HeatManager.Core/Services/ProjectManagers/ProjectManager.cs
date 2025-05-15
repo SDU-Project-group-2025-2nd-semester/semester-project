@@ -17,6 +17,11 @@ public class ProjectManager(
 
     public async Task SaveProjectAsync()
     {
+        if (CurrentProject is null)
+        {
+            throw new InvalidOperationException("Current project is null. Cannot save.");
+        }
+
         CurrentProject.LastOpened = DateTime.UtcNow;
 
         var projectData = CurrentProject.ProjectData;
@@ -73,7 +78,7 @@ public class ProjectManager(
         assetManager.ProductionUnits.Clear();
         resourceManager.Resources.Clear();
 
-        var projectData = CurrentProject.ProjectData;
+        var projectData = CurrentProject?.ProjectData ?? throw new InvalidOperationException("Project needs to be retrieved from db before it's loading.");
 
         projectData.ProductionUnits.ForEach(assetManager.ProductionUnits.Add);
         projectData.Resources.ForEach(resourceManager.Resources.Add);
