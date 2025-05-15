@@ -2,17 +2,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="650"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
              x:Class="HeatManager.Views.ProjectSettings.SettingsView"
 			 xmlns:settingsmodel="clr-namespace:HeatManager.ViewModels.ProjectSettings"
 			 xmlns:settingsview="clr-namespace:HeatManager.Views.ProjectSettings"
 			 x:DataType="settingsmodel:SettingsViewModel"
 			 >
-			
 
+	<Panel>
+		<Border>
+			<ScrollViewer>
+				
+			
 	<StackPanel>
 		
-		<TextBlock HorizontalAlignment="Center" FontWeight="DemiBold" FontSize="20" Margin="10 25 10 10" >Create a new project</TextBlock>
+		<TextBlock HorizontalAlignment="Left" FontWeight="DemiBold" FontSize="20" Margin="30 25 10 10" >Create a new project</TextBlock>
 		
 		<StackPanel>
 			
@@ -50,28 +54,51 @@
 			
 		</StackPanel>
 
-		<StackPanel Spacing="10" Background="LightGray">
-			
+		<StackPanel Spacing="0">
 			<TextBlock FontWeight="DemiBold" FontSize="18" Margin="30 0 0 0">Heating Units</TextBlock>
-
 			<Panel>
-				<Carousel Name="slides" >
-					<Carousel.PageTransition >
-						<CompositePageTransition>
-							<PageSlide Duration="0:00:01.500" Orientation="Horizontal" />
-						</CompositePageTransition>
-					</Carousel.PageTransition>
-					<Carousel.Items>
-						
-					</Carousel.Items>
-				</Carousel>
-				<Panel Margin="20">
-					<Button Background="White" >&lt;</Button>
-					<Button Background="White" HorizontalAlignment="Right">&gt;</Button>
-				</Panel>
+				<ItemsControl ItemsSource="{Binding ProductionUnits}">
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<UniformGrid Rows="1" Columns="5" />
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<StackPanel Orientation="Vertical" Spacing="10" HorizontalAlignment="Center" Margin="10">
+								<Border CornerRadius="10" ClipToBounds="True">
+									<!--Rounded corners -->
+									<Image Source="/Assets/units.png" Stretch="Uniform"/>
+								</Border>
+
+								<!-- Grid for Icon, Name, and Status -->
+								<Grid HorizontalAlignment="Center">
+									<!-- TO DO: Match the width of the picture -->
+									<Grid.RowDefinitions>
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+									</Grid.RowDefinitions>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="1*" />
+										<ColumnDefinition Width="2*" />
+									</Grid.ColumnDefinitions>
+
+									<Button Content="*" Width="21" Height="21" Grid.Row="0" Grid.Column="0" Margin="0,0,10,0"  />
+									
+									<TextBlock Text="{Binding Name}" Classes="subheading" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="1" />
+									
+								</Grid>
+							</StackPanel>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+				
 			</Panel>
 		</StackPanel>
 	</StackPanel>
-  
+			</ScrollViewer>
+		</Border>
+	</Panel>
   
 </UserControl>
