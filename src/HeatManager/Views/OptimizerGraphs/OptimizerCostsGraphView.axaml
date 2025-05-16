@@ -1,0 +1,46 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:optimizerGraphs="clr-namespace:HeatManager.ViewModels.OptimizerGraphs"
+    mc:Ignorable="d"
+    d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="HeatManager.Views.OptimizerGraphs.OptimizerCostsGraphView"
+    x:DataType="optimizerGraphs:OptimizerCostsGraphViewModel">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- ========================== Header Section ========================== -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+
+            <TextBlock Text="Navigate to Date:"
+                       FontWeight="SemiBold"
+                       FontSize="14"
+                       Margin="10"
+                       VerticalAlignment="Center"/>
+
+            <DatePicker Name="DatePickerControl"
+                        SelectedDate="{Binding SelectedDate, Mode=TwoWay}"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Margin="10"/>
+        </StackPanel>
+
+        <!-- ========================== Chart Section ========================== -->
+        <avalonia:CartesianChart Grid.Row="1"
+                                 Series="{Binding Series}"
+                                 XAxes="{Binding XAxes}"
+                                 YAxes="{Binding YAxes}"
+                                 ZoomMode="X"
+                                 TooltipPosition="Top"
+                                 DrawMargin="{Binding Margin}"
+                                 UpdateStartedCommand="{Binding ChartUpdatedCommand}"/>
+
+    </Grid>
+</UserControl>

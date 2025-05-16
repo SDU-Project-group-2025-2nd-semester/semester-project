@@ -74,7 +74,8 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
     public IEnumerable<ViewOption> ViewOptions => new[]
     {
         new ViewOption("Heat Production", OptimizerViewType.HeatProductionGraph),
-        new ViewOption("Total and Maximum Values", OptimizerViewType.SummaryTable)
+        new ViewOption("Total and Maximum Values", OptimizerViewType.SummaryTable),
+        new ViewOption("Costs", OptimizerViewType.CostsGraph)
     };
 
     /// <summary>
@@ -104,6 +105,15 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
     }
 
     /// <summary>
+    /// Sets the current view to the costs production graph view.
+    /// </summary>
+    [RelayCommand]
+    private void SetCostsGraphView()
+    {
+        CurrentView = new OptimizerCostsGraphView { DataContext = new OptimizerCostsGraphViewModel(schedules, orderedTimes, MinDate) };
+    }
+
+    /// <summary>
     /// Handles changes to the selected view option and updates the selected view type.
     /// </summary>
     /// <param name="value">The newly selected view option.</param>
@@ -128,6 +138,9 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
                 break;
             case OptimizerViewType.SummaryTable:
                 SetSummaryTableView();
+                break;
+            case OptimizerViewType.CostsGraph:
+                SetCostsGraphView();
                 break;
         }
     }
@@ -175,5 +188,6 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
 public enum OptimizerViewType
 {
     HeatProductionGraph,
-    SummaryTable
+    SummaryTable,
+    CostsGraph
 }
