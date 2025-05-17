@@ -1,9 +1,25 @@
 ﻿using HeatManager.Core.Models.Producers;
-namespace HeatManager.ViewModels.ConfigPanel;
 
-internal interface IAssetManagerViewModel
+namespace HeatManager.ViewModels.ConfigPanel
 {
-    public void RemoveUnit(ProductionUnitBase unit);
-    public void AddUnit(ProductionUnitBase unit);
-    public void EditUnit(ProductionUnitBase unitBase, ProductionUnitBase unit);
+    /// <summary>
+    /// Interface defining operations for managing production units.
+    /// </summary>
+    internal interface IAssetManagerViewModel
+    {
+        /// <summary>
+        /// Removes the specified production unit.
+        /// </summary>
+        void RemoveUnit(ProductionUnitBase unit);
+
+        /// <summary>
+        /// Adds a new production unit.
+        /// </summary>
+        void AddUnit(ProductionUnitBase unit);
+
+        /// <summary>
+        /// Edits an existing production unit by replacing the original with a new unit.
+        /// </summary>
+        void EditUnit(ProductionUnitBase unitBase, ProductionUnitBase unit);
+    }
 }
