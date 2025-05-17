@@ -13,11 +13,10 @@ namespace HeatManager.Views
 {
     public partial class MainWindow : Window
     {
-        private readonly IServiceProvider _serviceProvider;
-
-        public MainWindow(IServiceProvider serviceProvider)
+        
+        public MainWindow()
         {
-            _serviceProvider = serviceProvider;
+            
             InitializeComponent();
 
             //var sourceDataProvider = new SourceDataProvider();
@@ -44,8 +43,8 @@ namespace HeatManager.Views
 
         private async void MainWindow_Opened(object? sender, System.EventArgs e)
         {
-            var dialog =  ActivatorUtilities.CreateInstance<ProjectSelectionWindow>(_serviceProvider);
-            await dialog.ShowDialog(this);
+            var context =  (MainWindowViewModel)DataContext;
+            context.OpenProjectManagerWindowCommand.Execute(null);
         }
     }
 }

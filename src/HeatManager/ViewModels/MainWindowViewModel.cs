@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using HeatManager.Core.DataLoader;
 using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.Services.ProjectManagers;
 using HeatManager.Core.Services.SourceDataProviders;
@@ -12,13 +13,15 @@ using HeatManager.Views.ConfigPanel;
 using HeatManager.Views.DemandPrice;
 using HeatManager.Views.Optimizer;
 using HeatManager.Views.Overview;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading.Tasks;
 
 // ReSharper disable InconsistentNaming
 
 namespace HeatManager.ViewModels;
 
-public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOptimizer optimizer, IProjectManager projectManager) : ViewModelBase
+public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOptimizer optimizer, IProjectManager projectManager, IDataLoader dataLoader, Window window, IServiceProvider serviceProvider) : ViewModelBase
 {   
     [ObservableProperty]
     private UserControl? currentView;
@@ -50,7 +53,14 @@ public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOpti
     [RelayCommand]
     private void SetGridProductionView()
     {
-        CurrentView = new GridProductionView { DataContext = new GridProductionViewModel(dataProvider) };
+        CurrentView = new GridProductionView { DataContext = new GridProductionViewModel(dataProvider, window,dataLoader ) };
+    }
+
+    [RelayCommand]
+    private async Task OpenProjectManagerWindow()
+    {
+        var dialog =  ActivatorUtilities.CreateInstance<ProjectSelectionWindow>(serviceProvider);
+        await dialog.ShowDialog(window);
     }
 
     [RelayCommand]

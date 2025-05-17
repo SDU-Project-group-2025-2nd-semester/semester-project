@@ -60,7 +60,7 @@ internal partial class ProjectSelectionViewModel : ViewModelBase
     [RelayCommand]
     private async Task NewProject()
     {
-        await _projectManager.NewProjectAsync(_newProjectName);
+        await _projectManager.NewProjectAsync(NewProjectName);
         _hostWindow.Close(); // Close dialog after action
     }
 
