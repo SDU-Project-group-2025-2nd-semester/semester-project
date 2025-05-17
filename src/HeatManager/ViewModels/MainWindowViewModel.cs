@@ -32,7 +32,7 @@ public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOpti
     [RelayCommand]
     internal void SetConfigPanelView()
     {
-        CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel(productionUnitsViewModel) };
+        CurrentView = new AssetManagerView(productionUnitsViewModel);
     }
     
     [RelayCommand]

@@ -17,15 +17,16 @@ internal class AssetManagerViewModel : ViewModelBase, IAssetManagerViewModel
 
     public AssetManagerViewModel(ProductionUnitsViewModel productionUnitsViewModel)
     {
-        // Load combined units for the UI
+        // Call GetCombinedUnits to populate the CombinedUnits collection
+        var combinedUnitsFromAssetManager = _assetManager.GetCombinedUnits();
+
+        // Map the CombinedUnits and set the OnToggle property
         CombinedUnits = new ObservableCollection<CombinedProductionUnit>(
-        ProductionUnitData.Units.AllUnits.Select(unit => new CombinedProductionUnit
-        {
-            Name = unit.Key,
-            IsActive = unit.Value,
-            Status = unit.Value ? ProductionUnitStatus.Active : ProductionUnitStatus.Offline,
-            OnToggle = productionUnitsViewModel.RefreshProductionUnits // Notify ProductionUnitsViewModel
-        })
-    );
+            combinedUnitsFromAssetManager.Select(unit =>
+            {
+                unit.OnToggle = productionUnitsViewModel.RefreshProductionUnits; // Notify ProductionUnitsViewModel
+                return unit;
+            })
+        );
     }
 }

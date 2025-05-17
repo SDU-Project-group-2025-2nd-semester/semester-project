@@ -1,6 +1,8 @@
 using HeatManager.Core.Models;
 using HeatManager.Core.Models.Producers;
+using HeatManager.Core.Models.Resources;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Text.Json;
 
 namespace HeatManager.Core.Services.AssetManagers;
@@ -13,7 +15,7 @@ public class AssetManager : IAssetManager
     // This is just for parity, as the ProjectManager requires it.
     // Created after removing HeatSourceManager
     public ObservableCollection<HeatProductionUnit> HeatProductionUnits =>
-        new(ProductionUnits.OfType<HeatProductionUnit>()); 
+        new(ProductionUnits.OfType<HeatProductionUnit>());
 
     public AssetManager()
     {
@@ -49,7 +51,7 @@ public class AssetManager : IAssetManager
     public ObservableCollection<CombinedProductionUnit> GetCombinedUnits()
     {
         var combinedUnits = new ObservableCollection<CombinedProductionUnit>();
-
+        
         foreach (var unit in ProductionUnits)
         {
             if (ProductionUnitData.Units.AllUnits.TryGetValue(unit.Name, out var isActive))
@@ -59,14 +61,19 @@ public class AssetManager : IAssetManager
                 combinedUnits.Add(new CombinedProductionUnit
                 {
                     Name = unit.Name,
-                    IsActive = isActive, 
-                    Status = isActive ? ProductionUnitStatus.Active : ProductionUnitStatus.Offline,
+                    IsActive = isActive,
+                    Status = status,
                     Cost = unit.Cost,
                     MaxHeatProduction = unit.MaxHeatProduction,
                     Emissions = unit.Emissions,
                     ResourceConsumption = unit.ResourceConsumption,
-                    Resource = unit.Resource
+                    Resource = unit.Resource // Directly assign the Resource object
                 });
+            }
+            else
+            {
+                // Debug: Log missing keys
+                Debug.WriteLine($"Unit {unit.Name} not found in ProductionUnitData.Units.AllUnits");
             }
         }
 

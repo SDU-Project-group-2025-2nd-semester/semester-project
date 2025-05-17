@@ -4,14 +4,16 @@ using Avalonia.Interactivity;
 using HeatManager.Core.Models;
 using HeatManager.Core.Services;
 using HeatManager.ViewModels.ConfigPanel;
+using HeatManager.ViewModels.Overview;
 
 namespace HeatManager.Views.ConfigPanel
 {
     public partial class AssetManagerView : UserControl
     {
-        public AssetManagerView()
+        public AssetManagerView(ProductionUnitsViewModel productionUnitsViewModel)
         {
             InitializeComponent();
+            DataContext = new AssetManagerViewModel(productionUnitsViewModel);
         }
     }
 }
