@@ -8,11 +8,30 @@ using HeatManager.Core.Models.Resources;
 
 namespace HeatManager.Views.ConfigPanel.Dialogs
 {
+    /// <summary>
+    /// Dialog for adding a new production unit.
+    /// Implements INotifyPropertyChanged for data binding.
+    /// </summary>
     public partial class AdditionDialog : Window, INotifyPropertyChanged
     {
+        // Backing fields for properties
+        private bool _canAddUnit = false;
+        private string _unitName = string.Empty;
+        private string _resource = string.Empty;
+        private decimal _cost = 0m;
+        private double _maxHeatProduction = 0.0;
+        private double _maxElectricity = 0.0;
+        private double _emissions = 0.0;
+        private double _resourceConsumption = 0.0;
+
+        /// <summary>
+        /// Indicates whether the dialog was confirmed (Add button pressed).
+        /// </summary>
         public bool Confirmed { get; private set; }
 
-        private bool _canAddUnit = false;
+        /// <summary>
+        /// Indicates whether the input data is valid for adding a unit.
+        /// </summary>
         public bool CanAddUnit
         {
             get => _canAddUnit;
@@ -26,9 +45,12 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
             }
         }
 
+        /// <summary>
+        /// The new production unit created by this dialog, or null if cancelled.
+        /// </summary>
         public ProductionUnitBase? Unit { get; private set; }
 
-        private string _unitName = string.Empty;
+        // Properties bound to UI inputs with validation triggering
         public string UnitName
         {
             get => _unitName;
@@ -43,7 +65,6 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
             }
         }
 
-        private string _resource = string.Empty;
         public string Resource
         {
             get => _resource;
@@ -58,25 +79,16 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
             }
         }
 
-        private decimal _cost = 0m;
-        private double _maxHeatProduction = 0.0;
-        private double _maxElectricity = 0.0;
-        private double _emissions = 0.0;
-        private double _resourceConsumption = 0.0;
-
         public string Cost
         {
             get => _cost.ToString();
             set
             {
-                if (decimal.TryParse(value, out var parsed))
+                if (decimal.TryParse(value, out var parsed) && _cost != parsed)
                 {
-                    if (_cost != parsed)
-                    {
-                        _cost = parsed;
-                        OnPropertyChanged();
-                        IsUnitValid();
-                    }
+                    _cost = parsed;
+                    OnPropertyChanged();
+                    IsUnitValid();
                 }
             }
         }
@@ -86,14 +98,11 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
             get => _maxHeatProduction.ToString();
             set
             {
-                if (double.TryParse(value, out var parsed))
+                if (double.TryParse(value, out var parsed) && _maxHeatProduction != parsed)
                 {
-                    if (_maxHeatProduction != parsed)
-                    {
-                        _maxHeatProduction = parsed;
-                        OnPropertyChanged();
-                        IsUnitValid();
-                    }
+                    _maxHeatProduction = parsed;
+                    OnPropertyChanged();
+                    IsUnitValid();
                 }
             }
         }
@@ -103,14 +112,11 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
             get => _maxElectricity.ToString();
             set
             {
-                if (double.TryParse(value, out var parsed))
+                if (double.TryParse(value, out var parsed) && _maxElectricity != parsed)
                 {
-                    if (_maxElectricity != parsed)
-                    {
-                        _maxElectricity = parsed;
-                        OnPropertyChanged();
-                        IsUnitValid();
-                    }
+                    _maxElectricity = parsed;
+                    OnPropertyChanged();
+                    IsUnitValid();
                 }
             }
         }
@@ -120,14 +126,11 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
             get => _emissions.ToString();
             set
             {
-                if (double.TryParse(value, out var parsed))
+                if (double.TryParse(value, out var parsed) && _emissions != parsed)
                 {
-                    if (_emissions != parsed)
-                    {
-                        _emissions = parsed;
-                        OnPropertyChanged();
-                        IsUnitValid();
-                    }
+                    _emissions = parsed;
+                    OnPropertyChanged();
+                    IsUnitValid();
                 }
             }
         }
@@ -137,18 +140,18 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
             get => _resourceConsumption.ToString();
             set
             {
-                if (double.TryParse(value, out var parsed))
+                if (double.TryParse(value, out var parsed) && _resourceConsumption != parsed)
                 {
-                    if (_resourceConsumption != parsed)
-                    {
-                        _resourceConsumption = parsed;
-                        OnPropertyChanged();
-                        IsUnitValid();
-                    }
+                    _resourceConsumption = parsed;
+                    OnPropertyChanged();
+                    IsUnitValid();
                 }
             }
         }
 
+        /// <summary>
+        /// List of available resources for selection.
+        /// </summary>
         public List<string> ResourceList { get; } = new List<string>
         {
             "Gas",
@@ -156,21 +159,30 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
             "Electricity"
         };
 
+        /// <summary>
+        /// Constructor initializes component and data context.
+        /// </summary>
         public AdditionDialog()
         {
             InitializeComponent();
             DataContext = this;
         }
 
+        /// <summary>
+        /// Handles Cancel button click - closes dialog without adding.
+        /// </summary>
         private void Cancel_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             Confirmed = false;
             Close();
         }
 
+        /// <summary>
+        /// Handles Add button click - validates and creates new unit.
+        /// </summary>
         private void Add_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            if (_cost != 0 && _maxHeatProduction != 0.0 && _resourceConsumption != 0.0 && _unitName != "")
+            if (_cost != 0 && _maxHeatProduction != 0.0 && _resourceConsumption != 0.0 && !string.IsNullOrEmpty(_unitName))
             {
                 if (_maxElectricity == 0.0)
                 {
@@ -200,14 +212,23 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
 
                 Confirmed = true;
             }
+
             Close();
         }
 
+        /// <summary>
+        /// Validates if current inputs are valid for enabling the Add button.
+        /// </summary>
         private void IsUnitValid()
         {
-            CanAddUnit = !string.IsNullOrEmpty(UnitName) && _cost != 0 && _maxHeatProduction != 0.0 && _resourceConsumption != 0.0 && !string.IsNullOrEmpty(Resource);
+            CanAddUnit = !string.IsNullOrEmpty(UnitName)
+                         && _cost != 0
+                         && _maxHeatProduction != 0.0
+                         && _resourceConsumption != 0.0
+                         && !string.IsNullOrEmpty(Resource);
         }
 
+        // INotifyPropertyChanged implementation
         public new event PropertyChangedEventHandler? PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string? name = null)

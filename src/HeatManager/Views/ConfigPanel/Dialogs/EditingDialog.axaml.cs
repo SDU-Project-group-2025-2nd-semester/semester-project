@@ -8,12 +8,23 @@ using HeatManager.Core.Models.Resources;
 
 namespace HeatManager.Views.ConfigPanel.Dialogs
 {
-    public partial class EditingDialog: Window, INotifyPropertyChanged
+    public partial class EditingDialog : Window, INotifyPropertyChanged
     {
+        // Backing fields
+        private bool _canChangeUnit = false;
+        private string _unitName = string.Empty;
+        private string _resource = string.Empty;
+        private decimal _cost = 0m;
+        private double _maxHeatProduction = 0.0;
+        private double _maxElectricity = 0.0;
+        private double _emissions = 0.0;
+        private double _resourceConsumption = 0.0;
+
+        // Properties
         public ProductionUnitBase UnitBase { get; private set; }
         public bool Confirmed { get; private set; }
+        public ProductionUnitBase? Unit { get; private set; }
 
-        private bool _canChangeUnit = false;
         public bool CanChangeUnit
         {
             get => _canChangeUnit;
@@ -27,9 +38,6 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
             }
         }
 
-        public ProductionUnitBase? Unit { get; private set; }
-
-        private string _unitName = string.Empty;
         public string UnitName
         {
             get => _unitName;
@@ -44,7 +52,6 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
             }
         }
 
-        private string _resource = string.Empty;
         public string Resource
         {
             get => _resource;
@@ -58,12 +65,6 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
                 }
             }
         }
-
-        private decimal _cost = 0m;
-        private double _maxHeatProduction = 0.0;
-        private double _maxElectricity = 0.0;
-        private double _emissions = 0.0;
-        private double _resourceConsumption = 0.0;
 
         public string Cost
         {
@@ -157,6 +158,7 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
             "Electricity"
         };
 
+        // Constructor
         public EditingDialog(ProductionUnitBase unit)
         {
             UnitBase = unit;
@@ -166,7 +168,8 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
             _resource = unit.Resource.Name;
             _resourceConsumption = unit.ResourceConsumption;
             _emissions = unit.Emissions;
-            if ( unit is ElectricityProductionUnit elecUnit)
+
+            if (unit is ElectricityProductionUnit elecUnit)
             {
                 _maxElectricity = elecUnit.MaxElectricity;
             }
@@ -174,9 +177,9 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
             DataContext = this;
 
             InitializeComponent();
-            
         }
 
+        // Event handlers
         private void Cancel_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             Confirmed = false;
@@ -215,14 +218,21 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
 
                 Confirmed = true;
             }
+
             Close();
         }
 
+        // Validation method
         private void IsUnitValid()
         {
-            CanChangeUnit = !string.IsNullOrEmpty(UnitName) && _cost != 0 && _maxHeatProduction != 0.0 && _resourceConsumption != 0.0 && !string.IsNullOrEmpty(Resource);
+            CanChangeUnit = !string.IsNullOrEmpty(UnitName)
+                            && _cost != 0
+                            && _maxHeatProduction != 0.0
+                            && _resourceConsumption != 0.0
+                            && !string.IsNullOrEmpty(Resource);
         }
 
+        // INotifyPropertyChanged implementation
         public new event PropertyChangedEventHandler? PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string? name = null)

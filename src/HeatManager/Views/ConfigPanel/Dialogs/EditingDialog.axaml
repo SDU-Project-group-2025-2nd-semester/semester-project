@@ -12,6 +12,7 @@
     <Grid>
         <Border Padding="20" MaxWidth="320" HorizontalAlignment="Center">
             <StackPanel Spacing="10">
+				
                 <TextBlock Text="Enter details for the new production unit:" FontWeight="Bold" Margin="0,0,0,10"/>
 
                 <!-- Name -->
@@ -48,6 +49,7 @@
                     <Button Content="Cancel" Click="Cancel_Click"/>
                     <Button Content="Edit" Click="Edit_Click" IsEnabled="{Binding CanChangeUnit}"/>
                 </StackPanel>
+				
             </StackPanel>
         </Border>
 
