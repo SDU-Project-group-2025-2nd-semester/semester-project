@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HeatManager.Core.Services.Optimizers;
+using HeatManager.Core.Services.ProjectManagers;
 using HeatManager.Core.Services.SourceDataProviders;
 using HeatManager.ViewModels.ConfigPanel;
 using HeatManager.ViewModels.DemandPrice;
@@ -11,12 +12,13 @@ using HeatManager.Views.ConfigPanel;
 using HeatManager.Views.DemandPrice;
 using HeatManager.Views.Optimizer;
 using HeatManager.Views.Overview;
+using System.Threading.Tasks;
 
 // ReSharper disable InconsistentNaming
 
 namespace HeatManager.ViewModels;
 
-public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOptimizer optimizer) : ViewModelBase
+public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOptimizer optimizer, IProjectManager projectManager) : ViewModelBase
 {   
     [ObservableProperty]
     private UserControl? currentView;
@@ -27,6 +29,11 @@ public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOpti
     //     CurrentView = new OverviewView { DataContext = new OverviewViewModel(this) };
     // }
 
+    [RelayCommand]
+    private async Task SaveProject()
+    {
+        await projectManager.SaveProjectAsync();
+    }
 
     [RelayCommand]
     internal void SetConfigPanelView()

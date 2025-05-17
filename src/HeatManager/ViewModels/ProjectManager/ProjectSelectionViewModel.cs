@@ -11,6 +11,8 @@ namespace HeatManager.ViewModels.ProjectManager;
 
 internal partial class ProjectSelectionViewModel : ViewModelBase
 {
+    public ObservableCollection<ProjectDisplay> Projects { get; } = [];
+
     [ObservableProperty]
     private string _searchText = string.Empty;
 
@@ -30,20 +32,11 @@ internal partial class ProjectSelectionViewModel : ViewModelBase
     /// <inheritdoc/>
     public ProjectSelectionViewModel(IProjectManager projectManager, Window hostWindow)
     {
-        Projects.Add(new ProjectDisplay{Name = "I don't know", LastOpened = DateTime.Now});
-        Projects.Add(new ProjectDisplay{Name = "I don't know", LastOpened = DateTime.Now});
-        Projects.Add(new ProjectDisplay{Name = "I don't know", LastOpened = DateTime.Now});
-        Projects.Add(new ProjectDisplay{Name = "I don't know", LastOpened = DateTime.Now});
-        Projects.Add(new ProjectDisplay{Name = "I don't know", LastOpened = DateTime.Now});
-        Projects.Add(new ProjectDisplay{Name = "I don't know", LastOpened = DateTime.Now});
-        Projects.Add(new ProjectDisplay{Name = "I don't know", LastOpened = DateTime.Now});
+        projectManager.GetProjectsFromDatabaseDisplays().ForEach(Projects.Add);
 
         _projectManager = projectManager;
         _hostWindow = hostWindow;
     }
-
-
-    public ObservableCollection<ProjectDisplay> Projects { get; } = [];
 
     [RelayCommand]
     private void StartProjectCreation()
