@@ -9,6 +9,7 @@ using HeatManager.ViewModels.ConfigPanel;
 using HeatManager.ViewModels.DemandPrice;
 using HeatManager.ViewModels.Optimizer;
 using HeatManager.ViewModels.Overview;
+using HeatManager.ViewModels.ProjectManager;
 using HeatManager.Views.ConfigPanel;
 using HeatManager.Views.DemandPrice;
 using HeatManager.Views.Optimizer;
@@ -22,10 +23,10 @@ using System.Threading.Tasks;
 namespace HeatManager.ViewModels;
 
 public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOptimizer optimizer, IProjectManager projectManager, IDataLoader dataLoader, Window window, IServiceProvider serviceProvider) : ViewModelBase
-{   
+{
     [ObservableProperty]
     private UserControl? currentView;
-    
+
     // public MainWindowViewModel() : this(default, default)
     // {
     //     // Set the default view to OverviewView
@@ -43,7 +44,7 @@ public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOpti
     {
         CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel() };
     }
-    
+
     [RelayCommand]
     private void SetOptimizerView()
     {
@@ -53,13 +54,16 @@ public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOpti
     [RelayCommand]
     private void SetGridProductionView()
     {
-        CurrentView = new GridProductionView { DataContext = new GridProductionViewModel(dataProvider, window,dataLoader ) };
+        CurrentView = new GridProductionView { DataContext = new GridProductionViewModel(dataProvider) };
     }
 
     [RelayCommand]
     private async Task OpenProjectManagerWindow()
     {
-        var dialog =  ActivatorUtilities.CreateInstance<ProjectSelectionWindow>(serviceProvider);
+        var dialog = ActivatorUtilities.CreateInstance<ProjectSelectionWindow>(serviceProvider);
+
+        dialog.DataContext = ActivatorUtilities.CreateInstance<ProjectSelectionViewModel>(serviceProvider, dialog);
+
         await dialog.ShowDialog(window);
     }
 

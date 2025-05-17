@@ -7,6 +7,7 @@ using HeatManager.Core.Services.ResourceManagers;
 using HeatManager.Core.Services.SourceDataProviders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
 
 namespace HeatManager.Core.Extensions;
 
@@ -35,7 +36,14 @@ public static class ServiceCollectionExtensions
             options
                 .UseNpgsql("Host=localhost;Database=heatManager;Username=postgres;Password=postgres", o =>
                 {
-                    o.ConfigureDataSource(o => o.EnableDynamicJson());
+                    o.ConfigureDataSource(o =>
+                    {
+                        o.EnableDynamicJson();
+                        o.ConfigureJsonOptions(new JsonSerializerOptions()
+                        {
+                            IncludeFields = true,
+                        });
+                    });
                 })
                 .EnableDetailedErrors()
                 .EnableSensitiveDataLogging();

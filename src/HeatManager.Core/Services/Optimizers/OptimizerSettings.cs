@@ -28,7 +28,7 @@ public class OptimizerSettings : IOptimizerSettings
     /// A dictionary containing all units and their active status.
     /// The key is the unit name, and the value is a boolean indicating whether the unit is active.
     /// </summary>
-    public Dictionary<string, bool> AllUnits { get; set; }
+    public Dictionary<string, bool> AllUnits { get; set; } = [];
 
     /// <summary>
     /// An empty constructor used for DI.

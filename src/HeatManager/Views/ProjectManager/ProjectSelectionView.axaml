@@ -56,20 +56,36 @@
 			</StackPanel>
 		</DockPanel>
 
-		<DockPanel IsVisible="{Binding IsCreatingProject}">
-
-			<StackPanel DockPanel.Dock="Top"    HorizontalAlignment="Left" >
-			<TextBlock Text="How should be new project called?" FontSize="25" DockPanel.Dock="Top" Padding="0 0 0 30"/>
+		<Panel IsVisible="{Binding IsCreatingProject}">
 
 
-				<TextBox Text="{Binding NewProjectName}" MinWidth="100"/>
-			</StackPanel>
+			<DockPanel IsVisible="{Binding IsDataImported}">
 
-			<StackPanel Orientation="Horizontal" Spacing="10" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" HorizontalAlignment="Right">
-                <Button Command="{Binding CancelProjectCreationCommand}">Back</Button>
-				<Button Command="{Binding NewProjectCommand}">Create Project</Button>
-			</StackPanel>
-		</DockPanel>
+				<StackPanel DockPanel.Dock="Top"    HorizontalAlignment="Left" >
+					<TextBlock Text="How should be new project called?" FontSize="25" DockPanel.Dock="Top" Padding="0 0 0 30"/>
 
+
+					<TextBox Text="{Binding NewProjectName}" MinWidth="100"/>
+				</StackPanel>
+
+				<StackPanel Orientation="Horizontal" Spacing="10" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+					<Button Command="{Binding CancelProjectCreationCommand}">Back</Button>
+					<Button Command="{Binding NewProjectCommand}">Create Project</Button>
+				</StackPanel>
+			</DockPanel>
+
+			<DockPanel IsVisible="{Binding !IsDataImported}">
+
+				<StackPanel DockPanel.Dock="Top"    HorizontalAlignment="Left" >
+					<TextBlock Text="How should be new project called?" FontSize="25" DockPanel.Dock="Top" Padding="0 0 0 30"/>
+
+
+				</StackPanel>
+
+				<Button FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"  Command="{Binding GetFileCommand}">Import your precious data</Button>
+
+			</DockPanel>
+
+		</Panel>
 	</Panel>
 </UserControl>

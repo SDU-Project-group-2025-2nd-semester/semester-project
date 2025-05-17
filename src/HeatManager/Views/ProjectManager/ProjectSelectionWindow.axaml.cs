@@ -8,9 +8,9 @@ namespace HeatManager;
 
 public partial class ProjectSelectionWindow : Window
 {
-    public ProjectSelectionWindow(IProjectManager projectManager)
+    public ProjectSelectionWindow(/*IProjectManager projectManager*/)
     {
         InitializeComponent();
-        DataContext = new ProjectSelectionViewModel(projectManager, this);
+        //DataContext = new ProjectSelectionViewModel(projectManager);
     }
 }

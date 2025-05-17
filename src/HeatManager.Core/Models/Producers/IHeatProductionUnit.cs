@@ -31,5 +31,6 @@ public abstract class ProductionUnitBase
     /// </summary>
     public double Emissions { get; set; }
 
+    
     public ProductionUnitBase Clone() => (ProductionUnitBase)MemberwiseClone();
 }
