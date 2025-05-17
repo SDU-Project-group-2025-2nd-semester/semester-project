@@ -11,26 +11,43 @@
     x:DataType="optimizerGraphs:OptimizerCostsPieGraphViewModel"
     mc:Ignorable="d">
 
-    <Grid Margin="20,0,0,0" ShowGridLines="true">
+    <Grid Margin="20,0,0,0">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!--  ========================== Chart Section ==========================  -->
-
-        <!--  Max Costs  -->
-        <avalonia:PieChart
+        <TextBlock
             Grid.Row="0"
+            Margin="10"
+            VerticalAlignment="Center"
+            FontSize="14"
+            FontWeight="SemiBold"
+            Text="Max cost per Unit" />
+
+        <!--  Max Costs Chart -->
+        <avalonia:PieChart
+            Grid.Row="1"
             InitialRotation="-90"
             MaxAngle="350"
             MaxValue="100"
             MinValue="0"
             Series="{Binding MaxCostSeries}" />
 
-        <!--  Total Costs  -->
+        <TextBlock
+            Grid.Row="2"
+            Margin="10"
+            VerticalAlignment="Center"
+            FontSize="14"
+            FontWeight="SemiBold"
+            Text="Total cost per Unit" />
+
+        <!--  Total Costs Chart -->
         <avalonia:PieChart
-            Grid.Row="1"
+            Grid.Row="3"
             InitialRotation="-90"
             MaxAngle="350"
             MaxValue="100"

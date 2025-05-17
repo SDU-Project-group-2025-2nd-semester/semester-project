@@ -11,7 +11,7 @@
     x:Class="HeatManager.Views.OptimizerGraphs.OptimizerCostsGraphView"
     x:DataType="optimizerGraphs:OptimizerCostsGraphViewModel">
 
-    <Grid Margin="20" ShowGridLines="true">
+    <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/> 
@@ -35,7 +35,7 @@
 
 
     
-        <Grid Grid.Row="1" ShowGridLines="true">
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5*"/>
                 <ColumnDefinition Width="1.5*"/>

@@ -36,6 +36,10 @@ internal partial class OptimizerCostsPieGraphViewModel : ViewModelBase
         BuildPieSeries(schedules);
     }
 
+    /// <summary>
+    /// Builds the chart series based on provided schedule data.
+    /// </summary>
+    /// <param name="schedules">The list of schedules.</param>
     public void BuildPieSeries(List<HeatProductionUnitSchedule> schedules)
     {
         MaxCostSeries.Clear();
@@ -53,17 +57,20 @@ internal partial class OptimizerCostsPieGraphViewModel : ViewModelBase
         var totalItems = new GaugeItem[schedules.Count + 1]; // +1 for background
         totalItems[0] = new GaugeItem(GaugeItem.Background, series => { series.Fill = null; });
 
+
         for (int i = 0; i < schedules.Count; i++)
         {
+            SKColor currentColor = Colors[i + 1];
+
             var unitSchedule = schedules[i];
 
             maxItems[i + 1] = new GaugeItem(
                 (double)GetProportionalValue(SumOfMaxAllUnits, unitSchedule.MaxCost),
-                series => SetStyle($"{unitSchedule.Name}: {unitSchedule.MaxCost} DKK", series));
+                series => SetStyle($"{unitSchedule.Name}: {unitSchedule.MaxCost:N0} DKK", series, unitSchedule.MaxCost, currentColor));
 
             totalItems[i + 1] = new GaugeItem(
                 (double)GetProportionalValue(SumOfTotalAllUnits, unitSchedule.TotalCost),
-                series => SetStyle($"{unitSchedule.Name}: {unitSchedule.TotalCost} DKK", series));
+                series => SetStyle($"{unitSchedule.Name}: {unitSchedule.TotalCost:N0} DKK", series, unitSchedule.TotalCost, currentColor));
         }
 
         var maxSeries = GaugeGenerator.BuildSolidGauge(maxItems);
@@ -81,20 +88,37 @@ internal partial class OptimizerCostsPieGraphViewModel : ViewModelBase
     }
 
 
-
+    /// <summary>
+    /// Calculate Proportional Values 
+    /// </summary>
+    /// <param name="sumUnits">Total value</param>
+    /// <param name="singleUnit">Part value</param>
+    /// <returns></returns>
     private decimal GetProportionalValue(decimal sumUnits, decimal singleUnit)
     {
         return Math.Round(singleUnit / sumUnits * 100, 2);
     }
 
-    public static void SetStyle(string name, PieSeries<ObservableValue> series)
+    public static void SetStyle(string name, PieSeries<ObservableValue> series, decimal labelValue, SKColor currentColor)
     {
         series.Name = name;
-        series.DataLabelsSize = 20;
+        series.DataLabelsSize = 11;
         series.DataLabelsPosition = PolarLabelsPosition.End;
-        series.DataLabelsFormatter =
-                point => point.Coordinate.PrimaryValue.ToString();
+        series.DataLabelsFormatter = point => $"{labelValue:N0} DKK";
         series.InnerRadius = 20;
         series.MaxRadialColumnWidth = 5;
+        series.Fill = new SolidColorPaint(currentColor);
     }
+
+    /// <summary>
+    /// Predefined color palette for chart series.
+    /// </summary>
+    protected static readonly SKColor[] Colors =
+    {
+        SKColors.White, SKColors.Maroon, SKColors.Red, SKColors.Magenta, SKColors.Pink,
+        SKColors.Green, SKColors.Blue, SKColors.Yellow, SKColors.Orange, SKColors.Purple,
+        SKColors.Brown, SKColors.Gray, SKColors.Black, SKColors.Cyan, SKColors.Lime,
+        SKColors.Teal, SKColors.Navy, SKColors.Olive, SKColors.Aqua, SKColors.Silver,
+        SKColors.Gold
+    };
 }
