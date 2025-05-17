@@ -19,19 +19,34 @@ public partial class AssetManagerView : UserControl
         {
             if (border.Tag is ProductionUnitBase unit)
             {
-                var dialog = new DeletionDialog(unit.Name);
-
                 var parentWindow = (Window)this.VisualRoot!;
 
-                await dialog.ShowDialog(parentWindow);
+                // Show dialog with Edit or Remove options
+                var choiceDialog = new EditOrRemoveDialog(unit.Name);
+                await choiceDialog.ShowDialog(parentWindow);
 
-                if (dialog.Confirmed)
+                if (choiceDialog.SelectedOption == EditOrRemoveDialog.EditOrRemoveOption.Remove)
                 {
-                    vm.RemoveUnit(unit);
+                    var deletionDialog = new DeletionDialog(unit.Name);
+                    await deletionDialog.ShowDialog(parentWindow);
+
+                    if (deletionDialog.Confirmed)
+                        vm.RemoveUnit(unit);
+                }
+                else if (choiceDialog.SelectedOption == EditOrRemoveDialog.EditOrRemoveOption.Edit)
+                {
+                    var editDialog = new EditingDialog(unit); // Your edit dialog here
+                    await editDialog.ShowDialog(parentWindow);
+
+                    if (editDialog.Confirmed && editDialog.Unit != null)
+                    {
+                        vm.EditUnit(editDialog.UnitBase, editDialog.Unit);
+                    }
                 }
             }
         }
     }
+
 
     private async void AddNewUnit_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
@@ -43,7 +58,7 @@ public partial class AssetManagerView : UserControl
 
             await dialog.ShowDialog(parentWindow);
 
-            if (dialog.Confirmed)
+            if (dialog.Confirmed && dialog.Unit != null)
             {
                 vm.AddUnit(dialog.Unit);
             }

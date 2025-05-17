@@ -5,4 +5,5 @@ internal interface IAssetManagerViewModel
 {
     public void RemoveUnit(ProductionUnitBase unit);
     public void AddUnit(ProductionUnitBase unit);
+    public void EditUnit(ProductionUnitBase unitBase, ProductionUnitBase unit);
 }

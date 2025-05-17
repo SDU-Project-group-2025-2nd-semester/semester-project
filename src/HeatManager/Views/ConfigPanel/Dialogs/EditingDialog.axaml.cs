@@ -8,19 +8,20 @@ using HeatManager.Core.Models.Resources;
 
 namespace HeatManager.Views.ConfigPanel.Dialogs
 {
-    public partial class AdditionDialog : Window, INotifyPropertyChanged
+    public partial class EditingDialog: Window, INotifyPropertyChanged
     {
+        public ProductionUnitBase UnitBase { get; private set; }
         public bool Confirmed { get; private set; }
 
-        private bool _canAddUnit = false;
-        public bool CanAddUnit
+        private bool _canChangeUnit = false;
+        public bool CanChangeUnit
         {
-            get => _canAddUnit;
+            get => _canChangeUnit;
             private set
             {
-                if (_canAddUnit != value)
+                if (_canChangeUnit != value)
                 {
-                    _canAddUnit = value;
+                    _canChangeUnit = value;
                     OnPropertyChanged();
                 }
             }
@@ -156,10 +157,24 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
             "Electricity"
         };
 
-        public AdditionDialog()
+        public EditingDialog(ProductionUnitBase unit)
         {
-            InitializeComponent();
+            UnitBase = unit;
+            _unitName = unit.Name;
+            _cost = unit.Cost;
+            _maxHeatProduction = unit.MaxHeatProduction;
+            _resource = unit.Resource.Name;
+            _resourceConsumption = unit.ResourceConsumption;
+            _emissions = unit.Emissions;
+            if ( unit is ElectricityProductionUnit elecUnit)
+            {
+                _maxElectricity = elecUnit.MaxElectricity;
+            }
+
             DataContext = this;
+
+            InitializeComponent();
+            
         }
 
         private void Cancel_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -168,7 +183,7 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
             Close();
         }
 
-        private void Add_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private void Edit_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             if (_cost != 0 && _maxHeatProduction != 0.0 && _resourceConsumption != 0.0 && _unitName != "")
             {
@@ -205,7 +220,7 @@ namespace HeatManager.Views.ConfigPanel.Dialogs
 
         private void IsUnitValid()
         {
-            CanAddUnit = !string.IsNullOrEmpty(UnitName) && _cost != 0 && _maxHeatProduction != 0.0 && _resourceConsumption != 0.0 && !string.IsNullOrEmpty(Resource);
+            CanChangeUnit = !string.IsNullOrEmpty(UnitName) && _cost != 0 && _maxHeatProduction != 0.0 && _resourceConsumption != 0.0 && !string.IsNullOrEmpty(Resource);
         }
 
         public new event PropertyChangedEventHandler? PropertyChanged;

@@ -13,7 +13,7 @@
 		<TextBlock Text="{Binding UnitName}" FontSize="14" FontWeight="700" Foreground="Red"  Margin="0,0,0,10"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
             <Button Content="Cancel" Click="Cancel_Click"/>
-            <Button Content="Delete" Click="Delete_Click"/>
+            <Button Content="Delete" Click="Delete_Click" Background="#e57373" Foreground="White" />
         </StackPanel>
     </StackPanel>
 </Window>

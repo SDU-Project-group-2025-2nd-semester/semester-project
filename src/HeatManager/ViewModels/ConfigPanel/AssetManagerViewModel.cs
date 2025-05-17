@@ -28,4 +28,11 @@ internal class AssetManagerViewModel : ViewModelBase, IAssetManagerViewModel
         _optimizer.UpdateProductionUnits(_assetManager);
     }
 
+    public void EditUnit(ProductionUnitBase unitBase, ProductionUnitBase unit)
+    {
+        _assetManager.RemoveUnit(unitBase);
+        _assetManager.AddUnit(unit);
+        _optimizer.UpdateProductionUnits(_assetManager);
+    }
+
 }
