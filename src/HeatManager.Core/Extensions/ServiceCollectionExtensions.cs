@@ -1,5 +1,6 @@
 ﻿using HeatManager.Core.DataLoader;
 using HeatManager.Core.Db;
+using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.Services.ProjectManagers;
 using HeatManager.Core.Services.ResourceManagers;
@@ -17,6 +18,9 @@ public static class ServiceCollectionExtensions
 
         services
             .AddSingleton<ISourceDataProvider, SourceDataProvider>()
+            .AddSingleton<IOptimizerSettings, OptimizerSettings>()
+            .AddSingleton<IOptimizerStrategy, OptimizerStrategy>()
+            .AddSingleton<IAssetManager, AssetManager>()
             .AddSingleton<IResourceManager, ResourceManager>()
             .AddSingleton<IOptimizer, DefaultOptimizer>()
             .AddTransient<IDataLoader, CsvDataLoader>()
