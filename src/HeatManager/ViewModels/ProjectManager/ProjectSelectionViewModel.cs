@@ -20,7 +20,7 @@ internal partial class ProjectSelectionViewModel : ViewModelBase
     private bool _isCreatingProject;
 
     [ObservableProperty] 
-    private string _newProjectName;
+    private string _newProjectName = string.Empty;
 
     [ObservableProperty] 
     private ProjectDisplay? _selectedProject;
