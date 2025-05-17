@@ -3,14 +3,14 @@ using Avalonia.Interactivity;
 using HeatManager.ViewModels.Optimizer;
 using System;
 
-namespace HeatManager.Views.Optimizer
+namespace HeatManager.Views.OptimizerGraphs
 {
-    public partial class DataOptimizerView : UserControl
+    public partial class OptimizerHeatProductionGraphView : UserControl
     {
-        public DataOptimizerView()
+        public OptimizerHeatProductionGraphView()
         {
             InitializeComponent();
-            
+
         }
 
     }
