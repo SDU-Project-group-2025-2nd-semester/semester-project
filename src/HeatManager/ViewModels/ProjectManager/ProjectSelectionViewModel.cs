@@ -19,10 +19,10 @@ internal partial class ProjectSelectionViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isCreatingProject;
 
-    [ObservableProperty] 
+    [ObservableProperty]
     private string _newProjectName = string.Empty;
 
-    [ObservableProperty] 
+    [ObservableProperty]
     private ProjectDisplay? _selectedProject;
 
 
@@ -32,7 +32,11 @@ internal partial class ProjectSelectionViewModel : ViewModelBase
     /// <inheritdoc/>
     public ProjectSelectionViewModel(IProjectManager projectManager, Window hostWindow)
     {
-        projectManager.GetProjectsFromDatabaseDisplays().ForEach(Projects.Add);
+        try
+        {
+            projectManager.GetProjectsFromDatabaseDisplays().ForEach(Projects.Add);
+        }
+        catch (InvalidOperationException) { } // This is in case the database is not created yet
 
         _projectManager = projectManager;
         _hostWindow = hostWindow;
@@ -44,7 +48,7 @@ internal partial class ProjectSelectionViewModel : ViewModelBase
         IsCreatingProject = true;
         NewProjectName = string.Empty;
     }
-    
+
 
     [RelayCommand]
     private void CancelProjectCreation()
