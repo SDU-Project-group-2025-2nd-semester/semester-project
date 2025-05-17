@@ -1,22 +1,19 @@
-using System;
-using System.ComponentModel;
-using System.Collections.Generic;
-
+using CommunityToolkit.Mvvm.Input;
 using HeatManager.Core.Models.Schedules;
 using HeatManager.ViewModels.Optimizer;
-using System.Threading.Tasks;
-using System.Collections.ObjectModel;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.Measure;
 using LiveChartsCore.Kernel.Events;
-using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore.Kernel.Sketches;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
-using System.Linq;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
+using LiveChartsCore;
+using SkiaSharp;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 
 namespace HeatManager.ViewModels.OptimizerGraphs;
 
@@ -26,6 +23,11 @@ namespace HeatManager.ViewModels.OptimizerGraphs;
 internal partial class OptimizerCostsGraphViewModel : BaseOptimizerGraphViewModel
 {
     /// <summary>
+    /// Get the ViewModel for the Pie charts
+    /// </summary>
+    public OptimizerCostsPieGraphViewModel PieGraphViewModel { get; }
+
+    /// <summary>
     /// Constructor of the <see cref="OptimizerCostsGraphViewModel"/> partial class
     /// </summary>
     /// <param name="schedules">List of the Heat production unit's schedules</param>
@@ -33,6 +35,7 @@ internal partial class OptimizerCostsGraphViewModel : BaseOptimizerGraphViewMode
     /// <param name="minDate">Minimum date in given dataset</param>
     public OptimizerCostsGraphViewModel(List<HeatProductionUnitSchedule> schedules, List<DateTime> OrderedTimes, DateTimeOffset? minDate) : base(schedules, OrderedTimes, minDate)
     {
+        PieGraphViewModel = new OptimizerCostsPieGraphViewModel(schedules);
     }
 
     /// <summary>

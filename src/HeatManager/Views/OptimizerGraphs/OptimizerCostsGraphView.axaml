@@ -5,16 +5,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
     xmlns:optimizerGraphs="clr-namespace:HeatManager.ViewModels.OptimizerGraphs"
+    xmlns:views="clr-namespace:HeatManager.Views.OptimizerGraphs"
     mc:Ignorable="d"
     d:DesignWidth="800" d:DesignHeight="450"
     x:Class="HeatManager.Views.OptimizerGraphs.OptimizerCostsGraphView"
     x:DataType="optimizerGraphs:OptimizerCostsGraphViewModel">
 
-    <Grid Margin="20">
+    <Grid Margin="20" ShowGridLines="true">
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+            <RowDefinition Height="*"/> 
+        </Grid.RowDefinitions>        
 
         <!-- ========================== Header Section ========================== -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
@@ -32,15 +33,27 @@
                         Margin="10"/>
         </StackPanel>
 
-        <!-- ========================== Chart Section ========================== -->
-        <avalonia:CartesianChart Grid.Row="1"
-                                 Series="{Binding Series}"
-                                 XAxes="{Binding XAxes}"
-                                 YAxes="{Binding YAxes}"
-                                 ZoomMode="X"
-                                 TooltipPosition="Top"
-                                 DrawMargin="{Binding Margin}"
-                                 UpdateStartedCommand="{Binding ChartUpdatedCommand}"/>
 
+    
+        <Grid Grid.Row="1" ShowGridLines="true">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="1.5*"/>
+            </Grid.ColumnDefinitions>
+            <!-- ========================== Chart Section ========================== -->
+            <!-- Line Chart -->
+            <avalonia:CartesianChart Grid.Row="1"
+                                    Series="{Binding Series}"
+                                    XAxes="{Binding XAxes}"
+                                    YAxes="{Binding YAxes}"
+                                    ZoomMode="X"
+                                    TooltipPosition="Top"
+                                    DrawMargin="{Binding Margin}"
+                                    UpdateStartedCommand="{Binding ChartUpdatedCommand}"/>
+
+            <!-- Pie Charts (using separate user control) -->
+            <views:OptimizerCostsPieGraphView Grid.Column="1" DataContext="{Binding PieGraphViewModel}"/>
+
+        </Grid>
     </Grid>
 </UserControl>
