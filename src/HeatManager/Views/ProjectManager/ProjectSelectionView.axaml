@@ -77,7 +77,7 @@
 			<DockPanel IsVisible="{Binding !IsDataImported}">
 
 				<StackPanel DockPanel.Dock="Top"    HorizontalAlignment="Left" >
-					<TextBlock Text="How should be new project called?" FontSize="25" DockPanel.Dock="Top" Padding="0 0 0 30"/>
+					<TextBlock Text="What data should project use?" FontSize="25" DockPanel.Dock="Top" Padding="0 0 0 30"/>
 
 
 				</StackPanel>
