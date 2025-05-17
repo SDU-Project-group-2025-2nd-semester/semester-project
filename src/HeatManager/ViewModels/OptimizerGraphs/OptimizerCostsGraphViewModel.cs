@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System.Linq;
+using LiveChartsCore.SkiaSharpView.Painting.Effects;
 
 namespace HeatManager.ViewModels.OptimizerGraphs;
 
@@ -43,20 +44,48 @@ internal partial class OptimizerCostsGraphViewModel : BaseOptimizerGraphViewMode
         Series.Clear();
         int i = 0;
 
+        var strokeThickness = 3;
+        var strokeDashArray = new float[] { 3 * strokeThickness, 2 * strokeThickness };
+        var effect = new DashEffect(strokeDashArray);
+
+        List<decimal> totalCostsPerHour = new List<decimal>(new decimal[orderedTimes.Count]);
+
         foreach (var unitSchedule in schedules)
         {
             i++;
+            for (int j = 0; j < unitSchedule.Costs.Length; j++)
+            {
+
+                totalCostsPerHour[j] += unitSchedule.Costs[j];
+            }
+
             Series.Add(new LineSeries<double>
             {
                 Values = unitSchedule.Costs.Select(cost => (double)cost).ToArray(),
                 Name = unitSchedule.Name,
-                Stroke = new SolidColorPaint(Colors[i]) { StrokeThickness = 4 },
+                Stroke = new SolidColorPaint
+                {
+                    Color = Colors[i],
+                    StrokeCap = SKStrokeCap.Square,
+                    StrokeThickness = strokeThickness,
+                    PathEffect = effect
+                },
                 Fill = null,
                 GeometryFill = null,
                 GeometryStroke = null,
                 LineSmoothness = 1
             });
         }
+        Series.Add(new LineSeries<double>
+        {
+            Values = totalCostsPerHour.Select(cost => (double)cost).ToArray(),
+            Name = "Accumulative cost",
+            Stroke = new SolidColorPaint(Colors[i + 1]) { StrokeThickness = 5 },
+            Fill = null,
+            GeometryFill = null,
+            GeometryStroke = null,
+            LineSmoothness = 1
+        });
     }
 
 
