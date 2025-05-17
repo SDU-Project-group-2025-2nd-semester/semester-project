@@ -1,17 +1,23 @@
 ﻿namespace HeatManager.Core.Models.Resources;
 
-public class Resource(string name)
+public class Resource
 {
-    public string Name { get; set; } = name;
-    public ResourceType Type { get; set; } = name switch
+    // Used for serialization
+    public Resource() { }
+
+    public Resource(string name)
+    {
+        Name = name;
+    }
+
+    public string Name { get; set; }
+    public ResourceType Type => Name switch
     {
         "Gas" => ResourceType.Gas,
         "Oil" => ResourceType.Oil,
         "Electricity" => ResourceType.Electricity,
-        _ => throw new ArgumentException($"Invalid resource name: {name}")
+        _ => throw new ArgumentException($"Invalid resource name: {Name}")
     };
-    public override string ToString()
-    {
-        return Name;
-    }
+
+    public override string ToString() => Name;
 }

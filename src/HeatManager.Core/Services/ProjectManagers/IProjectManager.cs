@@ -10,6 +10,8 @@ public interface IProjectManager
 
     public Task<List<ProjectDisplay>> GetProjectsFromDatabaseDisplaysAsync();
 
+    public List<ProjectDisplay> GetProjectsFromDatabaseDisplays();
+
     public Task LoadProjectFromDb(string projectName);
 
     public Task SaveProjectAsync();

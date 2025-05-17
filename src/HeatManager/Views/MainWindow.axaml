@@ -26,9 +26,11 @@
                     <!-- Configuration panel is Asset Manager in the code, I will change the naming later -->
             
                     <Button Content="Optimiser" Command="{Binding SetOptimizerViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
-            
 
-                </StackPanel>
+					<Button Content="Save Project" Command="{Binding SaveProjectCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
+
+
+				</StackPanel>
         
             </SplitView.Pane>
        

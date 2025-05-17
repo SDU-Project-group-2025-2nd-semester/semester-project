@@ -35,7 +35,12 @@ public class OptimizerStrategy : IOptimizerStrategy
     {
         Optimization = priceOptimization ? OptimizationType.PriceOptimization : OptimizationType.Co2Optimization;
     }
-    
+
+    public OptimizerStrategy() : this(OptimizationType.PriceOptimization)
+    {
+        
+    }
+
     /// <summary>
     /// Constructor that initializes the optimizer strategy based on the provided optimization type.
     /// </summary>

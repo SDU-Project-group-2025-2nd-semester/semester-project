@@ -51,6 +51,19 @@ public class ProjectManager(
         await LoadAsync();
     }
 
+    public List<ProjectDisplay> GetProjectsFromDatabaseDisplays()
+    {
+        return  (from projects in dbContext.Projects
+            orderby projects.LastOpened descending
+            select new ProjectDisplay
+            {
+                Name = projects.Name,
+                CreatedAt = projects.CreatedAt,
+                LastOpened = projects.LastOpened
+            }
+        ).ToList();
+    }
+
     public async Task LoadProjectFromDb(string projectName)
     {
         var project = await dbContext.Projects.FirstOrDefaultAsync(p => p.Name == projectName);
