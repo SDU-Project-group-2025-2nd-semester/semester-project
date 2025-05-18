@@ -2,8 +2,11 @@ using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HeatManager.Core.DataLoader;
+using HeatManager.Core.Models.Schedules;
+using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.Services.ProjectManagers;
+using HeatManager.Core.Services.ScheduleExporter;
 using HeatManager.Core.Services.SourceDataProviders;
 using HeatManager.ViewModels.ConfigPanel;
 using HeatManager.ViewModels.DemandPrice;
@@ -16,13 +19,15 @@ using HeatManager.Views.Optimizer;
 using HeatManager.Views.Overview;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 // ReSharper disable InconsistentNaming
 
 namespace HeatManager.ViewModels;
 
-public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOptimizer optimizer, IProjectManager projectManager, IDataLoader dataLoader, Window window, IServiceProvider serviceProvider) : ViewModelBase
+public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataProvider dataProvider, IOptimizer optimizer, IProjectManager projectManager, IDataLoader dataLoader, Window window, IServiceProvider serviceProvider) : ViewModelBase
 {
     [ObservableProperty]
     private UserControl? currentView;
@@ -42,7 +47,7 @@ public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOpti
     [RelayCommand]
     internal void SetConfigPanelView()
     {
-        CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel() };
+        CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel(assetManager) };
     }
 
     [RelayCommand]
@@ -71,5 +76,20 @@ public partial class MainWindowViewModel(ISourceDataProvider dataProvider, IOpti
     private void SetOverviewView()
     {
         CurrentView = new OverviewView { DataContext = new OverviewViewModel(this) };
+    }
+
+    [RelayCommand]
+    private void ExportData()
+    {
+
+        assetManager.LoadUnits(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Models", "Producers", "ProductionUnits.json"));
+
+        optimizer.ChangeOptimizationSettings(new OptimizerSettings
+        {
+            AllUnits = assetManager.ProductionUnits.ToDictionary(x => x.Name, _ => true),
+        });
+        Schedule optimizedSchedule = optimizer.Optimize();
+        ScheduleExporter exporter = new ScheduleExporter();
+        exporter.ExportScheduleData("C:/Users/naame/Desktop/mangerui/semester-project/results/results.csv", optimizedSchedule);
     }
 }

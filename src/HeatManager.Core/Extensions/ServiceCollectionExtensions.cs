@@ -24,7 +24,7 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IAssetManager, AssetManager>()
             .AddSingleton<IResourceManager, ResourceManager>()
             .AddSingleton<IOptimizer, DefaultOptimizer>()
-            .AddTransient<IDataLoader, CsvDataLoader>()
+            .AddSingleton<IDataLoader, CsvDataLoader>()
             .AddSingleton<IProjectManager, ProjectManager>();
 
         #endregion
