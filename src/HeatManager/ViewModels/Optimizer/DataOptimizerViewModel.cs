@@ -1,4 +1,6 @@
-﻿using HeatManager.Core.Services.Optimizers;
+﻿using CommunityToolkit.Mvvm.Input;
+using HeatManager.Core.Services;
+using HeatManager.Core.Services.Optimizers;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -20,8 +22,16 @@ internal class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel
         OptimizeData();
     }
     
+    // Command to reoptimize the data
+    // public IRelayCommand ReoptimizeCommand => new RelayCommand(OptimizeData);
+    
     public void OptimizeData()
     {
+        // Update the optimizer with the latest Units dictionary
+        _optimizer.UpdateUnits(ProductionUnitData.Units.AllUnits);
+        
+        Series.Clear();
+        
         var schedule = _optimizer.Optimize();
 
         var schedules = schedule.HeatProductionUnitSchedules.ToList();

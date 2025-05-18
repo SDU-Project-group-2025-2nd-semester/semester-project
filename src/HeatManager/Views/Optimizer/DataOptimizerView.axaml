@@ -9,6 +9,14 @@
         x:DataType="optimizer:DataOptimizerViewModel">
         
     <Grid>
-        <avalonia:CartesianChart Series="{Binding Series}" />
+        <!-- <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions> -->
+
+        <!-- Reoptimize Button -->
+        <!-- <Button Grid.Row="0" Content="Reoptimize" Command="{Binding ReoptimizeCommand}" HorizontalAlignment="Center" Margin="10" /> -->
+        
+        <avalonia:CartesianChart Grid.Row="1" Series="{Binding Series}" />
     </Grid>
 </UserControl>

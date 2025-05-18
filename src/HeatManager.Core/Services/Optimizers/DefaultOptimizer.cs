@@ -116,6 +116,11 @@ public class DefaultOptimizer : IOptimizer
         return availableUnits;
     }
     
+    public void UpdateUnits(Dictionary<string, bool> units)
+    {
+        _optimizerSettings = new OptimizerSettings(units);
+    }
+
     public void ChangeOptimizationSettings(IOptimizerSettings optimizerSettings)
     {
         _optimizerSettings = optimizerSettings;

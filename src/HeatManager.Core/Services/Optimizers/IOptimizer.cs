@@ -17,6 +17,8 @@ public interface IOptimizer
     /// <param name="optimizerSettings">The new optimization settings</param>
     void ChangeOptimizationSettings(IOptimizerSettings optimizerSettings);
 
+    void UpdateUnits(Dictionary<string, bool> units);
+
     /// <summary>
     /// Gets the available production units based on the current settings
     /// </summary>
