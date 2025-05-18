@@ -74,7 +74,15 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
         this.orderedTimes = OrderedTimes;
         MinDate = minDate;
         BuildChartSeries(schedules);
-        ConfigureAxes(orderedTimes, schedules);
+        ConfigureAxes(orderedTimes);
+    }
+
+    protected BaseOptimizerGraphViewModel(Schedule schedule, List<DateTime> OrderedTimes, DateTimeOffset? minDate)
+    {
+        this.orderedTimes = OrderedTimes;
+        MinDate = minDate;
+        BuildChartSeries(schedule);
+        ConfigureAxes(orderedTimes);
     }
 
     /// <summary>
@@ -92,6 +100,7 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
     /// </summary>
     /// <param name="schedules">List of Unit Schedules</param>
     protected abstract void BuildChartSeries(List<HeatProductionUnitSchedule> schedules);
+    protected abstract void BuildChartSeries(Schedule schedule);
 
     /// <summary>
     /// Gets the Y-axis title - each subclass must implement this
@@ -103,7 +112,7 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
     /// </summary>
     /// <param name="orderedTimes">The list of ordered time slots.</param>
     /// <param name="schedules">The list of schedules.</param>
-    protected void ConfigureAxes(List<DateTime> orderedTimes, List<HeatProductionUnitSchedule> schedules)
+    protected void ConfigureAxes(List<DateTime> orderedTimes)
     {
         XAxes = new List<Axis>
         {

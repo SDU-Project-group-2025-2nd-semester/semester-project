@@ -51,5 +51,10 @@ internal partial class OptimizerCo2GraphViewModel : BaseOptimizerGraphViewModel
         });
     }
 
+    protected override void BuildChartSeries(Schedule schedule)
+    {
+        throw new NotImplementedException();
+    }
+
     protected override string GetYAxisTitle() => "CO₂ Emissions [kg]";
 }
