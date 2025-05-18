@@ -74,9 +74,15 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
         this.orderedTimes = OrderedTimes;
         MinDate = minDate;
         BuildChartSeries(schedules);
-        ConfigureAxes(orderedTimes);
+        ConfigureAxes(orderedTimes, schedules);
     }
 
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="schedule"></param>
+    /// <param name="OrderedTimes"></param>
+    /// <param name="minDate"></param>
     protected BaseOptimizerGraphViewModel(Schedule schedule, List<DateTime> OrderedTimes, DateTimeOffset? minDate)
     {
         this.orderedTimes = OrderedTimes;
@@ -112,7 +118,13 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
     /// </summary>
     /// <param name="orderedTimes">The list of ordered time slots.</param>
     /// <param name="schedules">The list of schedules.</param>
+
     protected void ConfigureAxes(List<DateTime> orderedTimes)
+    {
+        //wrapper, I do not want to remove code made by others, but I think we need to refactor a bit ;)
+        ConfigureAxes(orderedTimes, new List<HeatProductionUnitSchedule>());  
+    }
+    protected void ConfigureAxes(List<DateTime> orderedTimes, List<HeatProductionUnitSchedule> schedules) //Consider removing schedules
     {
         XAxes = new List<Axis>
         {
