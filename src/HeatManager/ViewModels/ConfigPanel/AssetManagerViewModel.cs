@@ -11,7 +11,7 @@ using HeatManager.ViewModels.Overview;
 namespace HeatManager.ViewModels.ConfigPanel;
 
 internal class AssetManagerViewModel : ViewModelBase, IAssetManagerViewModel
-{   
+{
     private readonly IAssetManager _assetManager = new AssetManager();
     public ObservableCollection<CombinedProductionUnit> CombinedUnits { get; }
 
@@ -24,9 +24,27 @@ internal class AssetManagerViewModel : ViewModelBase, IAssetManagerViewModel
         CombinedUnits = new ObservableCollection<CombinedProductionUnit>(
             combinedUnitsFromAssetManager.Select(unit =>
             {
-                unit.OnToggle = productionUnitsViewModel.RefreshProductionUnits; // Notify ProductionUnitsViewModel
+                unit.OnToggle = () =>
+                {
+                    productionUnitsViewModel.RefreshProductionUnits(); // Notify ProductionUnitsViewModel
+                    RefreshCombinedUnits();
+                };
+
                 return unit;
             })
         );
+    }
+
+    public void RefreshCombinedUnits()
+    {
+        foreach (var unit in CombinedUnits)
+        {
+            // Update the status shown of each unit based on the current state in ProductionUnitData
+            if (ProductionUnitData.Units.AllUnits.TryGetValue(unit.Name, out var isActive))
+            {
+                unit.IsActive = isActive;
+                unit.Status = isActive ? ProductionUnitStatus.Active : ProductionUnitStatus.Offline;
+            }
+        }
     }
 }
