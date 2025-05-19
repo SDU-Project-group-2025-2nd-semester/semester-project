@@ -90,6 +90,20 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
         });
         Schedule optimizedSchedule = optimizer.Optimize();
         ScheduleExporter exporter = new ScheduleExporter();
-        exporter.ExportScheduleData("C:/Users/naame/Desktop/mangerui/semester-project/results/results.csv", optimizedSchedule);
+
+        string? dir = AppDomain.CurrentDomain.BaseDirectory;
+
+        while (dir != null && !Directory.Exists(Path.Combine(dir, "results")))
+        {
+            if (Directory.GetParent(dir) == null) break;
+            dir = Directory.GetParent(dir)?.FullName;
+        }
+
+        if (dir == null)
+            throw new DirectoryNotFoundException("Could not find the 'results' directory in any parent folder.");
+
+            string resultsPath = Path.Combine(dir, "results", "results.csv");
+
+        exporter.ExportScheduleData(resultsPath, optimizedSchedule);
     }
 }
