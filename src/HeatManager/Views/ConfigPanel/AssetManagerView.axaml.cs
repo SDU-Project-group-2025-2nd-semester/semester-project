@@ -21,8 +21,9 @@ namespace HeatManager.Views.ConfigPanel
         public AssetManagerView(ProductionUnitsViewModel productionUnitsViewModel)
         {
             InitializeComponent();
-            DataContext = new AssetManagerViewModel(productionUnitsViewModel);
         }
+
+        public AssetManagerView() { }
 
         /// <summary>
         /// Handles the event when a production unit border is clicked.

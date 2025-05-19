@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using HeatManager.Core.Models;
 using HeatManager.Core.Services;
+using HeatManager.Core.Services.AssetManagers;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,6 +12,8 @@ public partial class ProductionUnitsViewModel : ViewModelBase
 {
     [ObservableProperty]
     private ObservableCollection<ProductionUnit>? productionUnits;
+    
+    private AssetManager? assetManager;
 
     [ObservableProperty]
     private bool isScenario1Selected;

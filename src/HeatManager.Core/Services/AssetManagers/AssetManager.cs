@@ -100,14 +100,9 @@ public class AssetManager : IAssetManager
 
                 combinedUnits.Add(new CombinedProductionUnit
                 {
-                    Name = unit.Name,
+                    Unit = unit,
                     IsActive = isActive,
                     Status = status,
-                    Cost = unit.Cost,
-                    MaxHeatProduction = unit.MaxHeatProduction,
-                    Emissions = unit.Emissions,
-                    ResourceConsumption = unit.ResourceConsumption,
-                    Resource = unit.Resource // Directly assign the Resource object
                 });
             }
             else

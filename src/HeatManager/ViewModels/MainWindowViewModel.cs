@@ -34,12 +34,6 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
 
     [ObservableProperty]
     private UserControl? currentView;
-
-    // public MainWindowViewModel() : this(default, default)
-    // {
-    //     // Set the default view to OverviewView
-    //     CurrentView = new OverviewView { DataContext = new OverviewViewModel(this) };
-    // }
  
     private readonly ProductionUnitsViewModel productionUnitsViewModel = new ProductionUnitsViewModel();
 
@@ -92,7 +86,10 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
     {
 
         assetManager.LoadUnits(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Models", "Producers", "ProductionUnits.json"));
-
+        optimizer.ChangeOptimizationSettings(new OptimizerSettings
+        {
+            AllUnits = assetManager.ProductionUnits.ToDictionary(x => x.Name, _ => true),
+        });
         optimizer.ChangeOptimizationSettings(new OptimizerSettings
         {
             AllUnits = assetManager.ProductionUnits.ToDictionary(x => x.Name, _ => true),

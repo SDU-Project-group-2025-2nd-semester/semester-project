@@ -24,7 +24,7 @@
 
 		<ScrollViewer Grid.Row="1" HorizontalAlignment="Right" VerticalScrollBarVisibility="Auto" Margin="0,0,20,0">
 			<StackPanel>
-				<ItemsControl ItemsSource="{Binding CombinedUnits}">
+				<ItemsControl ItemsSource="{Binding Units}">
 					<ItemsControl.ItemsPanel>
 						<ItemsPanelTemplate>
 							<WrapPanel Orientation="Horizontal"/>
@@ -43,22 +43,23 @@
 									<Border CornerRadius="7" ClipToBounds="True"  Margin="0,0,0,10">
 										<Image Source="/Assets/units.png" Width="200"/>
 									</Border>
+									<!--
 									<StackPanel Orientation="Horizontal">
-										<ToggleButton IsChecked="{Binding IsActive}" Background="#66000000" BorderThickness="0"> <!-- transparent background not working -->
+										<ToggleButton IsChecked="{Binding IsActive}" Background="#66000000" BorderThickness="0"> transparent background not working 
 											<ToggleButton.Content>
 												<Panel>
-													<!-- Active Icon -->
+													 Active Icon 
 													<Image Source="/Assets/Icons/circle-check-solid.png" Width="18" Height="18" Classes="icon-active" />
-													<!-- Offline Icon -->
+													Offline Icon 
 													<Image Source="/Assets/Icons/circle-xmark-solid.png" Width="18" Height="18" Classes="icon-offline" />
 												</Panel>
 											</ToggleButton.Content>
 										</ToggleButton>
 										<StackPanel Margin="10,5,0,15">
-											<TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14"/>
+											<TextBlock Text="{Binding Unit.Name}" FontWeight="Bold" FontSize="14"/>
 											<TextBlock Text="{Binding Status}" Classes="normaltext" Opacity="0.7"/> 
 										</StackPanel>
-									</StackPanel>
+									</StackPanel>-->
 
 									<!-- Production Cost -->
 									<TextBlock Text="Production Cost" FontWeight="Bold"/>

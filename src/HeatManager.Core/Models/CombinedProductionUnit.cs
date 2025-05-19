@@ -1,5 +1,6 @@
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using HeatManager.Core.Models.Producers;
 using System;
 using System.ComponentModel;
 using HeatManager.Core.Models.Resources;
@@ -11,7 +12,8 @@ namespace HeatManager.Core.Models;
 // for the AssetManagerView
 public class CombinedProductionUnit : INotifyPropertyChanged
 {
-    public string Name { get; set; } = "default";
+    public ProductionUnitBase Unit { get; set;  }
+    //public string Name { get; set; } = "default";
     private ProductionUnitStatus status;
     public ProductionUnitStatus Status
     {
@@ -26,11 +28,11 @@ public class CombinedProductionUnit : INotifyPropertyChanged
             }
         }
     }
-    public decimal Cost { get; set; }
-    public double MaxHeatProduction { get; set; }
-    public double Emissions { get; set; }
-    public double ResourceConsumption { get; set; }
-    public Resource? Resource { get; set; }
+    //public decimal Cost { get; set; }
+   // public double MaxHeatProduction { get; set; }
+    //public double Emissions { get; set; }
+    //public double ResourceConsumption { get; set; }
+    //public Resource? Resource { get; set; }
 
     // Dynamically resolve the Bitmap icon based on the Status
     public Bitmap Icon => Status switch
@@ -54,11 +56,11 @@ public class CombinedProductionUnit : INotifyPropertyChanged
                 // Directly update the Units object in ProductionUnitData
                 if (isActive)
                 {
-                    ProductionUnitData.Units.SetActive(Name);
+                    ProductionUnitData.Units.SetActive(Unit.Name);
                 }
                 else
                 {
-                    ProductionUnitData.Units.SetOffline(Name);
+                    ProductionUnitData.Units.SetOffline(Unit.Name);
                 }
 
                 // Notify the ViewModel to refresh the ProductionUnits collection

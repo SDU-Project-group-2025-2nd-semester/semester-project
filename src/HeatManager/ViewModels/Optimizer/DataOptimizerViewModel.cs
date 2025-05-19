@@ -31,6 +31,8 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
     private Schedule _schedule;
     private List<HeatProductionUnitSchedule> schedules;
     private List<DateTime> orderedTimes;
+    
+    private OptimizerSettings _settings;
 
     /// <summary>
     /// Gets or sets the current view displayed in the UI.
@@ -138,8 +140,6 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
     {
         // Update the optimizer with the latest Units dictionary
         _optimizer.UpdateUnits(ProductionUnitData.Units.AllUnits);
-        
-        Series.Clear();
         
         _schedule = _optimizer.Optimize();
 

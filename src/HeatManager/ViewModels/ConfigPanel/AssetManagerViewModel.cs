@@ -1,13 +1,17 @@
-﻿using HeatManager.Core.Models.Producers;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using HeatManager.Core.Models.Producers;
 using HeatManager.Core.Services;
 using HeatManager.Core.Models;
 using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.Optimizers;
+using HeatManager.ViewModels;
+using HeatManager.ViewModels.ConfigPanel;
 using System.Collections.ObjectModel;
 using System;
 using System.Diagnostics;
 using System.Linq;
 using HeatManager.ViewModels.Overview;
+using System.Collections.Generic;
 
 namespace HeatManager.ViewModels.ConfigPanel
 {
@@ -18,6 +22,8 @@ namespace HeatManager.ViewModels.ConfigPanel
     {
         private readonly IAssetManager _assetManager;
         private readonly IOptimizer _optimizer;
+        private readonly ProductionUnitsViewModel _productionUnitsViewModel = new ProductionUnitsViewModel();
+        public ObservableCollection<ProductionUnitBase> CombinedUnits { get; }
 
         /// <summary>
         /// Observable collection of production units managed by the asset manager.
@@ -28,6 +34,23 @@ namespace HeatManager.ViewModels.ConfigPanel
         {
             _assetManager = assetManager;
             _optimizer = optimizer;
+            //_productionUnitsViewModel = productionUnitsViewModel; 
+            CombinedUnits = _assetManager.ProductionUnits;
+            
+            var combinedUnitsFromAssetManager = _assetManager.GetCombinedUnits();
+            /*
+            CombinedUnits = new ObservableCollection<CombinedProductionUnit>(
+                combinedUnitsFromAssetManager.Select(unit =>
+                {
+                    unit.OnToggle = () =>
+                    {
+                        _productionUnitsViewModel.RefreshProductionUnits(); // Notify ProductionUnitsViewModel
+                        RefreshCombinedUnits();
+                    };
+
+                    return unit;
+                })
+            );*/ 
         }
 
         /// <summary>
@@ -57,45 +80,25 @@ namespace HeatManager.ViewModels.ConfigPanel
             _assetManager.AddUnit(unit);
             _optimizer.UpdateProductionUnits(_assetManager);
         }
-    }
-}
-
-internal class AssetManagerViewModel : ViewModelBase, IAssetManagerViewModel
-{
-    private readonly IAssetManager _assetManager = new AssetManager();
-    public ObservableCollection<CombinedProductionUnit> CombinedUnits { get; }
-
-    public AssetManagerViewModel(ProductionUnitsViewModel productionUnitsViewModel)
-    {
-        // Call GetCombinedUnits to populate the CombinedUnits collection
-        var combinedUnitsFromAssetManager = _assetManager.GetCombinedUnits();
-
-        // Map the CombinedUnits and set the OnToggle property
-        CombinedUnits = new ObservableCollection<CombinedProductionUnit>(
-            combinedUnitsFromAssetManager.Select(unit =>
-            {
-                unit.OnToggle = () =>
-                {
-                    productionUnitsViewModel.RefreshProductionUnits(); // Notify ProductionUnitsViewModel
-                    RefreshCombinedUnits();
-                };
-
-                return unit;
-            })
-        );
-    }
-
-    public void RefreshCombinedUnits()
-    {
-        foreach (var unit in CombinedUnits)
+        
+        /*
+        public void RefreshCombinedUnits()
         {
-            // Update the status shown of each unit based on the current state in ProductionUnitData
-            if (ProductionUnitData.Units.AllUnits.TryGetValue(unit.Name, out var isActive))
+            Dictionary<string, bool> combinedUnits = new Dictionary<string, bool>();
+            foreach (var unit in CombinedUnits)
             {
-                unit.IsActive = isActive;
-                unit.Status = isActive ? ProductionUnitStatus.Active : ProductionUnitStatus.Offline;
+                combinedUnits.Add(unit.Unit.Name, unit.IsActive);
+                // Update the status shown of each unit based on the current state in ProductionUnitData
+                if (ProductionUnitData.Units.AllUnits.TryGetValue(unit.Unit.Name, out var isActive))
+                {
+                    unit.IsActive = isActive;
+                    unit.Status = isActive ? ProductionUnitStatus.Active : ProductionUnitStatus.Offline;
+                }
+                
             }
-        }
+            _optimizer.ChangeOptimizationSettings(new OptimizerSettings(combinedUnits));
+        }*/
     }
 }
+
 
