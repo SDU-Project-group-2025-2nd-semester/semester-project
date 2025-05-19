@@ -35,7 +35,7 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
     [ObservableProperty]
     private UserControl? currentView;
  
-    private readonly ProductionUnitsViewModel productionUnitsViewModel = new ProductionUnitsViewModel();
+    private readonly ProductionUnitsViewModel productionUnitsViewModel = new ProductionUnitsViewModel(assetManager, optimizer);
 
     [RelayCommand]
     private async Task SaveProject()
@@ -47,7 +47,7 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
     [RelayCommand]
     internal void SetConfigPanelView()
     {
-        CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel(assetManager, optimizer) };
+        CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel(assetManager, optimizer, productionUnitsViewModel) };
     }
 
     [RelayCommand]

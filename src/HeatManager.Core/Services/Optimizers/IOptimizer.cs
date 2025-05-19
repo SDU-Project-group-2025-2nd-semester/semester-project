@@ -10,6 +10,7 @@ public interface IOptimizer
     /// Performs the optimization process
     /// </summary>
     public Schedule Optimize();
+    public IOptimizerSettings OptimizerSettings { get; }
 
     /// <summary>
     /// Changes the optimization settings

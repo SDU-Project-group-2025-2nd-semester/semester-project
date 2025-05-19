@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using HeatManager.Core.Models.Producers;
 using System;
 using System.ComponentModel;
 using HeatManager.Core.Services;
@@ -9,7 +10,7 @@ namespace HeatManager.Core.Models;
 
 public class ProductionUnit : INotifyPropertyChanged
 {
-    public string Name { get; set; } = "default";
+    public string Name { get; init; }
     private ProductionUnitStatus status;
     public ProductionUnitStatus Status
     {
@@ -45,8 +46,6 @@ public class ProductionUnit : INotifyPropertyChanged
             {
                 isActive = value;
                 Status = isActive ? ProductionUnitStatus.Active : ProductionUnitStatus.Offline;
-
-                // Update the state in ProductionUnitData
                 if (isActive)
                 {
                     ProductionUnitData.Units.SetActive(Name);

@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using HeatManager.Core.Models;
 using HeatManager.Core.Services;
 using HeatManager.Core.Services.AssetManagers;
+using HeatManager.Core.Services.Optimizers;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -13,7 +14,8 @@ public partial class ProductionUnitsViewModel : ViewModelBase
     [ObservableProperty]
     private ObservableCollection<ProductionUnit>? productionUnits;
     
-    private AssetManager? assetManager;
+    private IAssetManager _assetManager;
+    private IOptimizer _optimizer;
 
     [ObservableProperty]
     private bool isScenario1Selected;
@@ -21,11 +23,10 @@ public partial class ProductionUnitsViewModel : ViewModelBase
     // Static property to persist the selected scenario state
     public static bool IsScenario1SelectedState { get; set; } = true;
 
-    public ProductionUnitsViewModel()
+    public ProductionUnitsViewModel(IAssetManager assetManager, IOptimizer optimizer)
     { 
-        // Reflect the current state of ProductionUnitData.Units
-        RefreshProductionUnits();
-
+        _assetManager = assetManager;
+        _optimizer = optimizer;
         // Set the scenario state without resetting the units
         IsScenario1Selected = IsScenario1SelectedState;
     }
@@ -51,13 +52,26 @@ public partial class ProductionUnitsViewModel : ViewModelBase
 
     public void LoadScenario1()
     {
-        ProductionUnitData.SetUnitsBackToDefault();
+        var unitNames = _assetManager.ProductionUnits.Select(u => u.Name).ToList();
+        var settings = new OptimizerSettings(unitNames);
+        settings.SetActive("GB1");
+        settings.SetActive("GB2");
+        settings.SetActive("OB1");
+        
+        _optimizer.ChangeOptimizationSettings(settings);
         RefreshProductionUnits();
     }
 
     public void LoadScenario2()
     {
-        ProductionUnitData.SetAllUnitsActive();
+        var unitNames = _assetManager.ProductionUnits.Select(u => u.Name).ToList();
+        var settings = new OptimizerSettings(unitNames);
+        settings.SetActive("GB1");
+        settings.SetActive("GB2");
+        settings.SetActive("OB1");
+        settings.SetActive("GM1");
+        settings.SetActive("HP1");
+        _optimizer.ChangeOptimizationSettings(settings);
         RefreshProductionUnits();
     }
 

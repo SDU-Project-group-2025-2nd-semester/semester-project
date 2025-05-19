@@ -7,14 +7,12 @@ namespace HeatManager.Core.Services;
 public static class ProductionUnitData
 {
     // Initialize the dictionary of units with their active/inactive states
-    public static OptimizerSettings Units { get; } = new OptimizerSettings(new Dictionary<string, bool>
+    public static IOptimizerSettings Units { get; set; } = new OptimizerSettings();
+
+    public static void UpdateOptimizerSettings(IOptimizer optimizer)
     {
-        { "GB1", true },
-        { "GB2", true },
-        { "OB1", true },
-        { "GM1", false },
-        { "HP1", false }
-    });
+         Units = optimizer.OptimizerSettings;
+    }
 
     // Method to get all ProductionUnit objects for the UI
     public static List<ProductionUnit> GetProductionUnits()
@@ -30,7 +28,7 @@ public static class ProductionUnitData
         }
         return productionUnits;
     }
-
+    /*
     public static void SetAllUnitsActive()
     {
         foreach (var unitName in Units.AllUnits.Keys)
@@ -46,5 +44,5 @@ public static class ProductionUnitData
         Units.SetActive("OB1");
         Units.SetOffline("GM1");
         Units.SetOffline("HP1");
-    }
+    } */ 
 }

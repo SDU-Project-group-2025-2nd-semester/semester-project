@@ -16,6 +16,9 @@ public interface IOptimizerSettings
     /// </summary>
     /// <returns>A list of strings representing the names of active units.</returns>
     List<string> GetActiveUnitsNames();
+
+    public void SetActive(string name); 
+    public void SetOffline(string name);
 }
 
 

@@ -9,6 +9,5 @@ public partial class ProductionUnits : UserControl
     public ProductionUnits()
     {
         InitializeComponent();
-        DataContext = new ProductionUnitsViewModel();
     }
 }

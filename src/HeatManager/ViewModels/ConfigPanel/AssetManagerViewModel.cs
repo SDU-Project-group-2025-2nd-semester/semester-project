@@ -22,7 +22,7 @@ namespace HeatManager.ViewModels.ConfigPanel
     {
         private readonly IAssetManager _assetManager;
         private readonly IOptimizer _optimizer;
-        private readonly ProductionUnitsViewModel _productionUnitsViewModel = new ProductionUnitsViewModel();
+        private readonly ProductionUnitsViewModel _productionUnitsViewModel;
         public ObservableCollection<CombinedProductionUnit> CombinedUnits { get; }
 
         /// <summary>
@@ -30,11 +30,13 @@ namespace HeatManager.ViewModels.ConfigPanel
         /// </summary>
         internal ObservableCollection<ProductionUnitBase> Units => _assetManager.ProductionUnits;
 
-        public AssetManagerViewModel(IAssetManager assetManager, IOptimizer optimizer)
+        public AssetManagerViewModel(IAssetManager assetManager, IOptimizer optimizer, ProductionUnitsViewModel productionUnitsViewModel)
         {
             _assetManager = assetManager;
             _optimizer = optimizer;
-            //_productionUnitsViewModel = productionUnitsViewModel; 
+            _productionUnitsViewModel = productionUnitsViewModel; 
+            ProductionUnitData.UpdateOptimizerSettings(_optimizer);
+
             
             var combinedUnitsFromAssetManager = _assetManager.GetCombinedUnits();
             
@@ -68,6 +70,7 @@ namespace HeatManager.ViewModels.ConfigPanel
         {
             _assetManager.AddUnit(unit);
             _optimizer.UpdateProductionUnits(_assetManager);
+            RefreshCombinedUnits();
         }
 
         /// <summary>
@@ -78,6 +81,7 @@ namespace HeatManager.ViewModels.ConfigPanel
             _assetManager.RemoveUnit(unitBase);
             _assetManager.AddUnit(unit);
             _optimizer.UpdateProductionUnits(_assetManager);
+            RefreshCombinedUnits();
         }
         
         
@@ -96,6 +100,8 @@ namespace HeatManager.ViewModels.ConfigPanel
                 
             }
             _optimizer.ChangeOptimizationSettings(new OptimizerSettings(combinedUnits));
+            ProductionUnitData.UpdateOptimizerSettings(_optimizer);
+
         }
     }
 }
