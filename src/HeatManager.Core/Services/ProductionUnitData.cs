@@ -28,6 +28,12 @@ public static class ProductionUnitData
         }
         return productionUnits;
     }
+
+    public static List<ProductionUnit> GetProductionUnits(IOptimizer optimizer)
+    {
+        UpdateOptimizerSettings(optimizer);
+        return GetProductionUnits();
+    }
     /*
     public static void SetAllUnitsActive()
     {

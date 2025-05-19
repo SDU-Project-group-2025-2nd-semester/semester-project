@@ -3,6 +3,7 @@ using HeatManager.Core.Models;
 using HeatManager.Core.Services;
 using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.Optimizers;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -14,14 +15,14 @@ public partial class ProductionUnitsViewModel : ViewModelBase
     [ObservableProperty]
     private ObservableCollection<ProductionUnit>? productionUnits;
     
-    private IAssetManager _assetManager;
-    private IOptimizer _optimizer;
+    private readonly IAssetManager _assetManager;
+    private readonly IOptimizer _optimizer;
 
     [ObservableProperty]
     private bool isScenario1Selected;
 
     // Static property to persist the selected scenario state
-    public static bool IsScenario1SelectedState { get; set; } = true;
+    public static bool IsScenario1SelectedState { get; set; } = false;
 
     public ProductionUnitsViewModel(IAssetManager assetManager, IOptimizer optimizer)
     { 
@@ -29,6 +30,7 @@ public partial class ProductionUnitsViewModel : ViewModelBase
         _optimizer = optimizer;
         // Set the scenario state without resetting the units
         IsScenario1Selected = IsScenario1SelectedState;
+        RefreshProductionUnits();
     }
 
     partial void OnIsScenario1SelectedChanged(bool value)
@@ -57,8 +59,8 @@ public partial class ProductionUnitsViewModel : ViewModelBase
         settings.SetActive("GB1");
         settings.SetActive("GB2");
         settings.SetActive("OB1");
-        
         _optimizer.ChangeOptimizationSettings(settings);
+        ProductionUnitData.UpdateOptimizerSettings(_optimizer);
         RefreshProductionUnits();
     }
 
@@ -72,13 +74,13 @@ public partial class ProductionUnitsViewModel : ViewModelBase
         settings.SetActive("GM1");
         settings.SetActive("HP1");
         _optimizer.ChangeOptimizationSettings(settings);
+        ProductionUnitData.UpdateOptimizerSettings(_optimizer);
         RefreshProductionUnits();
     }
-
+    
     public void RefreshProductionUnits()
     {
-        ProductionUnits = new ObservableCollection<ProductionUnit>(
-            ProductionUnitData.GetProductionUnits()
-        );
+        var units = ProductionUnitData.GetProductionUnits(_optimizer); 
+        ProductionUnits = new ObservableCollection<ProductionUnit>(units);
     }
 }
