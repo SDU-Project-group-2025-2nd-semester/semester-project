@@ -36,7 +36,7 @@ internal class OptimizerResourceConsumptionViewModel : BaseOptimizerGraphViewMod
             {
                 Values = consumptionData,
                 Name = resourceType.ToString(),
-                Stroke = new SolidColorPaint(Colors[i]) { StrokeThickness = 3 },
+                Stroke = new SolidColorPaint(Colors[i % Colors.Length]) { StrokeThickness = 3 },
                 Fill = null,
                 GeometryFill = null,
                 GeometryStroke = null,
