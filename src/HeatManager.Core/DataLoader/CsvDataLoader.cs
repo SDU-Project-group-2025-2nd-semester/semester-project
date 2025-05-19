@@ -1,4 +1,5 @@
-﻿using CsvHelper;
+﻿using Avalonia.Platform.Storage;
+using CsvHelper;
 using CsvHelper.Configuration;
 using HeatManager.Core.Models.SourceData;
 using HeatManager.Core.Services.SourceDataProviders;
@@ -31,6 +32,13 @@ public class CsvDataLoader : IDataLoader
 
         // Reads the CSV file and maps its content to SourceDataPoint objects.
         using StreamReader reader = new(csvFilePath);
+
+        LoadData(reader);
+
+    }
+
+    private void LoadData(StreamReader reader)
+    {
         using CsvReader csv = new(reader, CultureInfo.InvariantCulture);
         
         // Registers the mapping configuration for SourceDataPoint.
@@ -42,7 +50,14 @@ public class CsvDataLoader : IDataLoader
         // Populates the source data collection in the source data provider.
         _sourceDataProvider.SourceDataCollection = new SourceDataCollection(records);
     }
-    
+
+    public async Task LoadData(IStorageFile csvFilePath)
+    {
+        await using var stream = await csvFilePath.OpenReadAsync();
+        using var reader = new StreamReader(stream);
+        LoadData(reader);
+    }
+
     /// <summary>
     /// A private class that defines the mapping between CSV columns and the <see cref="SourceDataPoint"/> properties.
     /// </summary>

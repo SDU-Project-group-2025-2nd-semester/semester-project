@@ -1,6 +1,8 @@
 ﻿using HeatManager.Core.Db;
 using HeatManager.Core.Models.Projects;
+using HeatManager.Core.Models.Schedules;
 using HeatManager.Core.Services.AssetManagers;
+using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.Services.ResourceManagers;
 using HeatManager.Core.Services.SourceDataProviders;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +13,8 @@ public class ProjectManager(
     HeatManagerDbContext dbContext, 
     IAssetManager assetManager, 
     IResourceManager resourceManager, 
-    ISourceDataProvider sourceDataProvider) : IProjectManager
+    ISourceDataProvider sourceDataProvider,
+    IOptimizer optimizer) : IProjectManager
 {
     public Project? CurrentProject { get; private set; }
 
@@ -49,6 +52,26 @@ public class ProjectManager(
         CurrentProject = new Project { Name = name };
 
         await LoadAsync();
+
+        assetManager.LoadUnits(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Models", "Producers", "ProductionUnits.json"));
+
+        optimizer.ChangeOptimizationSettings(new OptimizerSettings
+        {
+            AllUnits = assetManager.ProductionUnits.ToDictionary(x => x.Name, _ => true),
+        });
+    }
+
+    public List<ProjectDisplay> GetProjectsFromDatabaseDisplays()
+    {
+        return  (from projects in dbContext.Projects
+            orderby projects.LastOpened descending
+            select new ProjectDisplay
+            {
+                Name = projects.Name,
+                CreatedAt = projects.CreatedAt,
+                LastOpened = projects.LastOpened
+            }
+        ).ToList();
     }
 
     public async Task LoadProjectFromDb(string projectName)

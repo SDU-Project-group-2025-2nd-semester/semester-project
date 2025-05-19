@@ -43,4 +43,13 @@
       </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Views\DemandPrice\DashBoardView.axaml.cs">
+      <DependentUpon>DashBoardView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\DemandPrice\DashboardGraph.axaml.cs">
+      <DependentUpon>DashboardGraph.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

@@ -4,8 +4,8 @@ using System.Collections.ObjectModel;
 
 namespace HeatManager.ViewModels.ConfigPanel;
 
-internal class AssetManagerViewModel : ViewModelBase, IAssetManagerViewModel
+internal class AssetManagerViewModel(IAssetManager assetManager) : ViewModelBase, IAssetManagerViewModel
 {   
-    private readonly IAssetManager _assetManager = new AssetManager();
-    internal ObservableCollection<ProductionUnitBase> Units => _assetManager.ProductionUnits;
+
+    internal ObservableCollection<ProductionUnitBase> Units => assetManager.ProductionUnits;
 }
