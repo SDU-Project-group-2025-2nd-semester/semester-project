@@ -1,3 +1,4 @@
+using HeatManager.Core.Models;
 using HeatManager.Core.Models.Producers;
 using System.Collections.ObjectModel;
 
@@ -18,6 +19,7 @@ public interface IAssetManager
     /// Gets the collection of heat production units.
     /// </summary>
     public ObservableCollection<HeatProductionUnit> HeatProductionUnits { get; }
+    public ObservableCollection<CombinedProductionUnit> GetCombinedUnits(); 
 
     /// <summary>
     /// Loads production units from a specified file.

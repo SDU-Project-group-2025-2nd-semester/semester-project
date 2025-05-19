@@ -16,7 +16,7 @@ public class DefaultOptimizer : IOptimizer
 {
     internal IAssetManager _assetManager { get; private set; }
     private readonly ISourceDataProvider _sourceDataProvider;
-    internal IOptimizerSettings _optimizerSettings { get; private set; }
+    public IOptimizerSettings OptimizerSettings { get; private set; }
     private readonly IOptimizerStrategy _optimizerStrategy;
 
     
@@ -33,7 +33,7 @@ public class DefaultOptimizer : IOptimizer
     {
         _assetManager = assetManager;
         _sourceDataProvider = sourceDataProvider;
-        _optimizerSettings = optimizerSettings;
+        OptimizerSettings = optimizerSettings;
         _optimizerStrategy = optimizerStrategy;
     }
     /// <summary>
@@ -123,10 +123,11 @@ public class DefaultOptimizer : IOptimizer
         return resultSchedule; 
     }
 
+
     private List<ProductionUnitBase> GetAvailableUnits()
 
     {
-        List<string> activeUnitsNames = _optimizerSettings.GetActiveUnitsNames(); 
+        List<string> activeUnitsNames = OptimizerSettings.GetActiveUnitsNames(); 
         List<ProductionUnitBase> availableUnits = [];
         for (int i = 0; i < _assetManager.ProductionUnits.Count; i++)
         {
@@ -139,13 +140,19 @@ public class DefaultOptimizer : IOptimizer
         return availableUnits;
     }
     
+    public void UpdateUnits(Dictionary<string, bool> units)
+    {
+        OptimizerSettings = new OptimizerSettings(units);
+    }
+
+
     /// <summary>
     /// Updates the optimization settings for the optimizer.
     /// </summary>
     /// <param name="optimizerSettings">The new optimization settings. <see cref="OptimizerSettings"/>></param>
     public void ChangeOptimizationSettings(IOptimizerSettings optimizerSettings)
     {
-        _optimizerSettings = optimizerSettings;
+        OptimizerSettings = optimizerSettings;
     }
 
     /// <summary>
@@ -160,7 +167,7 @@ public class DefaultOptimizer : IOptimizer
         if (assetManager.ProductionUnits == null)
             throw new ArgumentNullException(nameof(assetManager.ProductionUnits));
 
-        _optimizerSettings.AllUnits = assetManager.ProductionUnits
+        OptimizerSettings.AllUnits = assetManager.ProductionUnits
             .Select(u => u.Name)
             .ToDictionary(name => name, name => true);
     }

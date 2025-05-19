@@ -6,7 +6,7 @@ namespace HeatManager.Core.Models.Producers;
 
 public abstract class ProductionUnitBase
 {
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// DKK/MWh(th)
@@ -24,7 +24,7 @@ public abstract class ProductionUnitBase
     public double ResourceConsumption { get; set; }
 
     [JsonConverter(typeof(BasicResourceConverter))]
-    public Resource Resource { get; set; }
+    public Resource? Resource { get; set; }
 
     /// <summary>
     /// kg/MWh(th)

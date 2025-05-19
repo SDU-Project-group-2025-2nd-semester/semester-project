@@ -14,6 +14,8 @@
         <entry key="src/HeatManager/Views/OptimizerGraphs/OptimizerResourceConsumptionView.axaml" value="src/HeatManager/HeatManager.csproj" />
         <entry key="src/HeatManager/Views/OptimizerGraphs/OptimizerSummaryTableView.axaml" value="src/HeatManager/HeatManager.csproj" />
         <entry key="src/HeatManager/Views/Overview/Map.axaml" value="src/HeatManager/HeatManager.csproj" />
+        <entry key="src/HeatManager/Views/Overview/OverviewView.axaml" value="src/HeatManager/HeatManager.csproj" />
+        <entry key="src/HeatManager/Views/Overview/ProductionUnits.axaml" value="src/HeatManager/HeatManager.csproj" />
       </map>
     </option>
   </component>

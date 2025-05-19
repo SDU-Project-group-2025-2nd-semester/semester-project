@@ -1,7 +1,17 @@
-﻿using HeatManager.Core.Models.Producers;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using HeatManager.Core.Models.Producers;
+using HeatManager.Core.Services;
+using HeatManager.Core.Models;
 using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.Optimizers;
+using HeatManager.ViewModels;
+using HeatManager.ViewModels.ConfigPanel;
 using System.Collections.ObjectModel;
+using System;
+using System.Diagnostics;
+using System.Linq;
+using HeatManager.ViewModels.Overview;
+using System.Collections.Generic;
 
 namespace HeatManager.ViewModels.ConfigPanel
 {
@@ -12,16 +22,36 @@ namespace HeatManager.ViewModels.ConfigPanel
     {
         private readonly IAssetManager _assetManager;
         private readonly IOptimizer _optimizer;
+        private readonly ProductionUnitsViewModel _productionUnitsViewModel;
+        public ObservableCollection<CombinedProductionUnit> CombinedUnits { get; }
 
         /// <summary>
         /// Observable collection of production units managed by the asset manager.
         /// </summary>
         internal ObservableCollection<ProductionUnitBase> Units => _assetManager.ProductionUnits;
 
-        public AssetManagerViewModel(IAssetManager assetManager, IOptimizer optimizer)
+        public AssetManagerViewModel(IAssetManager assetManager, IOptimizer optimizer, ProductionUnitsViewModel productionUnitsViewModel)
         {
             _assetManager = assetManager;
             _optimizer = optimizer;
+            _productionUnitsViewModel = productionUnitsViewModel; 
+           // ProductionUnitData.UpdateOptimizerSettings(_optimizer);
+
+            
+            var combinedUnitsFromAssetManager = _assetManager.GetCombinedUnits();
+            
+            CombinedUnits = new ObservableCollection<CombinedProductionUnit>(
+                combinedUnitsFromAssetManager.Select(unit =>
+                {
+                    unit.OnToggle = () =>
+                    {
+                        _productionUnitsViewModel.RefreshProductionUnits(); // Notify ProductionUnitsViewModel
+                        RefreshCombinedUnits();
+                    };
+
+                    return unit;
+                })
+            );
         }
 
         /// <summary>
@@ -31,6 +61,7 @@ namespace HeatManager.ViewModels.ConfigPanel
         {
             _assetManager.RemoveUnit(unit);
             _optimizer.UpdateProductionUnits(_assetManager);
+            RefreshCombinedUnits();
         }
 
         /// <summary>
@@ -40,6 +71,7 @@ namespace HeatManager.ViewModels.ConfigPanel
         {
             _assetManager.AddUnit(unit);
             _optimizer.UpdateProductionUnits(_assetManager);
+            RefreshCombinedUnits();
         }
 
         /// <summary>
@@ -50,7 +82,29 @@ namespace HeatManager.ViewModels.ConfigPanel
             _assetManager.RemoveUnit(unitBase);
             _assetManager.AddUnit(unit);
             _optimizer.UpdateProductionUnits(_assetManager);
+            RefreshCombinedUnits();
+        }
+        
+        
+        public void RefreshCombinedUnits()
+        {
+            Dictionary<string, bool> combinedUnits = new Dictionary<string, bool>();
+            foreach (var unit in CombinedUnits)
+            {
+                combinedUnits.Add(unit.Unit.Name, unit.IsActive);
+                // Update the status shown of each unit based on the current state in ProductionUnitData
+                if (ProductionUnitData.Units.AllUnits.TryGetValue(unit.Unit.Name, out var isActive))
+                {
+                    unit.IsActive = isActive;
+                    unit.Status = isActive ? ProductionUnitStatus.Active : ProductionUnitStatus.Offline;
+                }
+                
+            }
+            _optimizer.ChangeOptimizationSettings(new OptimizerSettings(combinedUnits));
+            ProductionUnitData.UpdateOptimizerSettings(_optimizer);
+            
         }
     }
 }
+
 

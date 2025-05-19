@@ -1,33 +1,86 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using HeatManager.Core.Models;
+using HeatManager.Core.Services;
+using HeatManager.Core.Services.AssetManagers;
+using HeatManager.Core.Services.Optimizers;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace HeatManager.ViewModels.Overview;
 
 public partial class ProductionUnitsViewModel : ViewModelBase
 {
+    [ObservableProperty]
+    private ObservableCollection<ProductionUnit>? productionUnits;
     
-
-    public static readonly Dictionary<ProductionUnitStatus, string> StatusIcons = new()
-    {
-        { ProductionUnitStatus.Active, "/Assets/Icons/circle-check-solid.png" },   // Green tick
-        { ProductionUnitStatus.Standby, "/Assets/Icons/circle-exclamation-solid.png" }, // Yellow exclamation mark 
-        { ProductionUnitStatus.Offline, "/Assets/Icons/circle-xmark-solid.png" }  // Red cross 
-    };
+    private readonly IAssetManager _assetManager;
+    private readonly IOptimizer _optimizer;
 
     [ObservableProperty]
-    private ObservableCollection<ProductionUnit> productionUnits;
+    private bool isScenario1Selected;
 
-    public ProductionUnitsViewModel()
+    // Static property to persist the selected scenario state
+    public static bool IsScenario1SelectedState { get; set; } = false;
+
+    public ProductionUnitsViewModel(IAssetManager assetManager, IOptimizer optimizer)
+    { 
+        _assetManager = assetManager;
+        _optimizer = optimizer;
+        // Set the scenario state without resetting the units
+        IsScenario1Selected = IsScenario1SelectedState;
+        RefreshProductionUnits();
+    }
+
+    partial void OnIsScenario1SelectedChanged(bool value)
     {
-        ProductionUnits = new ObservableCollection<ProductionUnit>
+        // Only load scenarios if the user explicitly changes the selection
+        if (value != IsScenario1SelectedState)
         {
-            new ProductionUnit { Name = "GB 1", Status = ProductionUnitStatus.Active },
-            new ProductionUnit { Name = "GB 2", Status = ProductionUnitStatus.Active },
-            new ProductionUnit { Name = "OB 1", Status = ProductionUnitStatus.Active },
-            new ProductionUnit { Name = "GM 1", Status = ProductionUnitStatus.Offline },
-            new ProductionUnit { Name = "HP 1", Status = ProductionUnitStatus.Offline }
-        };
+            // Persist the state
+            IsScenario1SelectedState = value;
+            
+            if (value) // If Scenario 1 is selected
+            {
+                LoadScenario1();
+            }
+            else // If Scenario 2 is selected
+            {
+                LoadScenario2();
+            }
+        }
+    }
+
+    public void LoadScenario1()
+    {
+        var unitNames = _assetManager.ProductionUnits.Select(u => u.Name).ToList();
+        var settings = new OptimizerSettings(unitNames);
+        settings.SetActive("GB1");
+        settings.SetActive("GB2");
+        settings.SetActive("OB1");
+        _optimizer.ChangeOptimizationSettings(settings);
+        ProductionUnitData.UpdateOptimizerSettings(_optimizer);
+        RefreshProductionUnits();
+    }
+
+    public void LoadScenario2()
+    {
+        var unitNames = _assetManager.ProductionUnits.Select(u => u.Name).ToList();
+        var settings = new OptimizerSettings(unitNames);
+        settings.SetActive("GB1");
+        settings.SetActive("GB2");
+        settings.SetActive("OB1");
+        settings.SetActive("GM1");
+        settings.SetActive("HP1");
+        _optimizer.ChangeOptimizationSettings(settings);
+        ProductionUnitData.UpdateOptimizerSettings(_optimizer);
+        RefreshProductionUnits();
+    }
+    
+    public void RefreshProductionUnits()
+    {
+        var units = ProductionUnitData.GetProductionUnits(_optimizer); 
+        ProductionUnits = new ObservableCollection<ProductionUnit>(units);
     }
 }

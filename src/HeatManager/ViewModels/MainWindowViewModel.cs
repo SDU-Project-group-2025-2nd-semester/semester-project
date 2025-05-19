@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HeatManager.Core.DataLoader;
 using HeatManager.Core.Models.Schedules;
+using HeatManager.Core.Services;
 using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.Services.ProjectManagers;
@@ -29,17 +30,24 @@ using System.Threading.Tasks;
 namespace HeatManager.ViewModels;
 
 
-public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataProvider dataProvider, IOptimizer optimizer, IProjectManager projectManager, IDataLoader dataLoader, Window window, IServiceProvider serviceProvider) : ViewModelBase
+public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataProvider dataProvider, IOptimizer optimizer, IProjectManager projectManager, IDataLoader dataLoader, Window window, IServiceProvider serviceProvider, object IHateThisWorld) : ViewModelBase
 {
-
+    public MainWindowViewModel(IAssetManager assetManager, ISourceDataProvider dataProvider, IOptimizer optimizer,
+        IProjectManager projectManager, IDataLoader dataLoader, Window window, IServiceProvider serviceProvider)
+        : this(assetManager, dataProvider, optimizer, projectManager, dataLoader, window, serviceProvider, new())
+    {
+        assetManager.LoadUnits(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Models", "Producers", "ProductionUnits.json")); 
+        optimizer.ChangeOptimizationSettings(new OptimizerSettings
+        {
+            AllUnits = assetManager.ProductionUnits.ToDictionary(x => x.Name, _ => true),
+        });
+        productionUnitsViewModel = new ProductionUnitsViewModel(assetManager, optimizer);
+    }
+    
     [ObservableProperty]
     private UserControl? currentView;
 
-    // public MainWindowViewModel() : this(default, default)
-    // {
-    //     // Set the default view to OverviewView
-    //     CurrentView = new OverviewView { DataContext = new OverviewViewModel(this) };
-    // }
+    private readonly ProductionUnitsViewModel productionUnitsViewModel; 
 
     [RelayCommand]
     private async Task SaveProject()
@@ -47,12 +55,11 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
         await projectManager.SaveProjectAsync();
     }
 
+
     [RelayCommand]
     internal void SetConfigPanelView()
     {
-
-        CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel(assetManager, optimizer) };
-
+        CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel(assetManager, optimizer, productionUnitsViewModel) };
     }
 
     [RelayCommand]
@@ -80,7 +87,10 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
     [RelayCommand]
     private void SetOverviewView()
     {
-        CurrentView = new OverviewView { DataContext = new OverviewViewModel(this) };
+        CurrentView = new OverviewView
+        {
+            DataContext = new OverviewViewModel(this, productionUnitsViewModel)
+        };
     }
 
     [RelayCommand]
@@ -88,7 +98,10 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
     {
 
         assetManager.LoadUnits(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Models", "Producers", "ProductionUnits.json"));
-
+        optimizer.ChangeOptimizationSettings(new OptimizerSettings
+        {
+            AllUnits = assetManager.ProductionUnits.ToDictionary(x => x.Name, _ => true),
+        });
         optimizer.ChangeOptimizationSettings(new OptimizerSettings
         {
             AllUnits = assetManager.ProductionUnits.ToDictionary(x => x.Name, _ => true),

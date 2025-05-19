@@ -1,4 +1,11 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Interactivity;
+using HeatManager.Core.Models;
+using HeatManager.Core.Services;
+using HeatManager.ViewModels.ConfigPanel;
+using HeatManager.ViewModels.Overview;
+
 using Avalonia.Input;
 using HeatManager.Core.Models.Producers;
 using HeatManager.ViewModels.ConfigPanel;
@@ -11,6 +18,11 @@ namespace HeatManager.Views.ConfigPanel
     /// </summary>
     public partial class AssetManagerView : UserControl
     {
+        public AssetManagerView(ProductionUnitsViewModel productionUnitsViewModel)
+        {
+            InitializeComponent();
+        }
+
         public AssetManagerView()
         {
             InitializeComponent();

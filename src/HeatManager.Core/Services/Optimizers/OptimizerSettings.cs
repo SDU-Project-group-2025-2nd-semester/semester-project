@@ -16,6 +16,9 @@ public interface IOptimizerSettings
     /// </summary>
     /// <returns>A list of strings representing the names of active units.</returns>
     List<string> GetActiveUnitsNames();
+
+    public void SetActive(string name); 
+    public void SetOffline(string name);
 }
 
 
@@ -79,18 +82,23 @@ public class OptimizerSettings : IOptimizerSettings
             AllUnits[name] = true;
         }
     }
+
+
+    public void SetOffline(string name)
+
     
     /// <summary>
     /// Sets a specific unit to inactive status.
     /// </summary>
     /// <param name="name">The name of the unit to disable.</param>
-    public void SetInactive(string name)
+
     {
         if (AllUnits.ContainsKey(name))
         {
             AllUnits[name] = false;
         }
     }
+
 
     /// <summary>
     /// Changes the status of the unit (from active to inactive and vice versa).
