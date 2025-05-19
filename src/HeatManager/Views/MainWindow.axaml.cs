@@ -28,7 +28,7 @@ namespace HeatManager.Views
             //var assetManager = new AssetManager();
 
 
-            //var optimizerSettings = new OptimizerSettings(assetManager.ProductionUnits.Select(u => u.Name).ToList());
+            //var optimizerSettings = new OptimizerSettings(assetManager.ProductionUnits.Select(u => u.JustSomeRadndomProperty).ToList());
 
             //optimizerSettings.SetActive("GB1");
             //optimizerSettings.SetActive("GB2");
