@@ -109,6 +109,11 @@ public class ProjectManager(
 
         sourceDataProvider.SourceDataCollection = projectData.SourceData;
 
+        optimizer.ChangeOptimizationSettings(new OptimizerSettings
+        {
+            AllUnits = assetManager.ProductionUnits.ToDictionary(x => x.Name, _ => true),
+        });
+
         return Task.CompletedTask;
     }
 }
