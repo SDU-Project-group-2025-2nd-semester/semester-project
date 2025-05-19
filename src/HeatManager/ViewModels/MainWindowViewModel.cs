@@ -51,7 +51,7 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
     internal void SetConfigPanelView()
     {
 
-        CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel(assetManager) };
+        CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel(assetManager, optimizer) };
 
     }
 
