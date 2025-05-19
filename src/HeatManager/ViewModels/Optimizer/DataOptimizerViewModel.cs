@@ -22,9 +22,6 @@ internal class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel
         OptimizeData();
     }
     
-    // Command to reoptimize the data
-    // public IRelayCommand ReoptimizeCommand => new RelayCommand(OptimizeData);
-    
     public void OptimizeData()
     {
         // Update the optimizer with the latest Units dictionary
