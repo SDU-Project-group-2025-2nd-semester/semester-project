@@ -15,6 +15,9 @@ namespace HeatManager.ViewModels.Optimizer;
 internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel, INotifyPropertyChanged
 {
     private readonly IOptimizer _optimizer;
+
+    private DateTimeOffset? _selectedDate;
+    private string? _lastLabel;
     private Schedule _schedule;
     private List<HeatProductionUnitSchedule> schedules;
     private List<DateTime> orderedTimes;
@@ -145,6 +148,7 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
     /// <param name="value">The newly selected view type.</param>
     partial void OnSelectedViewChanged(OptimizerViewType? value)
     {
+
         switch (value)
         {
             case OptimizerViewType.HeatProductionGraph:

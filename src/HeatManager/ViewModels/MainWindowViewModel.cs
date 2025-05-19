@@ -8,6 +8,7 @@ using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.Services.ProjectManagers;
 using HeatManager.Core.Services.ScheduleExporter;
 using HeatManager.Core.Services.SourceDataProviders;
+using HeatManager.Core.Services.AssetManagers;
 using HeatManager.ViewModels.ConfigPanel;
 using HeatManager.ViewModels.DemandPrice;
 using HeatManager.ViewModels.Optimizer;
@@ -27,8 +28,10 @@ using System.Threading.Tasks;
 
 namespace HeatManager.ViewModels;
 
+
 public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataProvider dataProvider, IOptimizer optimizer, IProjectManager projectManager, IDataLoader dataLoader, Window window, IServiceProvider serviceProvider) : ViewModelBase
 {
+
     [ObservableProperty]
     private UserControl? currentView;
 
@@ -47,7 +50,9 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
     [RelayCommand]
     internal void SetConfigPanelView()
     {
-        CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel(assetManager) };
+
+        CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel(assetManager, optimizer) };
+
     }
 
     [RelayCommand]

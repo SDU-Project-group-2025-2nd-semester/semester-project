@@ -43,7 +43,7 @@ public class ProjectManagerTest : DatabaseAccess
             },
             new HeatProductionUnit()
             {
-                JustSomeRadndomProperty ="TestHeatSource",
+                Name ="TestHeatSource",
                 Resource = testResource
             }
         };
@@ -107,7 +107,7 @@ public class ProjectManagerTest : DatabaseAccess
 
         var testResource = new Resource("Oil");
         
-        _assetManager.ProductionUnits.Add(new HeatProductionUnit { JustSomeRadndomProperty = "Test", Resource = testResource });
+        _assetManager.ProductionUnits.Add(new HeatProductionUnit { Name = "Test", Resource = testResource });
 
         _resourceManager.Resources.Add(new Resource("Electricity"));
 
@@ -138,8 +138,8 @@ public class ProjectManagerTest : DatabaseAccess
 
         var testResource = new Resource("Oil");
             
-        _assetManager.HeatProductionUnits.Add(new HeatProductionUnit { JustSomeRadndomProperty = "Test", Resource = testResource });
-        _assetManager.ProductionUnits.Add(new HeatProductionUnit { JustSomeRadndomProperty = "Test", Resource = testResource });
+        _assetManager.HeatProductionUnits.Add(new HeatProductionUnit { Name = "Test", Resource = testResource });
+        _assetManager.ProductionUnits.Add(new HeatProductionUnit { Name = "Test", Resource = testResource });
 
         _resourceManager.Resources.Add(new Resource("Electricity"));
 

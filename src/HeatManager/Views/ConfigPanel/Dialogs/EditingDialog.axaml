@@ -1,0 +1,57 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dialogs="clr-namespace:HeatManager.Views.ConfigPanel.Dialogs"
+        x:Class="HeatManager.Views.ConfigPanel.Dialogs.EditingDialog"
+        x:DataType="dialogs:EditingDialog"
+        Width="350" Height="600"
+        WindowStartupLocation="CenterOwner"
+        ShowActivated="False"
+        CanResize="False"
+        Title="Edit Unit">
+
+    <Grid>
+        <Border Padding="20" MaxWidth="320" HorizontalAlignment="Center">
+            <StackPanel Spacing="10">
+				
+                <TextBlock Text="Enter details for the new production unit:" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                <!-- Name -->
+                <TextBlock Text="Unit Name"/>
+                <TextBox Text="{Binding UnitName}" />
+
+                <!-- Cost -->
+                <TextBlock Text="Cost (DKK/MWh(th))"/>
+                <TextBox Text="{Binding Cost, TargetNullValue='0', FallbackValue='0'}"/>
+
+                <!-- Max Heat Production -->
+                <TextBlock Text="Max Heat Production (MW)"/>
+                <TextBox Text="{Binding MaxHeatProduction, TargetNullValue='0', FallbackValue='0'}"/>
+
+                <!-- Resource Consumption -->
+                <TextBlock Text="Resource Consumption (MWh/MWh(th))"/>
+                <TextBox Text="{Binding ResourceConsumption, TargetNullValue='0', FallbackValue='0'}"/>
+
+                <!-- Resource -->
+                <TextBlock Text="Resource"/>
+                <ComboBox ItemsSource="{Binding ResourceList}" 
+                          SelectedItem="{Binding Resource}" /> 
+
+                <!-- Emissions -->
+                <TextBlock Text="Emissions (kg/MWh(th))"/>
+                <TextBox Text="{Binding Emissions, TargetNullValue='0', FallbackValue='0'}"/>
+
+                <!-- Max Electricity -->
+                <TextBlock Text="Max Electricity Production (MW)"/>
+                <TextBox Text="{Binding MaxElectricity, TargetNullValue='0', FallbackValue='0'}"/>
+
+                <!-- Buttons -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,10,0,0">
+                    <Button Content="Cancel" Click="Cancel_Click"/>
+                    <Button Content="Edit" Click="Edit_Click" IsEnabled="{Binding CanChangeUnit}"/>
+                </StackPanel>
+				
+            </StackPanel>
+        </Border>
+
+    </Grid>
+</Window>

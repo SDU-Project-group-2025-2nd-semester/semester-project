@@ -45,8 +45,8 @@ internal partial class OptimizerSummaryTableViewModel : ViewModelBase, IDataOpti
                 MaxEmissions = Math.Round(Convert.ToDecimal(unitSchedule.MaxEmissions), 3),
                 Cost = Math.Round(unitSchedule.TotalCost, 2),
                 MaxCost = Math.Round(unitSchedule.MaxCost, 2),
-                ResourceConsumption = Math.Round(Convert.ToDecimal(unitSchedule.TotalResourceConsumption.Value), 3),
-                MaxResourceConsumption = Math.Round(Convert.ToDecimal(unitSchedule.MaxResourceConsumption.Value), 3),
+                ResourceConsumption = Math.Round(Convert.ToDecimal(unitSchedule.TotalResourceConsumption), 3),
+                MaxResourceConsumption = Math.Round(Convert.ToDecimal(unitSchedule.MaxResourceConsumption), 3),
                 Utilization = Math.Round(Convert.ToDecimal(unitSchedule.TotalUtilization), 3),
                 MaxUtilization = Math.Round(Convert.ToDecimal(unitSchedule.MaxUtilization), 3)
             });

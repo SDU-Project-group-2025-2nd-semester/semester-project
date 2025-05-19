@@ -25,6 +25,7 @@ namespace HeatManager.Views
 
             //parser.LoadData("./source-data-csv/winter.csv");    
 
+
             //var assetManager = new AssetManager();
 
 
