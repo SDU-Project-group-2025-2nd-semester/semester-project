@@ -15,6 +15,7 @@ namespace HeatManager.ViewModels.Optimizer;
 internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerViewModel, INotifyPropertyChanged
 {
     private readonly IOptimizer _optimizer;
+    private Schedule _schedule;
     private List<HeatProductionUnitSchedule> schedules;
     private List<DateTime> orderedTimes;
 
@@ -43,8 +44,8 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
     public DataOptimizerViewModel(IOptimizer optimizer)
     {
         _optimizer = optimizer;
-        var schedule = _optimizer.Optimize();
-        schedules = schedule.HeatProductionUnitSchedules.ToList();
+        _schedule = _optimizer.Optimize();
+        schedules = _schedule.HeatProductionUnitSchedules.ToList();
         orderedTimes = OrderTimeSlots(schedules);
 
         SelectedViewOption = ViewOptions.First(v => v.ViewType == OptimizerViewType.HeatProductionGraph);
@@ -75,7 +76,9 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
     {
         new ViewOption("Heat Production", OptimizerViewType.HeatProductionGraph),
         new ViewOption("Total and Maximum Values", OptimizerViewType.SummaryTable),
-        new ViewOption("Costs", OptimizerViewType.CostsGraph)
+        new ViewOption("Costs", OptimizerViewType.CostsGraph),
+        new ViewOption("Co2 Emissions", OptimizerViewType.Co2Graph),
+        new ViewOption("Resource Consumption", OptimizerViewType.ResourceConsumptionGraph)
     };
 
     /// <summary>
@@ -112,6 +115,17 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
     {
         CurrentView = new OptimizerCostsGraphView { DataContext = new OptimizerCostsGraphViewModel(schedules, orderedTimes, MinDate) };
     }
+    
+    private void SetCo2GraphView()
+    {
+        CurrentView = new OptimizerCo2GraphView() { DataContext = new OptimizerCo2GraphViewModel(schedules, orderedTimes, MinDate) };
+    }
+    
+    private void SetResourceConsumptionGraphView()
+    {
+        CurrentView = new OptimizerResourceConsumptionView() { DataContext = new OptimizerResourceConsumptionViewModel(_schedule, orderedTimes, MinDate) };
+    }
+
 
     /// <summary>
     /// Handles changes to the selected view option and updates the selected view type.
@@ -141,6 +155,12 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
                 break;
             case OptimizerViewType.CostsGraph:
                 SetCostsGraphView();
+                break;
+            case OptimizerViewType.Co2Graph:
+                SetCo2GraphView(); 
+                break;
+            case OptimizerViewType.ResourceConsumptionGraph:
+                SetResourceConsumptionGraphView();
                 break;
         }
     }
@@ -189,5 +209,7 @@ public enum OptimizerViewType
 {
     HeatProductionGraph,
     SummaryTable,
-    CostsGraph
+    CostsGraph, 
+    Co2Graph, 
+    ResourceConsumptionGraph
 }
