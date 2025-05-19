@@ -23,7 +23,7 @@ namespace HeatManager.ViewModels.ConfigPanel
         private readonly IAssetManager _assetManager;
         private readonly IOptimizer _optimizer;
         private readonly ProductionUnitsViewModel _productionUnitsViewModel = new ProductionUnitsViewModel();
-        public ObservableCollection<ProductionUnitBase> CombinedUnits { get; }
+        public ObservableCollection<CombinedProductionUnit> CombinedUnits { get; }
 
         /// <summary>
         /// Observable collection of production units managed by the asset manager.
@@ -35,10 +35,9 @@ namespace HeatManager.ViewModels.ConfigPanel
             _assetManager = assetManager;
             _optimizer = optimizer;
             //_productionUnitsViewModel = productionUnitsViewModel; 
-            CombinedUnits = _assetManager.ProductionUnits;
             
             var combinedUnitsFromAssetManager = _assetManager.GetCombinedUnits();
-            /*
+            
             CombinedUnits = new ObservableCollection<CombinedProductionUnit>(
                 combinedUnitsFromAssetManager.Select(unit =>
                 {
@@ -50,7 +49,7 @@ namespace HeatManager.ViewModels.ConfigPanel
 
                     return unit;
                 })
-            );*/ 
+            );
         }
 
         /// <summary>
@@ -81,7 +80,7 @@ namespace HeatManager.ViewModels.ConfigPanel
             _optimizer.UpdateProductionUnits(_assetManager);
         }
         
-        /*
+        
         public void RefreshCombinedUnits()
         {
             Dictionary<string, bool> combinedUnits = new Dictionary<string, bool>();
@@ -97,7 +96,7 @@ namespace HeatManager.ViewModels.ConfigPanel
                 
             }
             _optimizer.ChangeOptimizationSettings(new OptimizerSettings(combinedUnits));
-        }*/
+        }
     }
 }
 

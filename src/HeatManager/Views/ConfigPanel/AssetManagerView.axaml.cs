@@ -23,7 +23,10 @@ namespace HeatManager.Views.ConfigPanel
             InitializeComponent();
         }
 
-        public AssetManagerView() { }
+        public AssetManagerView()
+        {
+            InitializeComponent();
+        }
 
         /// <summary>
         /// Handles the event when a production unit border is clicked.

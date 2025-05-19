@@ -24,7 +24,7 @@
 
 		<ScrollViewer Grid.Row="1" HorizontalAlignment="Right" VerticalScrollBarVisibility="Auto" Margin="0,0,20,0">
 			<StackPanel>
-				<ItemsControl ItemsSource="{Binding Units}">
+				<ItemsControl ItemsSource="{Binding CombinedUnits}">
 					<ItemsControl.ItemsPanel>
 						<ItemsPanelTemplate>
 							<WrapPanel Orientation="Horizontal"/>
@@ -43,14 +43,14 @@
 									<Border CornerRadius="7" ClipToBounds="True"  Margin="0,0,0,10">
 										<Image Source="/Assets/units.png" Width="200"/>
 									</Border>
-									<!--
+									
 									<StackPanel Orientation="Horizontal">
-										<ToggleButton IsChecked="{Binding IsActive}" Background="#66000000" BorderThickness="0"> transparent background not working 
+										<ToggleButton IsChecked="{Binding IsActive}" Background="#66000000" BorderThickness="0"> <!--transparent background not working -->
 											<ToggleButton.Content>
 												<Panel>
-													 Active Icon 
+													 <!--Active Icon -->
 													<Image Source="/Assets/Icons/circle-check-solid.png" Width="18" Height="18" Classes="icon-active" />
-													Offline Icon 
+													<!--Offline Icon -->
 													<Image Source="/Assets/Icons/circle-xmark-solid.png" Width="18" Height="18" Classes="icon-offline" />
 												</Panel>
 											</ToggleButton.Content>
@@ -59,29 +59,29 @@
 											<TextBlock Text="{Binding Unit.Name}" FontWeight="Bold" FontSize="14"/>
 											<TextBlock Text="{Binding Status}" Classes="normaltext" Opacity="0.7"/> 
 										</StackPanel>
-									</StackPanel>-->
+									</StackPanel>
 
 									<!-- Production Cost -->
 									<TextBlock Text="Production Cost" FontWeight="Bold"/>
-									<TextBlock Text="{Binding Cost, StringFormat='{}{0} DKK/ MWh(th)'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>
+									<TextBlock Text="{Binding Unit.Cost, StringFormat='{}{0} DKK/ MWh(th)'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>
 
 									<!-- Max Heat -->
 									<TextBlock Text="Max Heat" FontWeight="Bold"/>
-									<TextBlock Text="{Binding MaxHeatProduction, FallbackValue=0, StringFormat='{}{0} MW'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>
+									<TextBlock Text="{Binding Unit.MaxHeatProduction, FallbackValue=0, StringFormat='{}{0} MW'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>
 
 									<!-- Max Electricity -->
 									<TextBlock Text="Max Electricity" FontWeight="Bold" />
-									<TextBlock Text="{Binding MaxElectricitySafe, FallbackValue='0 MW', TargetNullValue='0 MW', StringFormat='{}{0} MW'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>
+									<TextBlock Text="{Binding Unit.MaxElectricitySafe, FallbackValue='0 MW', TargetNullValue='0 MW', StringFormat='{}{0} MW'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>
 
 									<!-- CO2 Emissions -->
 									<TextBlock Text="CO2 Emissions" FontWeight="Bold"/>
-									<TextBlock Text="{Binding Emissions, StringFormat='{}{0} kg/ MWh(th)'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>
+									<TextBlock Text="{Binding Unit.Emissions, StringFormat='{}{0} kg/ MWh(th)'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>
 
 									<!-- Consumption -->
-									<TextBlock Text="{Binding Resource, TargetNullValue='No', StringFormat='{}{0} Consumption'}" FontWeight="Bold"/>
+									<TextBlock Text="{Binding Unit.Resource, TargetNullValue='No', StringFormat='{}{0} Consumption'}" FontWeight="Bold"/>
 									<TextBlock Opacity="0.7" Margin="10,0,0,15" FontSize="12">
-										<Run Text="{Binding ResourceConsumption, FallbackValue=0}"></Run>
-										<Run Text="{Binding Resource, FallbackValue='N/A', StringFormat=' MWh({0})/ MWh(th)'}"></Run>
+										<Run Text="{Binding Unit.ResourceConsumption, FallbackValue=0}"></Run>
+										<Run Text="{Binding Unit.Resource, FallbackValue='N/A', StringFormat=' MWh({0})/ MWh(th)'}"></Run>
 									</TextBlock>
 
 								</StackPanel>
