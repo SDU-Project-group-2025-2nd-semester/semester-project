@@ -35,7 +35,7 @@ namespace HeatManager.ViewModels.ConfigPanel
             _assetManager = assetManager;
             _optimizer = optimizer;
             _productionUnitsViewModel = productionUnitsViewModel; 
-            ProductionUnitData.UpdateOptimizerSettings(_optimizer);
+           // ProductionUnitData.UpdateOptimizerSettings(_optimizer);
 
             
             var combinedUnitsFromAssetManager = _assetManager.GetCombinedUnits();
@@ -61,6 +61,7 @@ namespace HeatManager.ViewModels.ConfigPanel
         {
             _assetManager.RemoveUnit(unit);
             _optimizer.UpdateProductionUnits(_assetManager);
+            RefreshCombinedUnits();
         }
 
         /// <summary>
@@ -101,7 +102,7 @@ namespace HeatManager.ViewModels.ConfigPanel
             }
             _optimizer.ChangeOptimizationSettings(new OptimizerSettings(combinedUnits));
             ProductionUnitData.UpdateOptimizerSettings(_optimizer);
-
+            
         }
     }
 }
