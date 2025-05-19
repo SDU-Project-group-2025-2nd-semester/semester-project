@@ -8,14 +8,13 @@ namespace HeatManager.Core.Services.ScheduleExporter;
 
 public class ScheduleExporter
 {
-    public void ExportScheduleData(string filePath, Schedule schedule)
+    public void ExportScheduleData<T>(string filePath, IEnumerable<T> records)
     {
 
         using (var writer = new StreamWriter(filePath))
         using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
         {
-            csv.WriteRecords(schedule.HeatProductionUnitSchedules);
-            //csv.WriteRecords(schedule.ElectricityProductionUnitSchedules);
+            csv.WriteRecords(records);
         }
         
     }

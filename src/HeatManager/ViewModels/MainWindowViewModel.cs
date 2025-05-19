@@ -102,8 +102,11 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
         if (dir == null)
             throw new DirectoryNotFoundException("Could not find the 'results' directory in any parent folder.");
 
-            string resultsPath = Path.Combine(dir, "results", "results.csv");
+        string OptimizedHeatProductionPath = Path.Combine(dir, "results", "OptimizedHeatProduction.csv");
 
-        exporter.ExportScheduleData(resultsPath, optimizedSchedule);
+        string OptimizedElectricityProductionPath = Path.Combine(dir, "results", "OptimizedElectricityProduction.csv");
+
+        exporter.ExportScheduleData(OptimizedHeatProductionPath, optimizedSchedule.HeatProductionUnitSchedules);
+        exporter.ExportScheduleData(OptimizedElectricityProductionPath, optimizedSchedule.ElectricityProductionUnitSchedules);
     }
 }
