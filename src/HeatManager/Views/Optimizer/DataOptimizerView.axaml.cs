@@ -13,14 +13,5 @@ namespace HeatManager.Views.Optimizer
             
         }
 
-        private void ToggleView_Click(object? sender, RoutedEventArgs e)
-        {
-            Console.WriteLine("ToggleView_Click");
-            if (DataContext is DataOptimizerViewModel vm)
-            {
-                vm.ToggleView();
-            }
-        }
-
     }
 }

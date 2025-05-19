@@ -1,3 +1,5 @@
+using HeatManager.Core.Models.Producers;
+using HeatManager.Core.Models.Resources;
 using HeatManager.Core.ResultData;
 
 namespace HeatManager.Core.Models.Schedules;
@@ -11,10 +13,7 @@ public class HeatProductionUnitSchedule
     /// Gets the name of the heat production unit.
     /// </summary>
     public string Name { get; }
-
-    /// <summary>
-    /// Gets the collection of data points for this schedule.
-    /// </summary>
+    public ResourceType ResourceType { get; }
     public List<IHeatProductionUnitResultDataPoint> DataPoints { get; }
 
     /// <summary>
@@ -67,15 +66,10 @@ public class HeatProductionUnitSchedule
     /// </summary>
     public double[] ResourceConsumption => DataPoints.Select(x => x.ResourceConsumption).ToArray();
 
-    /// <summary>
-    /// Gets the total resource consumption across all time periods.
-    /// </summary>
-    public double TotalResourceConsumption => ResourceConsumption.Sum();
+    public KeyValuePair<ResourceType, double[]> ResourceConsumptionTyped => new(ResourceType, ResourceConsumption); 
+    public KeyValuePair<ResourceType, double> TotalResourceConsumption => new (ResourceType, ResourceConsumption.Sum()) ;
+    public KeyValuePair<ResourceType, double> MaxResourceConsumption => new (ResourceType, ResourceConsumption.Max()) ;
 
-    /// <summary>
-    /// Gets the maximum resource consumption value across all time periods.
-    /// </summary>
-    public double MaxResourceConsumption => ResourceConsumption.Max();
     
     /// <summary>
     /// Gets the array of utilization values for each time period.
@@ -92,13 +86,11 @@ public class HeatProductionUnitSchedule
     /// </summary>
     public double MaxUtilization => Utilization.Max();
 
-    /// <summary>
-    /// Initializes a new instance of the HeatProductionUnitSchedule class.
-    /// </summary>
-    /// <param name="name">The name of the heat production unit.</param>
-    public HeatProductionUnitSchedule(string name)
+
+    public HeatProductionUnitSchedule(string name, ResourceType resourceType)
     {
         Name = name;
+        ResourceType = resourceType;
         DataPoints = new List<IHeatProductionUnitResultDataPoint>();
     }
 
@@ -109,5 +101,17 @@ public class HeatProductionUnitSchedule
     public void AddDataPoint(IHeatProductionUnitResultDataPoint dataPoint)
     {
         DataPoints.Add(dataPoint);
+    }
+
+    private List<KeyValuePair<ResourceType, double>> GetResourceConsumptionByHour(double[] resourceConsumptions)
+    {
+        List<KeyValuePair<ResourceType, double>> result = new List<KeyValuePair<ResourceType, double>>();
+
+        foreach (var consumptionPoint in resourceConsumptions)
+        {
+            result.Add(new KeyValuePair<ResourceType, double>(ResourceType, consumptionPoint));
+        }
+
+        return result; 
     }
 }

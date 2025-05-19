@@ -53,3 +53,4 @@ namespace HeatManager.ViewModels.ConfigPanel
         }
     }
 }
+

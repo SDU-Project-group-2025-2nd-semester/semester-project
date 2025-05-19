@@ -1,0 +1,42 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:projectManager="clr-namespace:HeatManager.ViewModels.ProjectManager"
+        xmlns:heatManager="clr-namespace:HeatManager"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="HeatManager.ProjectSelectionWindow"
+        Title="Choose Project"
+        WindowStartupLocation="CenterScreen"
+        
+        MinHeight="400"
+        MinWidth="900"
+
+        Width="900"
+
+        RequestedThemeVariant="Dark"
+
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        
+        ExtendClientAreaToDecorationsHint="True">
+
+
+
+	<Panel>
+		<ExperimentalAcrylicBorder IsHitTestVisible="False">
+			<ExperimentalAcrylicBorder.Material>
+				<ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.65" />
+			</ExperimentalAcrylicBorder.Material>
+		</ExperimentalAcrylicBorder>
+
+        <Panel Margin="40">
+            <heatManager:ProjectSelectionView/>
+        </Panel>
+
+	</Panel>
+</Window>
