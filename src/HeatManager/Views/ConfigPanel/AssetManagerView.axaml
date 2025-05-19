@@ -14,9 +14,15 @@
 		<StyleInclude Source="/Views/styles.axaml" />
 	</UserControl.Styles>
 
-	<StackPanel Background="#FFDDDF">
+	<Grid Background="#FFDDDF">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		
+		<Button Grid.Row="0" Content=" + Unit " HorizontalAlignment="Right" Margin="0,20,20,0" Background="White" Click="AddNewUnit_Click"/>
 
-		<ScrollViewer HorizontalAlignment="Right" VerticalScrollBarVisibility="Auto" Height="800" Margin="0,0,20,0">
+		<ScrollViewer Grid.Row="1" HorizontalAlignment="Right" VerticalScrollBarVisibility="Auto" Margin="0,0,20,0">
 			<StackPanel>
 				<ItemsControl ItemsSource="{Binding CombinedUnits}">
 					<ItemsControl.ItemsPanel>
@@ -26,7 +32,13 @@
 					</ItemsControl.ItemsPanel>
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
-							<Border Padding="25,20,25,20" Margin="10" Background="#B3ffffff" Width="250" CornerRadius="7">
+							<Border Padding="25,20,25,20"
+								Margin="10"
+								Background="#B3ffffff"
+								Width="250"
+								CornerRadius="7"
+								PointerPressed="UnitBorder_PointerPressed"
+								Tag="{Binding}">
 								<StackPanel>
 									<Border CornerRadius="7" ClipToBounds="True"  Margin="0,0,0,10">
 										<Image Source="/Assets/units.png" Width="200"/>
@@ -57,8 +69,8 @@
 									<TextBlock Text="{Binding MaxHeatProduction, FallbackValue=0, StringFormat='{}{0} MW'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>
 
 									<!-- Max Electricity -->
-									<!--<TextBlock Text="Max Electricity" FontWeight="Bold" />
-									<TextBlock Text="{Binding MaxElectricity, FallbackValue='0 MW', StringFormat='{}{0} MW'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>-->
+									<TextBlock Text="Max Electricity" FontWeight="Bold" />
+									<TextBlock Text="{Binding MaxElectricitySafe, FallbackValue='0 MW', TargetNullValue='0 MW', StringFormat='{}{0} MW'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>
 
 									<!-- CO2 Emissions -->
 									<TextBlock Text="CO2 Emissions" FontWeight="Bold"/>
@@ -78,6 +90,6 @@
 				</ItemsControl>
 			</StackPanel>
 		</ScrollViewer>
-	</StackPanel>
+	</Grid>
 
 </UserControl>

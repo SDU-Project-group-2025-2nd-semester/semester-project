@@ -1,11 +1,13 @@
 ﻿using HeatManager.Core.DataLoader;
 using HeatManager.Core.Db;
+using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.Services.ProjectManagers;
 using HeatManager.Core.Services.ResourceManagers;
 using HeatManager.Core.Services.SourceDataProviders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
 
 namespace HeatManager.Core.Extensions;
 
@@ -17,9 +19,12 @@ public static class ServiceCollectionExtensions
 
         services
             .AddSingleton<ISourceDataProvider, SourceDataProvider>()
+            .AddSingleton<IOptimizerSettings, OptimizerSettings>()
+            .AddSingleton<IOptimizerStrategy, OptimizerStrategy>()
+            .AddSingleton<IAssetManager, AssetManager>()
             .AddSingleton<IResourceManager, ResourceManager>()
             .AddSingleton<IOptimizer, DefaultOptimizer>()
-            .AddTransient<IDataLoader, CsvDataLoader>()
+            .AddSingleton<IDataLoader, CsvDataLoader>()
             .AddSingleton<IProjectManager, ProjectManager>();
 
         #endregion
@@ -31,7 +36,14 @@ public static class ServiceCollectionExtensions
             options
                 .UseNpgsql("Host=localhost;Database=heatManager;Username=postgres;Password=postgres", o =>
                 {
-                    o.ConfigureDataSource(o => o.EnableDynamicJson());
+                    o.ConfigureDataSource(o =>
+                    {
+                        o.EnableDynamicJson();
+                        o.ConfigureJsonOptions(new JsonSerializerOptions()
+                        {
+                            IncludeFields = true,
+                        });
+                    });
                 })
                 .EnableDetailedErrors()
                 .EnableSensitiveDataLogging();

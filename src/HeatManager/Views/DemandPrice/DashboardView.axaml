@@ -1,13 +1,16 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
-        xmlns:demandPrice="clr-namespace:HeatManager.ViewModels.DemandPrice"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+<UserControl
         x:Class="HeatManager.Views.DemandPrice.GridProductionView"
-        x:DataType="demandPrice:GridProductionViewModel">
-        
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:demandPrice="clr-namespace:HeatManager.ViewModels.DemandPrice"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        d:DesignHeight="450"
+        d:DesignWidth="800"
+        x:DataType="demandPrice:GridProductionViewModel"
+        mc:Ignorable="d">
+
         <Grid RowDefinitions="Auto,*,100">
                 <StackPanel Grid.Row="0">
                         <TextBlock Text="{Binding FirstViewText}" />
@@ -18,20 +21,21 @@
                 </StackPanel>
 
                 <avalonia:CartesianChart
+                        x:Name="mainChart"
                         Grid.Row="1"
-                        Height = "400"
+                        Height="400"
                         DrawMargin="{Binding Margin}"
-                        Series="{Binding Series}"
+                        Series="{Binding ChartSeries}"
+                        TooltipPosition="Top"
                         UpdateStartedCommand="{Binding ChartUpdatedCommand}"
                         XAxes="{Binding ScrollableAxes}"
                         YAxes="{Binding YAxes}"
-                        ZoomMode="X" 
-                        TooltipPosition="Top" />
+                        ZoomMode="X" />
 
                 <avalonia:CartesianChart
                         x:Name="ScrollBarChart"
                         Grid.Row="2"
-                        Height = "80"
+                        Height="80"
                         DrawMargin="{Binding Margin}"
                         PointerMoveCommand="{Binding PointerMoveCommand}"
                         PointerPressedCommand="{Binding PointerDownCommand}"
@@ -41,5 +45,11 @@
                         TooltipPosition="Hidden"
                         XAxes="{Binding InvisibleX}"
                         YAxes="{Binding InvisibleY}" />
+
+                <Button
+                        Grid.Row="3"
+                        Command="{Binding ExportButton}"
+                        CommandParameter="{Binding ElementName=mainChart}"
+                        Content="Export Chart" />
         </Grid>
 </UserControl>

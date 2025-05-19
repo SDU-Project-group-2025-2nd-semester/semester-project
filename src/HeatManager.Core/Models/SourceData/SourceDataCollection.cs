@@ -4,9 +4,10 @@ namespace HeatManager.Core.Models.SourceData;
 
 public class SourceDataCollection
 {
-    public string Name { get; } // TODO: Possibly remove
+    public IImmutableList<SourceDataPoint> DataPoints { get; set; } = [];
 
-    public IImmutableList<SourceDataPoint> DataPoints { get; }
+    // Used for serialization
+    public SourceDataCollection() { }
 
     public SourceDataCollection(IEnumerable<SourceDataPoint> dataPoints)
     {

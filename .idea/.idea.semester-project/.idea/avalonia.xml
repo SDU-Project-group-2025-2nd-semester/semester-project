@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="src/HeatManager/Views/ConfigPanel/AssetManagerView.axaml" value="src/HeatManager/HeatManager.csproj" />
+        <entry key="src/HeatManager/Views/DemandPrice/DashboardView.axaml" value="src/HeatManager/HeatManager.csproj" />
+        <entry key="src/HeatManager/Views/MainWindow.axaml" value="src/HeatManager/HeatManager.csproj" />
+        <entry key="src/HeatManager/Views/Optimizer/DataOptimizerView.axaml" value="src/HeatManager/HeatManager.csproj" />
+        <entry key="src/HeatManager/Views/OptimizerGraphs/OptimizerCo2GraphView.axaml" value="src/HeatManager/HeatManager.csproj" />
+        <entry key="src/HeatManager/Views/OptimizerGraphs/OptimizerCostsGraphView.axaml" value="src/HeatManager/HeatManager.csproj" />
+        <entry key="src/HeatManager/Views/OptimizerGraphs/OptimizerCostsPieGraphView.axaml" value="src/HeatManager/HeatManager.csproj" />
+        <entry key="src/HeatManager/Views/OptimizerGraphs/OptimizerHeatProductionGraphView.axaml" value="src/HeatManager/HeatManager.csproj" />
+        <entry key="src/HeatManager/Views/OptimizerGraphs/OptimizerResourceConsumptionView.axaml" value="src/HeatManager/HeatManager.csproj" />
+        <entry key="src/HeatManager/Views/OptimizerGraphs/OptimizerSummaryTableView.axaml" value="src/HeatManager/HeatManager.csproj" />
+        <entry key="src/HeatManager/Views/Overview/Map.axaml" value="src/HeatManager/HeatManager.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

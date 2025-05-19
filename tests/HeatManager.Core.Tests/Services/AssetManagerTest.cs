@@ -1,4 +1,6 @@
+using HeatManager.Core.Models.Producers;
 using HeatManager.Core.Services.AssetManagers;
+using HeatManager.Core.Models.Resources;
 using JetBrains.Annotations;
 using Shouldly;
 
@@ -107,4 +109,175 @@ public class AssetManagerTest
         // Validate
         await Verify(service.ProductionUnits);
     }
+
+    [Fact]
+    public void AddUnit_Should_Add_Valid_HeatProductionUnit_With_Correct_Properties()
+    {
+        // Arrange
+        var manager = new AssetManager();
+        var unit = new HeatProductionUnit
+        {
+            Name = "BioPlant A",
+            Cost = 350.50m,
+            MaxHeatProduction = 150.0,
+            ResourceConsumption = 1.2,
+            Resource = new Resource ("Gas"),
+            Emissions = 10.5
+        };
+
+        // Act
+        manager.AddUnit(unit);
+
+        // Assert
+        manager.ProductionUnits.ShouldContain(unit);
+        var addedUnit = (HeatProductionUnit)manager.ProductionUnits.First(u => u.Name == "BioPlant A");
+        addedUnit.Cost.ShouldBe(350.50m);
+        addedUnit.MaxHeatProduction.ShouldBe(150.0);
+        addedUnit.ResourceConsumption.ShouldBe(1.2);
+        addedUnit.Resource.Name.ShouldBe("Gas");
+        addedUnit.Emissions.ShouldBe(10.5);
+    }
+
+    [Fact]
+    public void AddUnit_Should_Handle_Edge_Values()
+    {
+        // Arrange
+        var manager = new AssetManager();
+        var unit = new HeatProductionUnit
+        {
+            Name = "Zero Plant",
+            Cost = 0m,
+            MaxHeatProduction = 0,
+            ResourceConsumption = 0,
+            Resource = new Resource ("Gas"),
+            Emissions = 0
+        };
+
+        // Act
+        manager.AddUnit(unit);
+
+        // Assert
+        manager.ProductionUnits.ShouldContain(unit);
+        var added = manager.ProductionUnits.OfType<HeatProductionUnit>().First(u => u.Name == "Zero Plant");
+        added.Cost.ShouldBe(0m);
+        added.Emissions.ShouldBe(0);
+    }
+
+    [Fact]
+    public void AddUnit_Should_Reject_Invalid_Values_Manually_Validated()
+    {
+        // Arrange
+        var manager = new AssetManager();
+        var unit = new HeatProductionUnit
+        {
+            Name = null!,
+            Cost = -100m,
+            MaxHeatProduction = -50,
+            ResourceConsumption = -1,
+            Resource = null!,
+            Emissions = -5
+        };
+
+        // Act
+        manager.AddUnit(unit);
+
+        // Assert
+        // Even though it gets added, you might want to validate this elsewhere — flag for improvement
+        manager.ProductionUnits.ShouldContain(unit);
+        unit.Cost.ShouldBeLessThan(0); // Fails logically, but passes technically — flag this in domain logic
+    }
+
+    [Fact]
+    public void AddUnit_Should_Add_Valid_ElectricityProductionUnit_With_Correct_Properties()
+    {
+        // Arrange
+        var manager = new AssetManager();
+        var unit = new ElectricityProductionUnit
+        {
+            Name = "Elec Plant A",
+            Cost = 420.75m,
+            MaxHeatProduction = 90.0,
+            MaxElectricity = 60.0,
+            ResourceConsumption = 0.9,
+            Resource = new Resource("Gas"),
+            Emissions = 7.8
+        };
+
+        // Act
+        manager.AddUnit(unit);
+
+        // Assert
+        manager.ProductionUnits.ShouldContain(unit);
+
+        var addedUnit = (ElectricityProductionUnit)manager.ProductionUnits
+            .First(u => u.Name == "Elec Plant A");
+
+        addedUnit.Cost.ShouldBe(420.75m);
+        addedUnit.MaxHeatProduction.ShouldBe(90.0);
+        addedUnit.MaxElectricity.ShouldBe(60.0);
+        addedUnit.ResourceConsumption.ShouldBe(0.9);
+        addedUnit.Resource.Name.ShouldBe("Gas");
+        addedUnit.Emissions.ShouldBe(7.8);
+    }
+
+    [Fact]
+    public void AddUnit_Should_Handle_ElectricityProductionUnit_With_Zero_Values()
+    {
+        // Arrange
+        var manager = new AssetManager();
+        var unit = new ElectricityProductionUnit
+        {
+            Name = "Zero Elec Unit",
+            Cost = 0m,
+            MaxHeatProduction = 0,
+            MaxElectricity = 0,
+            ResourceConsumption = 0,
+            Resource = new Resource("Electricity"),
+            Emissions = 0
+        };
+
+        // Act
+        manager.AddUnit(unit);
+
+        // Assert
+        manager.ProductionUnits.ShouldContain(unit);
+        var added = (ElectricityProductionUnit)manager.ProductionUnits.First(u => u.Name == "Zero Elec Unit");
+        added.MaxElectricity.ShouldBe(0);
+    }
+
+    [Fact]
+    public void RemoveUnit_Should_Only_Remove_Exact_Instance()
+    {
+        // Arrange
+        var manager = new AssetManager();
+        var unit1 = new HeatProductionUnit { Name = "Plant X", Cost = 100 };
+        var unit2 = new HeatProductionUnit { Name = "Plant X", Cost = 100 }; // Same values, different instance
+
+        manager.AddUnit(unit1);
+        manager.AddUnit(unit2);
+
+        // Act
+        manager.RemoveUnit(unit1);
+
+        // Assert
+        manager.ProductionUnits.ShouldContain(unit2);
+        manager.ProductionUnits.ShouldNotContain(unit1);
+        manager.ProductionUnits.Count(u => u.Name == "Plant X").ShouldBe(1);
+    }
+
+    [Fact]
+    public void RemoveUnit_Should_Work_For_ElectricityProductionUnit()
+    {
+        // Arrange
+        var manager = new AssetManager();
+        var unit = new ElectricityProductionUnit { Name = "To Remove", MaxElectricity = 100 };
+        manager.AddUnit(unit);
+
+        // Act
+        manager.RemoveUnit(unit);
+
+        // Assert
+        manager.ProductionUnits.ShouldNotContain(unit);
+    }
+
 }

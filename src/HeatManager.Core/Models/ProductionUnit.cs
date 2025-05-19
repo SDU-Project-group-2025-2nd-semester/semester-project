@@ -25,6 +25,7 @@ public class ProductionUnit : INotifyPropertyChanged
         }
     }
 
+
     // Get the Bitmap icon based on the Status
     public Bitmap Icon => Status switch
     {

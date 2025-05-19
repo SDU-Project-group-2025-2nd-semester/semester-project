@@ -1,17 +1,26 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using HeatManager.Core.Models.SourceData;
-using HeatManager.Core.Services.SourceDataProviders;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 using SkiaSharp;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Avalonia.Controls;
+using Avalonia;
+using System.IO;
+using Avalonia.Platform.Storage;
+using Avalonia.Controls.ApplicationLifetimes;
+
+using HeatManager.Core.Models.SourceData;
+using HeatManager.Core.Services.SourceDataProviders;
+using HeatManager.Services.FileServices;
+using System.Threading.Tasks;
 
 namespace HeatManager.ViewModels.DemandPrice;
 
@@ -27,7 +36,7 @@ public partial class GridProductionViewModel : ViewModelBase
     private readonly ObservableCollection<DateTimePoint> _heatValues = [];
     private readonly ObservableCollection<DateTimePoint> _priceValues = [];
 
-    public ISeries[] Series { get; set; }
+    public ISeries[] ChartSeries { get; set; }
     public ICartesianAxis[] ScrollableAxes { get; set; }
     public ICartesianAxis[] YAxes { get; set; }
     public ISeries[] ScrollbarSeries { get; set; }
@@ -36,9 +45,12 @@ public partial class GridProductionViewModel : ViewModelBase
     public LiveChartsCore.Measure.Margin Margin { get; set; }
     public RectangularSection[] Thumbs { get; set; }
 
+    public ChartExporter chartExporter = new ChartExporter();
+    private string _filenamePrefixOnExport = "SummerDataChart";
+
     public GridProductionViewModel(ISourceDataProvider provider)
     {
-        var dataPoints = provider.SourceDataCollection?.DataPoints;
+        var dataPoints = provider.SourceDataCollection?.DataPoints?? throw new InvalidOperationException("Source data need to be imported before their visualization.");
 
 
 
@@ -47,8 +59,8 @@ public partial class GridProductionViewModel : ViewModelBase
             _priceValues.Add(new DateTimePoint(dataPoint.TimeFrom, (double)dataPoint.ElectricityPrice));
             _heatValues.Add(new DateTimePoint(dataPoint.TimeFrom, dataPoint.HeatDemand));
         }
-            
-        Series = [
+
+        ChartSeries = [
             new ColumnSeries<DateTimePoint>
             {
                 Values = _priceValues,
@@ -119,32 +131,26 @@ public partial class GridProductionViewModel : ViewModelBase
             {
                 MinLimit = startDate.Ticks,
                 MaxLimit = endDate.Ticks,
-                // Name = "Day",
+                // JustSomeRadndomProperty = "Day",
                 Labeler = value =>
                 {
                     var date = new DateTime((long)value);
 
-                    if (ScrollableAxes != null &&
-                        ScrollableAxes.Length > 0 &&
-                        ScrollableAxes[0] is DateTimeAxis dateAxis)
+                    if (ScrollableAxes is not { Length: > 0 } ||
+                        ScrollableAxes[0] is not DateTimeAxis dateAxis)
                     {
-                        var visibleRange = dateAxis.MaxLimit - dateAxis.MinLimit;
-                        var rangeDays = TimeSpan.FromTicks((long)visibleRange).TotalDays;
-
-                        if (rangeDays < 1)
-                        {
-                            return date.ToString("HH:mm");
-                        }
-                        else if(rangeDays <7)
-                        {
-                            return date.ToString("MMM/dd HH:mm");
-                        }
-                        else
-                        {
-                            return date.ToString("MMM/dd/yy");
-                        }
+                        return date.ToString("MMM/dd/yy");
                     }
-                    return date.ToString("MMM/dd/yy");
+
+                    var visibleRange = dateAxis.MaxLimit - dateAxis ?.MinLimit ?? throw new InvalidOperationException("Max and/or min limit not set.");
+                    var rangeDays = TimeSpan.FromTicks((long)visibleRange).TotalDays;
+
+                    return rangeDays switch
+                    {
+                        < 1 => date.ToString("HH:mm"),
+                        < 7 => date.ToString("MMM/dd HH:mm"),
+                        _ => date.ToString("MMM/dd/yy")
+                    };
                 }
             }
         ];
@@ -204,4 +210,19 @@ public partial class GridProductionViewModel : ViewModelBase
     [RelayCommand]
     public void PointerUp(PointerCommandArgs args) =>
         _isDown = false;
+
+    [RelayCommand]
+    public async Task ExportButton(object chartObject)
+    {
+        var mainChart = chartObject as LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart;
+
+        // Execute Export logic
+        if (mainChart == null)
+        {
+            Console.WriteLine("ChartControl not found");
+            return;
+        }
+        await chartExporter.ExportControl(mainChart, ChartSeries, ScrollableAxes, YAxes, _filenamePrefixOnExport);
+    }
+
 }

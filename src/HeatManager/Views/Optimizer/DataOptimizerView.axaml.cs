@@ -1,4 +1,7 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
+using HeatManager.ViewModels.Optimizer;
+using System;
 
 namespace HeatManager.Views.Optimizer
 {
@@ -9,5 +12,6 @@ namespace HeatManager.Views.Optimizer
             InitializeComponent();
             
         }
+
     }
 }
