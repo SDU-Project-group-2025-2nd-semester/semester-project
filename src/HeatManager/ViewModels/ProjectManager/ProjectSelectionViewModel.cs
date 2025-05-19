@@ -40,11 +40,11 @@ internal partial class ProjectSelectionViewModel : ViewModelBase
     /// <inheritdoc/>
     public ProjectSelectionViewModel(IProjectManager projectManager, Window hostWindow, IDataLoader dataLoader, ISourceDataProvider sourceDataProvider)
     {
-        try
-        {
+        //try
+        //{
             projectManager.GetProjectsFromDatabaseDisplays().ForEach(Projects.Add);
-        }
-        catch (InvalidOperationException) { } // This is in case the database is not created yet
+        //}
+        //catch (InvalidOperationException) { } // This is in case the database is not created yet
 
         _isDataImported = true;
         _projectManager = projectManager;

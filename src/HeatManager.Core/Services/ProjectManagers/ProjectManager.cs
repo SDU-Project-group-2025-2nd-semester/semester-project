@@ -1,4 +1,5 @@
 ﻿using HeatManager.Core.Db;
+using HeatManager.Core.Models.Producers;
 using HeatManager.Core.Models.Projects;
 using HeatManager.Core.Models.Schedules;
 using HeatManager.Core.Services.AssetManagers;
@@ -107,6 +108,11 @@ public class ProjectManager(
         projectData.Resources.ForEach(resourceManager.Resources.Add);
 
         sourceDataProvider.SourceDataCollection = projectData.SourceData;
+
+        optimizer.ChangeOptimizationSettings(new OptimizerSettings
+        {
+            AllUnits = assetManager.ProductionUnits.ToDictionary(x => x.Name, _ => true),
+        });
 
         return Task.CompletedTask;
     }

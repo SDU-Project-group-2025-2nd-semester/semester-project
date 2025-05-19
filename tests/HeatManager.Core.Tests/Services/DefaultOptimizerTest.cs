@@ -55,9 +55,9 @@ public class DefaultOptimizerTest
 
         var allUnits = new ObservableCollection<ProductionUnitBase>
         {
-            new HeatProductionUnit { Name = "Unit1", Resource = _oil },
-            new HeatProductionUnit { Name = "Unit2", Resource = _oil },
-            new HeatProductionUnit { Name = "Unit3", Resource = _oil }
+            new HeatProductionUnit { JustSomeRadndomProperty = "Unit1", Resource = _oil },
+            new HeatProductionUnit { JustSomeRadndomProperty = "Unit2", Resource = _oil },
+            new HeatProductionUnit { JustSomeRadndomProperty = "Unit3", Resource = _oil }
         };
 
         _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames()).Returns(activeUnits);
@@ -68,9 +68,9 @@ public class DefaultOptimizerTest
 
         // Assert
         Assert.Equal(2, result.Count);
-        Assert.Contains(result, u => u.Name == "Unit1");
-        Assert.Contains(result, u => u.Name == "Unit2");
-        Assert.DoesNotContain(result, u => u.Name == "Unit3");
+        Assert.Contains(result, u => u.JustSomeRadndomProperty == "Unit1");
+        Assert.Contains(result, u => u.JustSomeRadndomProperty == "Unit2");
+        Assert.DoesNotContain(result, u => u.JustSomeRadndomProperty == "Unit3");
     }
     */
 
@@ -95,8 +95,8 @@ public class DefaultOptimizerTest
         // Arrange
         var units = new List<HeatProductionUnit>
         {
-            new HeatProductionUnit { Name = "Unit1", Resource = _oil },
-            new HeatProductionUnit { Name = "Unit2", Resource = _oil }
+            new HeatProductionUnit { JustSomeRadndomProperty = "Unit1", Resource = _oil },
+            new HeatProductionUnit { JustSomeRadndomProperty = "Unit2", Resource = _oil }
         };
 
         // Act
@@ -104,8 +104,8 @@ public class DefaultOptimizerTest
 
         // Assert
         Assert.Equal(2, result.Count);
-        Assert.Contains(result, s => s.Name == "Unit1");
-        Assert.Contains(result, s => s.Name == "Unit2");
+        Assert.Contains(result, s => s.JustSomeRadndomProperty == "Unit1");
+        Assert.Contains(result, s => s.JustSomeRadndomProperty == "Unit2");
     }
 
     [Fact]
@@ -159,7 +159,7 @@ public class DefaultOptimizerTest
         var activeUnits = new List<string>();
         var allUnits = new ObservableCollection<ProductionUnitBase>
         {
-            new HeatProductionUnit { Name = "Unit1", Resource = _oil }
+            new HeatProductionUnit { JustSomeRadndomProperty = "Unit1", Resource = _oil }
         };
 
         _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames()).Returns(activeUnits);
@@ -179,7 +179,7 @@ public class DefaultOptimizerTest
         var activeUnits = new List<string> { "NonExistentUnit" };
         var allUnits = new ObservableCollection<ProductionUnitBase>
         {
-            new HeatProductionUnit { Name = "Unit1", Resource = _oil }
+            new HeatProductionUnit { JustSomeRadndomProperty = "Unit1", Resource = _oil }
         };
 
         _mockOptimizerSettings.Setup(s => s.GetActiveUnitsNames()).Returns(activeUnits);
@@ -198,7 +198,7 @@ public class DefaultOptimizerTest
         // Arrange
         var unit = new HeatProductionUnit
         {
-            Name = "Unit1",
+            JustSomeRadndomProperty = "Unit1",
             MaxHeatProduction = 100,
             Cost = 1,
             Emissions = 1,
@@ -241,7 +241,7 @@ public class DefaultOptimizerTest
         // Arrange
         var productionUnit1 = new HeatProductionUnit
         {
-            Name = "Unit1",
+            JustSomeRadndomProperty = "Unit1",
             MaxHeatProduction = 50,
             Cost = 1,
             Emissions = 1,
@@ -251,7 +251,7 @@ public class DefaultOptimizerTest
 
         var productionUnit2 = new HeatProductionUnit
         {
-            Name = "Unit2",
+            JustSomeRadndomProperty = "Unit2",
             MaxHeatProduction = 50,
             Cost = 2,
             Emissions = 1,
@@ -301,7 +301,7 @@ public class DefaultOptimizerTest
         // Arrange
         var productionUnit1 = new HeatProductionUnit
         {
-            Name = "Unit1",
+            JustSomeRadndomProperty = "Unit1",
             MaxHeatProduction = 50,
             Cost = 1,
             Emissions = 2,
@@ -311,7 +311,7 @@ public class DefaultOptimizerTest
 
         var productionUnit2 = new HeatProductionUnit
         {
-            Name = "Unit2",
+            JustSomeRadndomProperty = "Unit2",
             MaxHeatProduction = 50,
             Cost = 2,
             Emissions = 1,
@@ -414,7 +414,7 @@ public class DefaultOptimizerTest
         // Arrange
         var unit = new HeatProductionUnit
         {
-            Name = "Unit1",
+            JustSomeRadndomProperty = "Unit1",
             MaxHeatProduction = 100,
             Cost = 1,
             Emissions = 1,
@@ -460,7 +460,7 @@ public class DefaultOptimizerTest
         // Arrange
         var unit = new HeatProductionUnit
         {
-            Name = "Unit1",
+            JustSomeRadndomProperty = "Unit1",
             MaxHeatProduction = 100,
             Cost = 1,
             Emissions = 1,
@@ -497,7 +497,7 @@ public class DefaultOptimizerTest
         // Arrange
         var unit = new HeatProductionUnit
         {
-            Name = "Unit1",
+            JustSomeRadndomProperty = "Unit1",
             MaxHeatProduction = 100,
             Cost = 1,
             Emissions = 1,
@@ -558,7 +558,7 @@ public class DefaultOptimizerTest
         // Arrange
         var unit1 = new HeatProductionUnit
         {
-            Name = "Unit1",
+            JustSomeRadndomProperty = "Unit1",
             MaxHeatProduction = 50,
             Cost = 1,
             Emissions = 2,
@@ -568,7 +568,7 @@ public class DefaultOptimizerTest
 
         var unit2 = new HeatProductionUnit
         {
-            Name = "Unit2",
+            JustSomeRadndomProperty = "Unit2",
             MaxHeatProduction = 50,
             Cost = 2,
             Emissions = 1,
@@ -609,7 +609,7 @@ public class DefaultOptimizerTest
         // Arrange
         var heatPump = new HeatProductionUnit
         {
-            Name = "HeatPump",
+            JustSomeRadndomProperty = "HeatPump",
             MaxHeatProduction = 100,
             Cost = 10, // Base cost
             Emissions = 0,
@@ -655,7 +655,7 @@ public class DefaultOptimizerTest
         // Arrange
         var heatUnit = new HeatProductionUnit
         {
-            Name = "HeatOnly",
+            JustSomeRadndomProperty = "HeatOnly",
             MaxHeatProduction = 100,
             Cost = 5,
             Emissions = 1,
@@ -718,7 +718,7 @@ public class DefaultOptimizerTest
         // Arrange
         var unit1 = new HeatProductionUnit
         {
-            Name = "Unit1",
+            JustSomeRadndomProperty = "Unit1",
             MaxHeatProduction = 50,
             Cost = 1,
             Emissions = 1,
@@ -728,7 +728,7 @@ public class DefaultOptimizerTest
 
         var unit2 = new HeatProductionUnit
         {
-            Name = "Unit2",
+            JustSomeRadndomProperty = "Unit2",
             MaxHeatProduction = 50,
             Cost = 2,
             Emissions = 2,
@@ -778,7 +778,7 @@ public class DefaultOptimizerTest
         // Arrange
         var heatUnit = new HeatProductionUnit
         {
-            Name = "HeatOnly",
+            JustSomeRadndomProperty = "HeatOnly",
             MaxHeatProduction = 100,
             Cost = 5,
             Emissions = 1,
