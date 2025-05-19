@@ -6,12 +6,16 @@
 - Postgres database is running on localhost:5432, with username:password = postgres:postgres
 - Install ef core tool `dotnet tool install --global dotnet-ef`
 
-1. Create migration
+1. Create migration 
+
 ```
-dotnet ef migrations add <migration name>
+# In HeatManager.Core directory
+> dotnet ef migrations add <migration name>
 ```
 
 2. Update Database
+
 ```
-dotnet ef database update
+# In HeatManager.Core directory
+> dotnet ef database update
 ```
