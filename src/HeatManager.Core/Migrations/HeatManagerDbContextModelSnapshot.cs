@@ -32,7 +32,7 @@ namespace HeatManager.Core.Migrations
                     b.Property<DateTime>("LastOpened")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("JustSomeRadndomProperty")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
