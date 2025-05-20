@@ -35,6 +35,9 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
     [ObservableProperty]
     private UserControl? currentView;
 
+    [ObservableProperty]
+    private bool isPaneOpen; //= true; // Default to open
+
     // public MainWindowViewModel() : this(default, default)
     // {
     //     // Set the default view to OverviewView

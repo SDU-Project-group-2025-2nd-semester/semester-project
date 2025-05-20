@@ -22,4 +22,12 @@
         <Setter Property="Margin" Value="0,0,0,25" />
     </Style>
 
+    <!-- Button Style for the Pane -->
+    <Style Selector="Button.reusable">
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="10" />
+    </Style>
 </Styles>

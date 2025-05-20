@@ -4,44 +4,51 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:HeatManager.ViewModels"
         xmlns:viewModels="clr-namespace:HeatManager.ViewModels"
+        xmlns:local="clr-namespace:HeatManager.Converters"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="HeatManager.Views.MainWindow"
         x:DataType="viewModels:MainWindowViewModel"
         Title="HeatManager">
 
-        <SplitView IsPaneOpen = "True" DisplayMode="Inline" OpenPaneLength="300" 
-                   VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-       
-            <SplitView.Pane>
-            
-                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin = "0,0,0,0">
-            
-                    <TextBlock Text="Menu" TextAlignment = "Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" FontSize="20" FontWeight="Bold"/>
+        <Window.Resources>
+            <local:BooleanToGridLengthConverter x:Key="BooleanToGridLengthConverter" />
+            <local:BooleanToContentConverter x:Key="BooleanToContentConverter" />
+        </Window.Resources>
 
-                    <Button Content="Overview" Command="{Binding SetOverviewViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
-            
-                    <Button Content="Grid &amp; Production" Command="{Binding SetGridProductionViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
+    <Grid>
+        <!-- Two columns: one for the pane and one for the content -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="{Binding IsPaneOpen, Converter={StaticResource BooleanToGridLengthConverter}, ConverterParameter='300,50'}" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-                    <Button Content="Configuration Panel" Command="{Binding SetConfigPanelViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
-                    <!-- Configuration panel is Asset Manager in the code, I will change the naming later -->
-            
-                    <Button Content="Optimiser" Command="{Binding SetOptimizerViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
+       <!-- <StackPanel Grid.Column="0" Background="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0">
+            <TextBlock Text="Menu" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" FontSize="20" FontWeight="Bold" />
+            <ToggleButton IsChecked="{Binding IsPaneOpen}" Margin="10" Content="☰" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+            <Button Content="Overview" Command="{Binding SetOverviewViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" />
+            <Button Content="Grid &amp; Production" Command="{Binding SetGridProductionViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" />
+            <Button Content="Configuration Panel" Command="{Binding SetConfigPanelViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" />
+            <Button Content="Optimiser" Command="{Binding SetOptimizerViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" />
+            <Button Content="Save Project" Command="{Binding SaveProjectCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" />
+            <Button Content="Data Exporter" Command="{Binding ExportDataCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" />
+        </StackPanel> -->
+        <StackPanel Grid.Column="0" Background="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0">
+            <ToggleButton IsChecked="{Binding IsPaneOpen}" Margin="10" Content="☰" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+            <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Overview|🏠'}"
+                    Command="{Binding SetOverviewViewCommand}" Classes="reusable" />
+            <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Grid &amp; Production|📊'}"
+                    Command="{Binding SetGridProductionViewCommand}" Classes="reusable" />
+            <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Configuration Panel|⚙️'}"
+                    Command="{Binding SetConfigPanelViewCommand}" Classes="reusable" />
+            <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Optimiser|📈'}"
+                    Command="{Binding SetOptimizerViewCommand}" Classes="reusable" />
+            <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Save Project|💾'}"
+                    Command="{Binding SaveProjectCommand}" Classes="reusable" />
+            <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Data Exporter|📤'}"
+                    Command="{Binding ExportDataCommand}" Classes="reusable" />
+        </StackPanel>
 
-					<Button Content="Save Project" Command="{Binding SaveProjectCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
-
-                    <Button Content="Data Exporter" Command = "{Binding ExportDataCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
-
-
-				</StackPanel>
-        
-            </SplitView.Pane>
-       
-            <SplitView.Content>
-                
-                <ContentControl Content = "{Binding CurrentView}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-            
-            </SplitView.Content>
-    
-    </SplitView>
+        <ContentControl Grid.Column="1" Content="{Binding CurrentView}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+    </Grid>
 
 </Window>
