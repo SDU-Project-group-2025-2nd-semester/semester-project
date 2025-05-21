@@ -62,7 +62,7 @@ namespace HeatManager.Tests.Views
                 _mockOptimizerStrategy.Object);
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void Can_Remove_Unit()
         {
             // Arrange
@@ -88,7 +88,7 @@ namespace HeatManager.Tests.Views
             Assert.DoesNotContain(unitToRemove, viewModel.Units);
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void Can_Add_Unit()
         {
             // Arrange
@@ -121,7 +121,7 @@ namespace HeatManager.Tests.Views
             Assert.Contains(newUnit, viewModel.Units);
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void Can_Edit_Unit()
         {
             // Arrange
