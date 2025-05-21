@@ -2,7 +2,15 @@
 
 namespace HeatManager.Core.Models.SourceData;
 
-public class SourceDataCollection(IEnumerable<SourceDataPoint> dataPoints)
+public class SourceDataCollection
 {
-    public IImmutableList<SourceDataPoint> DataPoints { get; } = dataPoints.ToImmutableList();
+    public IImmutableList<SourceDataPoint> DataPoints { get; set; } = [];
+
+    // Used for serialization
+    public SourceDataCollection() { }
+
+    public SourceDataCollection(IEnumerable<SourceDataPoint> dataPoints)
+    {
+        DataPoints = dataPoints.ToImmutableList();
+    }
 }

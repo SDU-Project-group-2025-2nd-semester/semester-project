@@ -91,6 +91,11 @@ internal partial class OptimizerCostsGraphViewModel : BaseOptimizerGraphViewMode
         });
     }
 
+    protected override void BuildChartSeries(Schedule schedule)
+    {
+        throw new NotImplementedException();
+    }
+
 
     /// <summary>
     /// Gets the Y-axis title - each subclass must implement this

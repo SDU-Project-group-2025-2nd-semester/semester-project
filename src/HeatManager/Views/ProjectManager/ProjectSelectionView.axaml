@@ -1,0 +1,91 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:projectManager="clr-namespace:HeatManager.ViewModels.ProjectManager"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="HeatManager.ProjectSelectionView"
+             x:DataType="projectManager:ProjectSelectionViewModel">
+
+	<Panel>
+		<DockPanel IsVisible="{Binding !IsCreatingProject}">
+
+			<TextBlock Text="What project would you like to choose?" FontSize="25" DockPanel.Dock="Top"/>
+
+			<StackPanel Margin="20" Spacing="10" DockPanel.Dock="Left" MinWidth="400">
+				<TextBlock FontSize="15">Existing projects</TextBlock>
+
+				<TextBox Watermark="Search for projects" Text="{Binding SearchText}"/>
+
+				<ScrollViewer VerticalScrollBarVisibility="Auto" Height="450">
+					<ItemsControl ItemsSource="{Binding Projects}" Margin="10">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate >
+								<Button Command="{Binding $parent[ItemsControl].((projectManager:ProjectSelectionViewModel)DataContext).OpenCommand}"                     CommandParameter="{Binding}" Background="Transparent" BorderThickness="0" Padding="3">
+									<Border    BorderBrush="White" BorderThickness="0.7" CornerRadius="3">
+										<Panel  MinHeight="50"  Margin="5" MinWidth="400">
+
+
+											<TextBlock FontSize="15" FontWeight="Bold" VerticalAlignment="Center" Text="{Binding Name}" HorizontalAlignment="Left" Padding="5"/>
+											<TextBlock FontSize="12" Text="{Binding CreatedAt}" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="5"/>
+										</Panel>
+									</Border>
+								</Button>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</ScrollViewer>
+
+
+			</StackPanel>
+
+			<StackPanel Margin="20" Spacing="10" DockPanel.Dock="Right" HorizontalAlignment="Right">
+
+				<Button  Command="{Binding StartProjectCreationCommand }" >
+					<StackPanel >
+						<TextBlock Name="NewProjectText" FontSize="20" MinWidth="250">New Project </TextBlock>
+						<TextBlock
+							Width="{Binding #NewProjectText.Bounds.Width }"
+							TextWrapping="Wrap" >
+							Create new project and import data to start optimizing
+						</TextBlock>
+
+					</StackPanel>
+				</Button>
+
+			</StackPanel>
+		</DockPanel>
+
+		<Panel IsVisible="{Binding IsCreatingProject}">
+
+
+			<DockPanel IsVisible="{Binding IsDataImported}">
+
+				<StackPanel DockPanel.Dock="Top"    HorizontalAlignment="Left" >
+					<TextBlock Text="How should be new project called?" FontSize="25" DockPanel.Dock="Top" Padding="0 0 0 30"/>
+
+
+					<TextBox Text="{Binding NewProjectName}" MinWidth="100"/>
+				</StackPanel>
+
+				<StackPanel Orientation="Horizontal" Spacing="10" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+					<Button Command="{Binding CancelProjectCreationCommand}">Back</Button>
+					<Button Command="{Binding NewProjectCommand}">Create Project</Button>
+				</StackPanel>
+			</DockPanel>
+
+			<DockPanel IsVisible="{Binding !IsDataImported}">
+
+				<StackPanel DockPanel.Dock="Top"    HorizontalAlignment="Left" >
+					<TextBlock Text="What data should project use?" FontSize="25" DockPanel.Dock="Top" Padding="0 0 0 30"/>
+
+
+				</StackPanel>
+
+				<Button FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"  Command="{Binding GetFileCommand}">Import your precious data</Button>
+
+			</DockPanel>
+
+		</Panel>
+	</Panel>
+</UserControl>

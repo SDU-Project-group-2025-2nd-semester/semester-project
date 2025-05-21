@@ -32,6 +32,7 @@
   },
   {
     MaxElectricity: 2.6,
+    MaxElectricitySafe: 2.6,
     Name: GM1,
     Cost: 990.0,
     MaxHeatProduction: 3.5,
@@ -43,6 +44,7 @@
   },
   {
     MaxElectricity: -6.0,
+    MaxElectricitySafe: -6.0,
     Name: HP1,
     Cost: 60.0,
     MaxHeatProduction: 6.0,
