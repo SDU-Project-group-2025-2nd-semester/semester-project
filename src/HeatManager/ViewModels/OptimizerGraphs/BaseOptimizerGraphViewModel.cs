@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace HeatManager.ViewModels.OptimizerGraphs;
 
@@ -21,7 +22,9 @@ namespace HeatManager.ViewModels.OptimizerGraphs;
 /// </summary>
 internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDataOptimizerViewModel, INotifyPropertyChanged
 {
-    private DateTimeOffset? _selectedDate;
+    // private DateTimeOffset? _selectedDate;
+    private DateTime? _calendarSelectedDate;
+
     private string? _lastLabel;
     protected List<DateTime> orderedTimes;
 
@@ -31,14 +34,23 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
     public ObservableCollection<ISeries> Series { get; } = new();
 
     /// <summary>
+    /// Gets the view model responsible for managing the calendar date picker functionality
+    /// within the optimizer graph. This view model handles the selection and display of dates
+    /// relevant to the optimization process.
+    /// </summary>
+    public OptimizerCalendarDatePickerViewModel CalendarDatePicker { get; private set; }
+
+
+
+    /// <summary>
     /// Gets or sets the selected date for filtering.
     /// </summary>
-    public DateTimeOffset? SelectedDate
+    public DateTime? CalendarSelectedDate
     {
-        get => _selectedDate;
+        get => _calendarSelectedDate;
         set
         {
-            SetProperty(ref _selectedDate, value);
+            SetProperty(ref _calendarSelectedDate, value);
             OnDateSelected();
         }
     }
@@ -46,7 +58,9 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
     /// <summary>
     /// Gets the minimum date in the dataset.
     /// </summary>
-    public DateTimeOffset? MinDate { get; private set; }
+    public DateTime? MinDate { get; private set; }
+
+
 
     /// <summary>
     /// Gets the X-axis configuration.
@@ -72,9 +86,17 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
     protected BaseOptimizerGraphViewModel(List<HeatProductionUnitSchedule> schedules, List<DateTime> OrderedTimes, DateTimeOffset? minDate)
     {
         this.orderedTimes = OrderedTimes;
-        MinDate = minDate;
+        MinDate = minDate?.DateTime;
         BuildChartSeries(schedules);
         ConfigureAxes(orderedTimes, schedules);
+
+        CalendarDatePicker = new OptimizerCalendarDatePickerViewModel(OrderedTimes);
+        CalendarDatePicker.DateSelected += OnCalendarDateSelected;
+
+        if (MinDate.HasValue)
+        {
+            CalendarDatePicker.CalendarSelectedDate = MinDate.Value;
+        }
     }
 
     /// <summary>
@@ -150,7 +172,21 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
         };
 
         Margin = new Margin(100, Margin.Auto, 50, Margin.Auto);
-        SelectedDate = MinDate;
+        CalendarSelectedDate = MinDate;
+    }
+
+    /// <summary>
+    /// Handles date selection events from the calendar picker control.
+    /// </summary>
+    /// <param name="selectedDate">The newly selected date from the calendar, or null if selection was cleared.</param>
+    /// <remarks>
+    /// This method synchronizes the calendar component's selected date with the graph view model's state.
+    /// When a new date is selected in the calendar, this handler updates the <see cref="CalendarSelectedDate"/> 
+    /// property, which in turn triggers <see cref="OnDateSelected"/> to adjust the graph's visible range.
+    /// </remarks>
+    private void OnCalendarDateSelected(DateTime? selectedDate)
+    {
+        CalendarSelectedDate = selectedDate;
     }
 
     /// <summary>
@@ -158,7 +194,8 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
     /// </summary>
     protected void OnDateSelected()
     {
-        if (SelectedDate.HasValue)
+        Console.WriteLine($"CalendarSelectedDate.HasValue: {CalendarSelectedDate.HasValue}");
+        if (CalendarSelectedDate.HasValue)
         {
             SetXMinLimit();
         }
@@ -169,9 +206,10 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
     /// </summary>
     protected void SetXMinLimit()
     {
-        if (SelectedDate.HasValue)
+        if (CalendarSelectedDate.HasValue)
         {
-            var index = orderedTimes.FindIndex(t => t >= SelectedDate.Value.DateTime);
+            var index = orderedTimes.FindIndex(t => t >= CalendarSelectedDate.Value);
+            Console.WriteLine($"SetXMinLimit() > in:  {index}");
 
             if (index != -1)
             {
@@ -188,6 +226,7 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
             XAxes[0].MinLimit = 0;
         }
     }
+
     /// <summary>
     /// Predefined color palette for chart series.
     /// </summary>
