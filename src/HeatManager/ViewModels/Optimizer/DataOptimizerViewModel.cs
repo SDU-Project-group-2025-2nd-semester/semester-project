@@ -85,14 +85,6 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
     };
 
     /// <summary>
-    /// Gets the text representation of the date range.
-    /// </summary>
-    public string DateRangeText =>
-        (MinDate.HasValue && MaxDate.HasValue)
-            ? $"Available data: {MinDate.Value:dd MMM yyyy} - {MaxDate.Value:dd MMM yyyy}"
-            : "No data range available";
-
-    /// <summary>
     /// Sets the current view to the summary table view.
     /// </summary>
     [RelayCommand]

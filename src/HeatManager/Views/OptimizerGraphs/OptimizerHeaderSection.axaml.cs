@@ -5,11 +5,12 @@ using System;
 
 namespace HeatManager.Views.OptimizerGraphs
 {
-    public partial class OptimizerCostsGraphView : UserControl
+    public partial class OptimizerHeaderSection : UserControl
     {
-        public OptimizerCostsGraphView()
+        public OptimizerHeaderSection()
         {
             InitializeComponent();
+
         }
 
     }
