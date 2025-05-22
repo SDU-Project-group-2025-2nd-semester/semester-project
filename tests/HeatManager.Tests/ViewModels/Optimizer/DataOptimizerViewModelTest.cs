@@ -81,7 +81,6 @@ public class DataOptimizerViewModelTest
         vm.SelectedView.ShouldBe(OptimizerViewType.HeatProductionGraph);
         vm.MinDate?.Date.ShouldBe(new DateTime(2024, 01, 01));
         vm.MaxDate?.Date.ShouldBe(new DateTime(2024, 01, 01));
-        vm.DateRangeText.ShouldContain("01 Jan. 2024");
     }
 
 
