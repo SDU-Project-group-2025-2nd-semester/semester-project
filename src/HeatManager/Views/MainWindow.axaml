@@ -1,47 +1,111 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="using:HeatManager.ViewModels"
-        xmlns:viewModels="clr-namespace:HeatManager.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="HeatManager.Views.MainWindow"
-        x:DataType="viewModels:MainWindowViewModel"
-        Title="HeatManager">
+<Window
+    x:Class="HeatManager.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="clr-namespace:HeatManager.ViewModels"
+    xmlns:vm="using:HeatManager.ViewModels"
+    Title="HeatManager"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="viewModels:MainWindowViewModel"
+    Icon="/Assets/logo3.png"
+    mc:Ignorable="d">
 
-        <SplitView IsPaneOpen = "True" DisplayMode="Inline" OpenPaneLength="300" 
-                   VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-       
-            <SplitView.Pane>
-            
-                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin = "0,0,0,0">
-            
-                    <TextBlock Text="Menu" TextAlignment = "Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" FontSize="20" FontWeight="Bold"/>
+    <SplitView
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        DisplayMode="Inline"
+        IsPaneOpen="True"
+        OpenPaneLength="300">
 
-                    <Button Content="Overview" Command="{Binding SetOverviewViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
-            
-                    <Button Content="Grid &amp; Production" Command="{Binding SetGridProductionViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
+        <SplitView.Pane>
 
-                    <Button Content="Configuration Panel" Command="{Binding SetConfigPanelViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
-                    <!-- Configuration panel is Asset Manager in the code, I will change the naming later -->
-            
-                    <Button Content="Optimiser" Command="{Binding SetOptimizerViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
+            <StackPanel
+                Margin="0,0,0,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
 
-					<Button Content="Save Project" Command="{Binding SaveProjectCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
+                <TextBlock
+                    Margin="0"
+                    Padding="10"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Text="Menu"
+                    TextAlignment="Center" />
 
-                    <Button Content="Data Exporter" Command = "{Binding ExportDataCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
+                <Button
+                    Margin="0"
+                    Padding="10"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding SetOverviewViewCommand}"
+                    Content="Overview" />
+
+                <Button
+                    Margin="0"
+                    Padding="10"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding SetGridProductionViewCommand}"
+                    Content="Grid &amp; Production" />
+
+                <Button
+                    Margin="0"
+                    Padding="10"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding SetConfigPanelViewCommand}"
+                    Content="Configuration Panel" />
+                <!--  Configuration panel is Asset Manager in the code, I will change the naming later  -->
+
+                <Button
+                    Margin="0"
+                    Padding="10"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding SetOptimizerViewCommand}"
+                    Content="Optimiser" />
+
+                <Button
+                    Margin="0"
+                    Padding="10"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding SaveProjectCommand}"
+                    Content="Save Project" />
+
+                <Button
+                    Margin="0"
+                    Padding="10"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Command="{Binding ExportDataCommand}"
+                    Content="Data Exporter" />
 
 
-				</StackPanel>
-        
-            </SplitView.Pane>
-       
-            <SplitView.Content>
-                
-                <ContentControl Content = "{Binding CurrentView}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-            
-            </SplitView.Content>
-    
+            </StackPanel>
+
+        </SplitView.Pane>
+
+        <SplitView.Content>
+
+            <ContentControl
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Content="{Binding CurrentView}" />
+
+        </SplitView.Content>
+
     </SplitView>
 
 </Window>
