@@ -1,0 +1,112 @@
+@startuml HeatManager_Component_Diagram
+
+skinparam pageWidth 2800
+skinparam pageHeight 2800
+
+' package "HeatManager" {
+'   [MainWindow] as mainWindow
+'   [ViewModels] as viewmodels
+'   [Views] as views
+
+'   package "OptimizerGraphs" {
+'     [BaseOptimizerGraphViewModel] as baseGraphVM
+'     [OptimizerHeatProductionGraphViewModel] as heatGraphVM
+'     [OptimizerCostsGraphViewModel] as costsGraphVM
+'     [OptimizerCo2GraphViewModel] as co2GraphVM
+'     [OptimizerResourceConsumptionViewModel] as resourceGraphVM
+'     [OptimizerSummaryTableViewModel] as summaryTableVM
+'     [OptimizerCostsPieGraphViewModel] as costsPieGraphVM
+'   }
+  
+'   package "ConfigPanel" {
+'     [AssetManagerViewModel] as assetManagerVM
+'     [AssetManagerView] as assetManagerView
+'   }
+
+'   package "DemandPrice" {
+'     [GridProductionViewModel] as gridVM
+'     [GridProductionView] as gridView
+'   }
+' }
+
+package "HeatManager.Core" {
+  [Models] as models
+  [Services] as services
+  [ResultData] as resultData
+  [DataLoader] as dataLoader
+  [Db] as db
+  
+  package "Static Data" {
+    artifact "summer.csv" as summerData
+    artifact "winter.csv" as winterData
+  }
+  
+  package "Models" {
+    [ProductionUnitBase] as prodUnitBase
+    [HeatProductionUnit] as heatUnit
+    [ElectricityProductionUnit] as elecUnit
+    [Projects] as projects
+    [Schedules] as schedules
+    [Resources] as resources
+  }
+  
+  package "Services" {
+    [AssetManager] as assetManager
+    [ProjectManager] as projectManager
+    [Optimizer] as optimizer
+    [ResourceManager] as resourceManager
+    [ChartExporter] as chartExporter
+    [SourceDataProvider] as sourceDataProvider
+    [ScheduleExporter] as scheduleExporter
+  }
+  
+  package "ResultData" {
+    [HeatProductionUnitSchedule] as heatSchedule
+    [ElectricityProductionUnitSchedule] as elecSchedule
+    [Schedule] as schedule
+  }
+}
+
+' Component relationships
+' mainWindow --> viewmodels : uses
+' views --> viewmodels : uses
+
+' OptimizerGraphs relationships
+' heatGraphVM --|> baseGraphVM : extends
+' costsGraphVM --|> baseGraphVM : extends
+' co2GraphVM --|> baseGraphVM : extends
+' resourceGraphVM --|> baseGraphVM : extends
+' costsGraphVM --> costsPieGraphVM : contains
+' baseGraphVM --> schedule : displays data from
+
+' ViewModels to Core relationships
+' viewmodels --> services : uses
+' viewmodels --> models : uses
+' assetManagerVM --> assetManager : uses
+' gridVM --> sourceDataProvider : uses
+' gridVM --> chartExporter : uses
+
+' Core internal relationships
+services --> models : manipulates
+services --> resultData : produces
+services --> db : persists data
+dataLoader --> models : populates
+dataLoader --> "Static Data" : retrieves
+optimizer --> schedule : creates
+schedule *-- heatSchedule : contains
+schedule *-- elecSchedule : contains
+
+' Hierarchical relationships
+heatUnit --|> prodUnitBase : extends
+elecUnit --|> prodUnitBase : extends
+heatSchedule --> heatUnit : references
+elecSchedule --> elecUnit : references
+
+' Service interactions
+assetManager --> prodUnitBase : manages collection of
+optimizer --> assetManager : uses units from
+scheduleExporter --> schedule : exports
+projectManager --> projects : manages
+resourceManager --> resources : manages
+
+@enduml

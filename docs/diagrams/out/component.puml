@@ -1,0 +1,50 @@
+@startuml
+
+package "HeatManager.Core" {
+  [Models] as models
+  [ViewModels] as viewmodels
+  [Views] as views
+  [Services] as services
+  [ResultData] as resultdata
+  [DataLoader] as dataloader
+  [Db] as db
+
+package "Static Data" {
+   artifact "summer.csv" as summerData
+   artifact "winter.csv" as winterData
+}
+
+' Relationships
+views --> viewmodels : uses
+viewmodels --> models : uses
+viewmodels --> services : uses
+services --> models : manipulates
+services --> resultdata : produces
+services --> db : retrieves data
+dataloader --> models : populates
+dataloader --> "Static Data" : retrives
+
+package "Models" {
+  [ProductionUnit] as produnit
+  [Producers] as producers
+  [Projects] as projects
+  [Schedules] as schedules
+}
+
+package "Services" {
+  [Optimizers] as optimizers
+}
+
+package "ResultData" {
+  [ElectricityProduction] as elecprod
+  [HeatProduction] as heatprod
+}
+
+'Subcomponents Relationships
+optimizers --> elecprod : generates
+optimizers --> heatprod : generates
+optimizers --> producers : optimizes
+producers --> produnit : extends
+}
+
+@enduml
