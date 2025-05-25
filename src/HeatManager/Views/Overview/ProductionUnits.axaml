@@ -16,19 +16,7 @@
     <Grid>
         <Border Background="White" CornerRadius="15" Padding="10" Margin="10,10,10,10">
             <StackPanel> 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" /> 
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Column="0" Text="Production Units" Classes="heading" HorizontalAlignment="Left" Margin="10"/>
-                    <RadioButton Grid.Column="1" Content="Scenario 1" IsChecked="{Binding IsScenario1Selected}" /> <!-- default selection -->
-                    <RadioButton Grid.Column="2" Content="Scenario 2" Margin="10" IsChecked="{Binding IsScenario1Selected, Converter={StaticResource InverseBooleanConverter}}"/>
-                </Grid>
-
-                <!-- <TextBlock Text="For manual setting, please click on the Configuration Panel." /> -->
+                <TextBlock Text="Production Units" Classes="heading" HorizontalAlignment="Left" Margin="10"/>
 
                 <ItemsControl ItemsSource="{Binding ProductionUnits}">
                     <ItemsControl.ItemsPanel>

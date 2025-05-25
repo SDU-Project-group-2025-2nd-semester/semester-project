@@ -42,14 +42,6 @@ public abstract class ProductionUnitBase : INotifyPropertyChanged
     public ProductionUnitStatus UnitStatus
     {
         get => _unitStatus;
-        private set
-        {
-            if (_unitStatus != value)
-            {
-                _unitStatus = value;
-                OnPropertyChanged(nameof(UnitStatus));
-            }
-        }
     }
 
     public bool IsActive
@@ -60,9 +52,9 @@ public abstract class ProductionUnitBase : INotifyPropertyChanged
             if (_isActive != value)
             {
                 _isActive = value;
-                UnitStatus = _isActive ? ProductionUnitStatus.Active : ProductionUnitStatus.Offline;
-
+                _unitStatus = _isActive ? ProductionUnitStatus.Active : ProductionUnitStatus.Offline;
                 OnPropertyChanged(nameof(IsActive));
+                OnPropertyChanged(nameof(UnitStatus));
             }
         }
     }

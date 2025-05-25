@@ -46,11 +46,12 @@ public class ProductionUnitViewModel : INotifyPropertyChanged
         get => _unit.IsActive;
         set
         {
-            _unit.IsActive = value;
-            OnPropertyChanged(nameof(IsActive));
-            OnPropertyChanged(nameof(UnitStatus));
-            OnPropertyChanged(nameof(Icon));
-            OnToggle?.Invoke();
+            if (_unit.IsActive != value)
+            {
+                _unit.IsActive = value;
+                OnPropertyChanged(nameof(IsActive));
+                OnToggle?.Invoke();
+            }
         }
     }
 
@@ -59,12 +60,21 @@ public class ProductionUnitViewModel : INotifyPropertyChanged
         _unit = unit;
         _unit.PropertyChanged += (s, e) =>
         {
-            if (e.PropertyName == nameof(ProductionUnitBase.UnitStatus))
+            if (e.PropertyName == nameof(ProductionUnitBase.IsActive))
+            {   
+                OnPropertyChanged(nameof(IsActive));
+                OnPropertyChanged(nameof(UnitStatus));
+                OnPropertyChanged(nameof(Icon));
+            } else if (e.PropertyName == nameof(ProductionUnitBase.UnitStatus))
             {
                 OnPropertyChanged(nameof(UnitStatus));
                 OnPropertyChanged(nameof(Icon));
             }
         };
+
+        OnPropertyChanged(nameof(IsActive));
+        OnPropertyChanged(nameof(UnitStatus));
+        OnPropertyChanged(nameof(Icon));
     }
 
     private static Bitmap LoadBitmap(string resourcePath)

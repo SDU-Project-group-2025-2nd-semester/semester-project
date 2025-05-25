@@ -1,11 +1,14 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using HeatManager.Core.Models;
+using HeatManager.Core.Models.Producers;
 using HeatManager.Core.Services;
 using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.Optimizers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 
 namespace HeatManager.ViewModels.Overview;
@@ -17,65 +20,58 @@ public partial class ProductionUnitsViewModel : ViewModelBase
     
     private readonly IAssetManager _assetManager;
 
-    [ObservableProperty]
-    private bool isScenario1Selected;
-
-    // Static property to persist the selected scenario state
-    public static bool IsScenario1SelectedState { get; set; } = false;
-
     public ProductionUnitsViewModel(IAssetManager assetManager)
     { 
         _assetManager = assetManager;
-        // Set the scenario state without resetting the unitss
-        IsScenario1Selected = IsScenario1SelectedState;
-        RefreshProductionUnits();
-    }
-
-    partial void OnIsScenario1SelectedChanged(bool value)
-    {
-        // Only load scenarios if the user explicitly changes the selection
-        if (value != IsScenario1SelectedState)
+        
+        // Subscribe to collection changes
+        _assetManager.ProductionUnits.CollectionChanged += OnProductionUnitsCollectionChanged;
+        
+        // Subscribe to individual unit changes
+        foreach (var unit in _assetManager.ProductionUnits)
         {
-            // Persist the state
-            IsScenario1SelectedState = value;
-            
-            if (value) // If Scenario 1 is selected
+            if (unit is INotifyPropertyChanged notifier)
             {
-                LoadScenario1();
-            }
-            else // If Scenario 2 is selected
-            {
-                LoadScenario2();
+                notifier.PropertyChanged += OnUnitPropertyChanged;
             }
         }
-    }
-
-    public void LoadScenario1()
-    {
-        var units = _assetManager.ProductionUnits;
-        foreach (var unit in units)
-        {
-            unit.IsActive = unit.Name switch
-            {
-                "GB1" or "GB2" or "OB1" => true,
-                _ => false
-            };
-        }
+        
         RefreshProductionUnits();
     }
 
-    public void LoadScenario2()
+    private void OnProductionUnitsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        var units = _assetManager.ProductionUnits;
-        foreach (var unit in units)
+        if (e.Action == NotifyCollectionChangedAction.Add)
         {
-            unit.IsActive = unit.Name switch
+            foreach (ProductionUnitBase unit in e.NewItems!)
             {
-                "GB1" or "GB2" or "OB1" or "GM1" or "HP1" => true,
-                _ => false
-            };
+                if (unit is INotifyPropertyChanged notifier)
+                {
+                    notifier.PropertyChanged += OnUnitPropertyChanged;
+                }
+            }
         }
+        else if (e.Action == NotifyCollectionChangedAction.Remove)
+        {
+            foreach (ProductionUnitBase unit in e.OldItems!)
+            {
+                if (unit is INotifyPropertyChanged notifier)
+                {
+                    notifier.PropertyChanged -= OnUnitPropertyChanged;
+                }
+            }
+        }
+        
         RefreshProductionUnits();
+    }
+
+    private void OnUnitPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ProductionUnitBase.IsActive) || 
+            e.PropertyName == nameof(ProductionUnitBase.UnitStatus))
+        {
+            RefreshProductionUnits();
+        }
     }
     
     public void RefreshProductionUnits()

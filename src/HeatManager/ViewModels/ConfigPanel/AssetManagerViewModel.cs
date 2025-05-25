@@ -92,23 +92,21 @@ namespace HeatManager.ViewModels.ConfigPanel
         
         public void RefreshProductionUnitViewModels()
         {
-            // First, save the current states
-            Dictionary<string, bool> unitStates = new Dictionary<string, bool>();
-            foreach (var viewModel in ProductionUnitViewModels)
-            {
-                unitStates.Add(viewModel.Name, viewModel.IsActive);
-            }
+            // Get the current states from the actual units
+            Dictionary<string, bool> unitStates = _assetManager.ProductionUnits.ToDictionary(u => u.Name, u => u.IsActive);
 
             // Clear and rebuild the collection
             ProductionUnitViewModels.Clear();
+
+            // Temporarily unsubscribe to avoid multiple refreshes
+            var observableCollection = (INotifyCollectionChanged)_assetManager.ProductionUnits;
+            observableCollection.CollectionChanged -= AssetManagerProductionUnits_CollectionChanged;
+
             foreach (var unit in _assetManager.ProductionUnits)
             {
                 var viewModel = new ProductionUnitViewModel(unit);
-                // Restore the state if it exists
-                if (unitStates.TryGetValue(unit.Name, out bool isActive))
-                {
-                    viewModel.IsActive = isActive;
-                }
+                // Set the state from the actual unit - redundant but harmless now
+                viewModel.IsActive = unit.IsActive;
                 viewModel.PropertyChanged += (s, e) =>
                 {
                     if (e.PropertyName == nameof(ProductionUnitViewModel.IsActive))
@@ -119,8 +117,17 @@ namespace HeatManager.ViewModels.ConfigPanel
                 ProductionUnitViewModels.Add(viewModel);
             }
 
-            // Update optimizer settings
+            // Re-subscribe after adding items
+            observableCollection.CollectionChanged += AssetManagerProductionUnits_CollectionChanged;
+            
+            // Update optimizer settings with the actual unit states
             _optimizer.ChangeOptimizationSettings(new OptimizerSettings(unitStates));
+        }
+
+        // Handler for AssetManager ProductionUnits CollectionChanged
+        private void AssetManagerProductionUnits_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            RefreshProductionUnitViewModels();
         }
 
         public void ReOptimize()
