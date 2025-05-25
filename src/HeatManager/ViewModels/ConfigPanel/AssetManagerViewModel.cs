@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using HeatManager.ViewModels.Overview;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace HeatManager.ViewModels.ConfigPanel
 {
@@ -27,6 +28,12 @@ namespace HeatManager.ViewModels.ConfigPanel
             _productionUnitsViewModel = productionUnitsViewModel; 
             
             ProductionUnitViewModels = new ObservableCollection<ProductionUnitViewModel>();
+            
+            // Subscribe to changes in the AssetManager's ProductionUnits collection
+            ((INotifyCollectionChanged)_assetManager.ProductionUnits).CollectionChanged += (s, e) =>
+            {
+                RefreshProductionUnitViewModels();
+            };
             
             var units = _assetManager.ProductionUnits;
             foreach (var unit in units)

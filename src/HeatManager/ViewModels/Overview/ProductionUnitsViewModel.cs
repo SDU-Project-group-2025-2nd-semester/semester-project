@@ -16,7 +16,6 @@ public partial class ProductionUnitsViewModel : ViewModelBase
     private ObservableCollection<ProductionUnitViewModel>? productionUnits;
     
     private readonly IAssetManager _assetManager;
-    private readonly IOptimizer _optimizer;
 
     [ObservableProperty]
     private bool isScenario1Selected;
@@ -24,11 +23,10 @@ public partial class ProductionUnitsViewModel : ViewModelBase
     // Static property to persist the selected scenario state
     public static bool IsScenario1SelectedState { get; set; } = false;
 
-    public ProductionUnitsViewModel(IAssetManager assetManager, IOptimizer optimizer)
+    public ProductionUnitsViewModel(IAssetManager assetManager)
     { 
         _assetManager = assetManager;
-        _optimizer = optimizer;
-        // Set the scenario state without resetting the units
+        // Set the scenario state without resetting the unitss
         IsScenario1Selected = IsScenario1SelectedState;
         RefreshProductionUnits();
     }
