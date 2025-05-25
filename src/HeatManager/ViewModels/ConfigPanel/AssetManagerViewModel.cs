@@ -85,11 +85,34 @@ namespace HeatManager.ViewModels.ConfigPanel
         
         public void RefreshProductionUnitViewModels()
         {
+            // First, save the current states
             Dictionary<string, bool> unitStates = new Dictionary<string, bool>();
             foreach (var viewModel in ProductionUnitViewModels)
             {
                 unitStates.Add(viewModel.Name, viewModel.IsActive);
             }
+
+            // Clear and rebuild the collection
+            ProductionUnitViewModels.Clear();
+            foreach (var unit in _assetManager.ProductionUnits)
+            {
+                var viewModel = new ProductionUnitViewModel(unit);
+                // Restore the state if it exists
+                if (unitStates.TryGetValue(unit.Name, out bool isActive))
+                {
+                    viewModel.IsActive = isActive;
+                }
+                viewModel.PropertyChanged += (s, e) =>
+                {
+                    if (e.PropertyName == nameof(ProductionUnitViewModel.IsActive))
+                    {
+                        ReOptimize();
+                    }
+                };
+                ProductionUnitViewModels.Add(viewModel);
+            }
+
+            // Update optimizer settings
             _optimizer.ChangeOptimizationSettings(new OptimizerSettings(unitStates));
         }
 

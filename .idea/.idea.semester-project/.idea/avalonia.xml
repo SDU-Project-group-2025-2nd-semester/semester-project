@@ -4,6 +4,8 @@
     <option name="projectPerEditor">
       <map>
         <entry key="src/HeatManager/Views/ConfigPanel/AssetManagerView.axaml" value="src/HeatManager/HeatManager.csproj" />
+        <entry key="src/HeatManager/Views/ConfigPanel/Dialogs/AdditionDialog.axaml" value="src/HeatManager/HeatManager.csproj" />
+        <entry key="src/HeatManager/Views/ConfigPanel/Dialogs/DeletionDialog.axaml" value="src/HeatManager/HeatManager.csproj" />
         <entry key="src/HeatManager/Views/DemandPrice/DashboardView.axaml" value="src/HeatManager/HeatManager.csproj" />
         <entry key="src/HeatManager/Views/MainWindow.axaml" value="src/HeatManager/HeatManager.csproj" />
         <entry key="src/HeatManager/Views/Optimizer/DataOptimizerView.axaml" value="src/HeatManager/HeatManager.csproj" />
