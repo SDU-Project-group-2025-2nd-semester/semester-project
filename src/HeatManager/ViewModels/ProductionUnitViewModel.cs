@@ -2,51 +2,36 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using HeatManager.Core.Models;
 using HeatManager.Core.Models.Producers;
-using HeatManager.Core.Services;
+using HeatManager.Core.Models.Resources;
 using System;
 using System.ComponentModel;
 
 namespace HeatManager.ViewModels;
 
-public partial class ProductionUnitViewModel : ViewModelBase
+public class ProductionUnitViewModel : INotifyPropertyChanged
 {
-    public ProductionUnitBase ProductionUnit { get; private set; }
-    public string Name => ProductionUnit.Name;
-    public decimal Cost => ProductionUnit.Cost;
-    public double Emissions => ProductionUnit.Emissions;
-    public double MaxHeat => ProductionUnit.MaxHeatProduction;
+    private readonly ProductionUnitBase _unit;
 
-    public double MaxElectricity
+    public ProductionUnitBase ProductionUnit => _unit;
+    public string Name => _unit.Name;
+    public decimal Cost => _unit.Cost;
+    public double Emissions => _unit.Emissions;
+    public double MaxHeatProduction => _unit.MaxHeatProduction;
+    public double MaxElectricityProduction
     {
         get
         {
-            if (ProductionUnit is ElectricityProductionUnit electricityUnit)
+            if (_unit is ElectricityProductionUnit electricityUnit)
             {
                 return electricityUnit.MaxElectricity;
             }
-            else
-            {
-                return 0;
-            }
+            return 0;
         }
     }
+    public ResourceType ResourceType => _unit.Resource.Type;
+    public double ResourceConsumption => _unit.ResourceConsumption;
 
-    private ProductionUnitStatus _unitStatus; 
-    public ProductionUnitStatus UnitStatus
-    {
-        get => _unitStatus;
-        set
-        {
-            if (_unitStatus != value)
-            {
-                _unitStatus = value;
-                
-                OnPropertyChanged(nameof(IsActive));
-                OnPropertyChanged(nameof(UnitStatus));
-                OnPropertyChanged(nameof(Icon));
-            }
-        }
-    }
+    public ProductionUnitStatus UnitStatus => _unit.UnitStatus;
     
     public Bitmap Icon => UnitStatus switch
     {
@@ -55,51 +40,41 @@ public partial class ProductionUnitViewModel : ViewModelBase
         ProductionUnitStatus.Offline => LoadBitmap("/Assets/Icons/circle-xmark-solid.png"),
         _ => throw new System.NotImplementedException(),
     };
-    
-    private bool _isActive;
+
     public bool IsActive
     {
-        get => _isActive;
+        get => _unit.IsActive;
         set
         {
-            if (_isActive != value)
-            {
-                _isActive = value;
-                UnitStatus = _isActive ? ProductionUnitStatus.Active : ProductionUnitStatus.Offline;
-                if (_isActive)
-                {
-                    ProductionUnitData.Units.SetActive(Name);
-                }
-                else
-                {
-                    ProductionUnitData.Units.SetOffline(Name);
-                }
-
-                // Notify the ViewModel to refresh the ProductionUnits collection
-                OnToggle?.Invoke();
-
-                OnPropertyChanged(nameof(IsActive));
-            }
+            _unit.IsActive = value;
+            OnPropertyChanged(nameof(IsActive));
+            OnPropertyChanged(nameof(UnitStatus));
+            OnPropertyChanged(nameof(Icon));
         }
     }
 
-    public ProductionUnitViewModel(ProductionUnitBase productionUnit)
+    public ProductionUnitViewModel(ProductionUnitBase unit)
     {
-        ProductionUnit = productionUnit;
+        _unit = unit;
+        _unit.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName == nameof(ProductionUnitBase.UnitStatus))
+            {
+                OnPropertyChanged(nameof(UnitStatus));
+                OnPropertyChanged(nameof(Icon));
+            }
+        };
     }
-
-    // Delegate to notify the ViewModel
-    public Action? OnToggle { get; set; }
 
     private static Bitmap LoadBitmap(string resourcePath)
     {
         var uri = new Uri($"avares://HeatManager{resourcePath}");
         return new Bitmap(AssetLoader.Open(uri));
     }
-    
+
     public event PropertyChangedEventHandler? PropertyChanged;
     protected virtual void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-}
+} 

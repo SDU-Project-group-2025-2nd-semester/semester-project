@@ -1,7 +1,9 @@
 using HeatManager.Core.Models;
+using HeatManager.Core.Models.Producers;
 using HeatManager.Core.Services.Optimizers;
 using System.Collections.Generic;
 
+/*
 namespace HeatManager.Core.Services;
 
 public static class ProductionUnitData
@@ -15,21 +17,21 @@ public static class ProductionUnitData
     }
 
     // Method to get all ProductionUnit objects for the UI
-    public static List<ProductionUnit> GetProductionUnits()
+    public static List<ProductionUnitBase> GetProductionUnits()
     {
-        var productionUnits = new List<ProductionUnit>();
+        var productionUnits = new List<ProductionUnitBase>();
         foreach (var unit in Units.AllUnits)
         {
-            productionUnits.Add(new ProductionUnit
+            productionUnits.Add(new ProductionUnitBase
             {
                 Name = unit.Key,
-                Status = unit.Value ? ProductionUnitStatus.Active : ProductionUnitStatus.Offline
+                UnitStatus = unit.Value ? ProductionUnitStatus.Active : ProductionUnitStatus.Offline
             });
         }
         return productionUnits;
     }
 
-    public static List<ProductionUnit> GetProductionUnits(IOptimizer optimizer)
+    public static List<ProductionUnitBase> GetProductionUnits(IOptimizer optimizer)
     {
         UpdateOptimizerSettings(optimizer);
         return GetProductionUnits();
@@ -50,5 +52,7 @@ public static class ProductionUnitData
         Units.SetActive("OB1");
         Units.SetOffline("GM1");
         Units.SetOffline("HP1");
-    } */ 
-}
+    } 
+
+
+}*/ 

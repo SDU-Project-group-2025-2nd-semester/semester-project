@@ -7,7 +7,7 @@ using HeatManager.Core.Models.Resources;
 using HeatManager.Core.Services;
 
 namespace HeatManager.Core.Models;
-
+/*
 // Combining data from the JSON file (ProductionUnits.json) and the Units object (ProductionUnitData.cs)
 // for the AssetManagerView
 public class CombinedProductionUnit : INotifyPropertyChanged
@@ -88,3 +88,4 @@ public class CombinedProductionUnit : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
+*/

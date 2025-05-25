@@ -138,11 +138,7 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
     
     private void SetResourceConsumptionGraphView()
     {
-        // Update the optimizer with the latest Units dictionary
-        _optimizer.UpdateUnits(ProductionUnitData.Units.AllUnits);
-        
         _schedule = _optimizer.Optimize();
-
         CurrentView = new OptimizerResourceConsumptionView() { DataContext = new OptimizerResourceConsumptionViewModel(_schedule, orderedTimes, MinDate) };
     }
 
@@ -165,7 +161,6 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
     /// <param name="value">The newly selected view type.</param>
     partial void OnSelectedViewChanged(OptimizerViewType? value)
     {
-
         switch (value)
         {
             case OptimizerViewType.HeatProductionGraph:

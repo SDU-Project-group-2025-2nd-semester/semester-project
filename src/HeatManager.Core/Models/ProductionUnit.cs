@@ -7,7 +7,7 @@ using System.ComponentModel;
 using HeatManager.Core.Services;
 
 namespace HeatManager.Core.Models;
-
+/*
 public class ProductionUnit : INotifyPropertyChanged
 {
     public string Name { get; init; }
@@ -78,3 +78,4 @@ public class ProductionUnit : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
+*/

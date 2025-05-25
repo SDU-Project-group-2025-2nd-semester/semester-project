@@ -13,7 +13,7 @@ namespace HeatManager.ViewModels.Overview;
 public partial class ProductionUnitsViewModel : ViewModelBase
 {
     [ObservableProperty]
-    private ObservableCollection<ProductionUnit>? productionUnits;
+    private ObservableCollection<ProductionUnitViewModel>? productionUnits;
     
     private readonly IAssetManager _assetManager;
     private readonly IOptimizer _optimizer;
@@ -60,7 +60,6 @@ public partial class ProductionUnitsViewModel : ViewModelBase
         settings.SetActive("GB2");
         settings.SetActive("OB1");
         _optimizer.ChangeOptimizationSettings(settings);
-        ProductionUnitData.UpdateOptimizerSettings(_optimizer);
         RefreshProductionUnits();
     }
 
@@ -74,13 +73,12 @@ public partial class ProductionUnitsViewModel : ViewModelBase
         settings.SetActive("GM1");
         settings.SetActive("HP1");
         _optimizer.ChangeOptimizationSettings(settings);
-        ProductionUnitData.UpdateOptimizerSettings(_optimizer);
         RefreshProductionUnits();
     }
     
     public void RefreshProductionUnits()
     {
-        var units = ProductionUnitData.GetProductionUnits(_optimizer); 
-        ProductionUnits = new ObservableCollection<ProductionUnit>(units);
+        var units = _assetManager.ProductionUnits;
+        ProductionUnits = new ObservableCollection<ProductionUnitViewModel>(units.Select(u => new ProductionUnitViewModel(u)));
     }
 }
