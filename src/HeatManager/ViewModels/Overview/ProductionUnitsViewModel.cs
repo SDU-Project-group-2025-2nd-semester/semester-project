@@ -54,25 +54,31 @@ public partial class ProductionUnitsViewModel : ViewModelBase
 
     public void LoadScenario1()
     {
-        var unitNames = _assetManager.ProductionUnits.Select(u => u.Name).ToList();
-        var settings = new OptimizerSettings(unitNames);
-        settings.SetActive("GB1");
-        settings.SetActive("GB2");
-        settings.SetActive("OB1");
-        _optimizer.ChangeOptimizationSettings(settings);
+        var units = _assetManager.ProductionUnits;
+        foreach (var unit in units)
+        {
+            unit.IsActive = unit.Name switch
+            {
+                "GB1" or "GB2" or "OB1" => true,
+                _ => false
+            };
+        }
+        UpdateOptimizerSettings();
         RefreshProductionUnits();
     }
 
     public void LoadScenario2()
     {
-        var unitNames = _assetManager.ProductionUnits.Select(u => u.Name).ToList();
-        var settings = new OptimizerSettings(unitNames);
-        settings.SetActive("GB1");
-        settings.SetActive("GB2");
-        settings.SetActive("OB1");
-        settings.SetActive("GM1");
-        settings.SetActive("HP1");
-        _optimizer.ChangeOptimizationSettings(settings);
+        var units = _assetManager.ProductionUnits;
+        foreach (var unit in units)
+        {
+            unit.IsActive = unit.Name switch
+            {
+                "GB1" or "GB2" or "OB1" or "GM1" or "HP1" => true,
+                _ => false
+            };
+        }
+        UpdateOptimizerSettings();
         RefreshProductionUnits();
     }
     
@@ -80,5 +86,11 @@ public partial class ProductionUnitsViewModel : ViewModelBase
     {
         var units = _assetManager.ProductionUnits;
         ProductionUnits = new ObservableCollection<ProductionUnitViewModel>(units.Select(u => new ProductionUnitViewModel(u)));
+    }
+
+    private void UpdateOptimizerSettings()
+    {
+        var unitStates = _assetManager.ProductionUnits.ToDictionary(u => u.Name, u => u.IsActive);
+        _optimizer.ChangeOptimizationSettings(new OptimizerSettings(unitStates));
     }
 }
