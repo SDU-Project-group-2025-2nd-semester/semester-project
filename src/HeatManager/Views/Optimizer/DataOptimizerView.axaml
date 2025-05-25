@@ -37,16 +37,6 @@
 					</DataTemplate>
 				</ComboBox.ItemTemplate>
 			</ComboBox>
-
-			<!-- Data Range Displayed -->
-			<TextBlock
-				Grid.Column="1"
-				Text="{Binding DateRangeText}"
-				FontWeight="SemiBold"
-				FontSize="14"
-				Margin="10"
-				VerticalAlignment="Center"
-				HorizontalAlignment="Right"/>
 		</Grid>
 
 

@@ -131,7 +131,6 @@ public partial class GridProductionViewModel : ViewModelBase
             {
                 MinLimit = startDate.Ticks,
                 MaxLimit = endDate.Ticks,
-                // JustSomeRadndomProperty = "Day",
                 Labeler = value =>
                 {
                     var date = new DateTime((long)value);
