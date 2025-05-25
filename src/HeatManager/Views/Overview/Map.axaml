@@ -6,7 +6,7 @@
         <StyleInclude Source="/Views/styles.axaml" />
     </UserControl.Styles>
     
-    <Border Background="White" CornerRadius="15" Padding="10" Margin="10">
+    <Border Background="White" CornerRadius="15" Padding="10" Classes="dynamicMargin"> <!-- Margin="10" -->
       <Grid>
           <Grid.RowDefinitions>
               <RowDefinition Height="Auto" /> <!-- Row for the TextBlock -->

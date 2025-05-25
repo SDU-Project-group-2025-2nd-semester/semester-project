@@ -9,7 +9,7 @@
     </UserControl.Styles>
 
     <!-- Border for background and rounded edges -->
-    <Border Background="White" CornerRadius="15" Padding="10" Margin="10">
+    <Border Background="White" CornerRadius="15" Padding="10" Classes="dynamicMargin"> <!-- Margin="10" -->
         <StackPanel>
             <TextBlock Text="Weekly Statistics" Classes="heading" HorizontalAlignment="Left" Margin="10"/>
 

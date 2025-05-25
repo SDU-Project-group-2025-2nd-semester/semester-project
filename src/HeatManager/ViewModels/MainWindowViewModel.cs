@@ -36,7 +36,7 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
     private UserControl? currentView;
 
     [ObservableProperty]
-    private bool isPaneOpen; //= true; // Default to open
+    private bool isPaneOpen; 
 
     // public MainWindowViewModel() : this(default, default)
     // {

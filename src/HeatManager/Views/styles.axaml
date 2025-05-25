@@ -3,21 +3,21 @@
 
     <!-- Heading Style -->
     <Style Selector="TextBlock.heading">
-        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontSize" Value="{DynamicResource HeadingFontSize}" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Margin" Value="0,0,0,20" />
     </Style>
 
     <!-- Subheading Style -->
     <Style Selector="TextBlock.subheading">
-        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontSize" Value="{DynamicResource SubheadingFontSize}" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Margin" Value="0,0,0,5" />
     </Style>
 
     <!-- Normal Text Style -->
     <Style Selector="TextBlock.normaltext">
-        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontSize" Value="{DynamicResource NormalTextFontSize}" />
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="Margin" Value="0,0,0,25" />
     </Style>
@@ -29,5 +29,16 @@
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="10" />
+    </Style>
+
+    <!-- Dynamic Margin for Borders (in Overview) -->
+    <Style Selector="Border.dynamicMargin">
+        <Setter Property="Margin" Value="{DynamicResource BorderMargin}" />
+    </Style>
+
+    <!-- Icon Style -->
+    <Style Selector="Image.dynamicIcon">
+        <Setter Property="Width" Value="{DynamicResource IconSize}" />
+        <Setter Property="Height" Value="{DynamicResource IconSize}" />
     </Style>
 </Styles>

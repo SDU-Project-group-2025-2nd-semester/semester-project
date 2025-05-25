@@ -6,6 +6,8 @@ using System.Globalization;
 
 namespace HeatManager.Converters
 {
+    // Used in MainWindow.axaml
+    // Determines the width of the Menu pane based on its IsPaneOpen value
     public class BooleanToGridLengthConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)

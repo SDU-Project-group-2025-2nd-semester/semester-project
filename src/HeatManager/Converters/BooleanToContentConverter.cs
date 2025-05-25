@@ -4,6 +4,9 @@ using Avalonia.Data.Converters;
 
 namespace HeatManager.Converters
 {
+    // Used in the MainWindow.axaml
+    // If the Menu pane is open, the texts show up on the buttons
+    // If it is closed, the icons show up
     public class BooleanToContentConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
