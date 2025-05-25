@@ -3,6 +3,7 @@ using Avalonia.Platform;
 using HeatManager.Core.Models;
 using HeatManager.Core.Models.Producers;
 using HeatManager.Core.Models.Resources;
+using HeatManager.Core.Services.Optimizers;
 using System;
 using System.ComponentModel;
 
@@ -11,7 +12,6 @@ namespace HeatManager.ViewModels;
 public class ProductionUnitViewModel : INotifyPropertyChanged
 {
     private readonly ProductionUnitBase _unit;
-
     public ProductionUnitBase ProductionUnit => _unit;
     public string Name => _unit.Name;
     public decimal Cost => _unit.Cost;
@@ -50,6 +50,7 @@ public class ProductionUnitViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(IsActive));
             OnPropertyChanged(nameof(UnitStatus));
             OnPropertyChanged(nameof(Icon));
+            OnToggle?.Invoke();
         }
     }
 
@@ -77,4 +78,7 @@ public class ProductionUnitViewModel : INotifyPropertyChanged
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+
+    // Delegate to notify when unit state changes
+    public Action? OnToggle { get; set; }
 } 
