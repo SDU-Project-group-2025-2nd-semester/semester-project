@@ -63,7 +63,6 @@ public partial class ProductionUnitsViewModel : ViewModelBase
                 _ => false
             };
         }
-        UpdateOptimizerSettings();
         RefreshProductionUnits();
     }
 
@@ -78,7 +77,6 @@ public partial class ProductionUnitsViewModel : ViewModelBase
                 _ => false
             };
         }
-        UpdateOptimizerSettings();
         RefreshProductionUnits();
     }
     
@@ -86,11 +84,5 @@ public partial class ProductionUnitsViewModel : ViewModelBase
     {
         var units = _assetManager.ProductionUnits;
         ProductionUnits = new ObservableCollection<ProductionUnitViewModel>(units.Select(u => new ProductionUnitViewModel(u)));
-    }
-
-    private void UpdateOptimizerSettings()
-    {
-        var unitStates = _assetManager.ProductionUnits.ToDictionary(u => u.Name, u => u.IsActive);
-        _optimizer.ChangeOptimizationSettings(new OptimizerSettings(unitStates));
     }
 }

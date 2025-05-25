@@ -31,8 +31,25 @@ namespace HeatManager.ViewModels.ConfigPanel
             var units = _assetManager.ProductionUnits;
             foreach (var unit in units)
             {
-                ProductionUnitViewModels.Add(new ProductionUnitViewModel(unit));
+                var viewModel = new ProductionUnitViewModel(unit);
+                viewModel.PropertyChanged += (s, e) =>
+                {
+                    if (e.PropertyName == nameof(ProductionUnitViewModel.IsActive))
+                    {
+                        ReOptimize();
+                    }
+                };
+                ProductionUnitViewModels.Add(viewModel);
             }
+
+            // Subscribe to changes in ProductionUnitsViewModel
+            _productionUnitsViewModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(ProductionUnitsViewModel.ProductionUnits))
+                {
+                    ReOptimize();
+                }
+            };
         }
 
         /// <summary>
@@ -73,6 +90,12 @@ namespace HeatManager.ViewModels.ConfigPanel
             {
                 unitStates.Add(viewModel.Name, viewModel.IsActive);
             }
+            _optimizer.ChangeOptimizationSettings(new OptimizerSettings(unitStates));
+        }
+
+        public void ReOptimize()
+        {
+            var unitStates = _assetManager.ProductionUnits.ToDictionary(u => u.Name, u => u.IsActive);
             _optimizer.ChangeOptimizationSettings(new OptimizerSettings(unitStates));
         }
     }
