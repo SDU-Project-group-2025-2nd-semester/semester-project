@@ -13,5 +13,6 @@
 
     <Application.Resources>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <converters:BoolToStatusConverter x:Key="BoolToStatusConverter"/>
     </Application.Resources>        
 </Application>

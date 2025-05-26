@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:configPanel="clr-namespace:HeatManager.ViewModels.ConfigPanel"
+        xmlns:converters="clr-namespace:HeatManager.Core.Converters;assembly=HeatManager.Core"
         mc:Ignorable="d"
         x:Class="HeatManager.Views.ConfigPanel.AssetManagerView"
         x:DataType="configPanel:AssetManagerViewModel">
@@ -13,6 +14,10 @@
 		</Style>
 		<StyleInclude Source="/Views/styles.axaml" />
 	</UserControl.Styles>
+
+	<UserControl.Resources>
+		<converters:BoolToStatusConverter x:Key="BoolToStatusConverter" />
+	</UserControl.Resources>
 
 	<Grid Background="#FFDDDF">
 		<Grid.RowDefinitions>
@@ -57,7 +62,7 @@
 										</ToggleButton>
 										<StackPanel Margin="10,5,0,15">
 											<TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14"/>
-											<TextBlock Text="{Binding UnitStatus}" Classes="normaltext" Opacity="0.7"/> 
+											<TextBlock Text="{Binding IsActive, Converter={StaticResource BoolToStatusConverter}}" Classes="normaltext" Opacity="0.7"/> 
 										</StackPanel>
 									</StackPanel>
 

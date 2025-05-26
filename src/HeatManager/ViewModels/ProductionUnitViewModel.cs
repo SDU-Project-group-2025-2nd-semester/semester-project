@@ -31,15 +31,9 @@ public class ProductionUnitViewModel : INotifyPropertyChanged
     public ResourceType ResourceType => _unit.Resource.Type;
     public double ResourceConsumption => _unit.ResourceConsumption;
 
-    public ProductionUnitStatus UnitStatus => _unit.UnitStatus;
-    
-    public Bitmap Icon => UnitStatus switch
-    {
-        ProductionUnitStatus.Active  => LoadBitmap("/Assets/Icons/circle-check-solid.png"),
-        ProductionUnitStatus.Standby => LoadBitmap("/Assets/Icons/circle-exclamation-solid.png"),
-        ProductionUnitStatus.Offline => LoadBitmap("/Assets/Icons/circle-xmark-solid.png"),
-        _ => throw new System.NotImplementedException(),
-    };
+    public Bitmap Icon => IsActive 
+        ? LoadBitmap("/Assets/Icons/circle-check-solid.png")
+        : LoadBitmap("/Assets/Icons/circle-xmark-solid.png");
 
     public bool IsActive
     {
@@ -50,6 +44,7 @@ public class ProductionUnitViewModel : INotifyPropertyChanged
             {
                 _unit.IsActive = value;
                 OnPropertyChanged(nameof(IsActive));
+                OnPropertyChanged(nameof(Icon));
                 OnToggle?.Invoke();
             }
         }
@@ -63,17 +58,11 @@ public class ProductionUnitViewModel : INotifyPropertyChanged
             if (e.PropertyName == nameof(ProductionUnitBase.IsActive))
             {   
                 OnPropertyChanged(nameof(IsActive));
-                OnPropertyChanged(nameof(UnitStatus));
-                OnPropertyChanged(nameof(Icon));
-            } else if (e.PropertyName == nameof(ProductionUnitBase.UnitStatus))
-            {
-                OnPropertyChanged(nameof(UnitStatus));
                 OnPropertyChanged(nameof(Icon));
             }
         };
 
         OnPropertyChanged(nameof(IsActive));
-        OnPropertyChanged(nameof(UnitStatus));
         OnPropertyChanged(nameof(Icon));
     }
 

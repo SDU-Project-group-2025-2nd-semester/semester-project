@@ -24,9 +24,12 @@ public partial class ProductionUnitsViewModel : ViewModelBase
     { 
         _assetManager = assetManager;
         
+        // Initialize the collection even if empty
+        ProductionUnits = new ObservableCollection<ProductionUnitViewModel>();
+        
         // Subscribe to collection changes
         _assetManager.ProductionUnits.CollectionChanged += OnProductionUnitsCollectionChanged;
-        
+
         // Subscribe to individual unit changes
         foreach (var unit in _assetManager.ProductionUnits)
         {
@@ -35,10 +38,15 @@ public partial class ProductionUnitsViewModel : ViewModelBase
                 notifier.PropertyChanged += OnUnitPropertyChanged;
             }
         }
-        
         RefreshProductionUnits();
     }
-
+    
+    public void RefreshProductionUnits()
+    {
+        var units = _assetManager.ProductionUnits;
+        ProductionUnits = new ObservableCollection<ProductionUnitViewModel>(units.Select(u => new ProductionUnitViewModel(u)));
+    }
+    
     private void OnProductionUnitsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (e.Action == NotifyCollectionChangedAction.Add)
@@ -61,22 +69,15 @@ public partial class ProductionUnitsViewModel : ViewModelBase
                 }
             }
         }
-        
+
         RefreshProductionUnits();
     }
 
     private void OnUnitPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(ProductionUnitBase.IsActive) || 
-            e.PropertyName == nameof(ProductionUnitBase.UnitStatus))
+        if (e.PropertyName == nameof(ProductionUnitBase.IsActive))
         {
             RefreshProductionUnits();
         }
-    }
-    
-    public void RefreshProductionUnits()
-    {
-        var units = _assetManager.ProductionUnits;
-        ProductionUnits = new ObservableCollection<ProductionUnitViewModel>(units.Select(u => new ProductionUnitViewModel(u)));
-    }
+    } 
 }

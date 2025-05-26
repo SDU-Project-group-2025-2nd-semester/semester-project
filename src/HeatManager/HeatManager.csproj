@@ -62,6 +62,10 @@
       <DependentUpon>DashboardGraph.axaml</DependentUpon>
     </Compile>
 
+    <Compile Update="Views\OptimizerGraphs\OptimizerHeaderSection.axaml.cs">
+      <DependentUpon>OptimizerHeaderSection.axaml</DependentUpon>
+    </Compile>
+
   </ItemGroup>
 
 </Project>

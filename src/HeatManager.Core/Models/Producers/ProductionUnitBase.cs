@@ -10,7 +10,6 @@ namespace HeatManager.Core.Models.Producers;
 /// </summary>
 public abstract class ProductionUnitBase : INotifyPropertyChanged
 {
-    private ProductionUnitStatus _unitStatus;
     private bool _isActive;
 
     public string Name { get; set; } = string.Empty;
@@ -39,11 +38,6 @@ public abstract class ProductionUnitBase : INotifyPropertyChanged
 
     public ProductionUnitBase Clone() => (ProductionUnitBase)MemberwiseClone();
 
-    public ProductionUnitStatus UnitStatus
-    {
-        get => _unitStatus;
-    }
-
     public bool IsActive
     {
         get => _isActive;
@@ -52,9 +46,7 @@ public abstract class ProductionUnitBase : INotifyPropertyChanged
             if (_isActive != value)
             {
                 _isActive = value;
-                _unitStatus = _isActive ? ProductionUnitStatus.Active : ProductionUnitStatus.Offline;
                 OnPropertyChanged(nameof(IsActive));
-                OnPropertyChanged(nameof(UnitStatus));
             }
         }
     }

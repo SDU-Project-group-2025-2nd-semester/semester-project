@@ -49,6 +49,11 @@ namespace HeatManager.ViewModels.ConfigPanel
                 ProductionUnitViewModels.Add(viewModel);
             }
 
+            _assetManager.ProductionUnits.CollectionChanged += AssetManagerProductionUnits_CollectionChanged;
+            
+            // Initial population of the collection
+            RefreshProductionUnitViewModels();
+
             // Subscribe to changes in ProductionUnitsViewModel
             _productionUnitsViewModel.PropertyChanged += (s, e) =>
             {
@@ -98,15 +103,10 @@ namespace HeatManager.ViewModels.ConfigPanel
             // Clear and rebuild the collection
             ProductionUnitViewModels.Clear();
 
-            // Temporarily unsubscribe to avoid multiple refreshes
-            var observableCollection = (INotifyCollectionChanged)_assetManager.ProductionUnits;
-            observableCollection.CollectionChanged -= AssetManagerProductionUnits_CollectionChanged;
-
             foreach (var unit in _assetManager.ProductionUnits)
             {
                 var viewModel = new ProductionUnitViewModel(unit);
-                // Set the state from the actual unit - redundant but harmless now
-                viewModel.IsActive = unit.IsActive;
+                // Don't set IsActive directly as it triggers property changes
                 viewModel.PropertyChanged += (s, e) =>
                 {
                     if (e.PropertyName == nameof(ProductionUnitViewModel.IsActive))
@@ -117,9 +117,6 @@ namespace HeatManager.ViewModels.ConfigPanel
                 ProductionUnitViewModels.Add(viewModel);
             }
 
-            // Re-subscribe after adding items
-            observableCollection.CollectionChanged += AssetManagerProductionUnits_CollectionChanged;
-            
             // Update optimizer settings with the actual unit states
             _optimizer.ChangeOptimizationSettings(new OptimizerSettings(unitStates));
         }
