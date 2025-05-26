@@ -23,6 +23,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using HeatManager.Views.DataExporter;
+using HeatManager.ViewModels.DataExporter;
 
 // ReSharper disable InconsistentNaming
 
@@ -84,6 +86,12 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
     }
 
     [RelayCommand]
+    private void SetDataExportView()
+    {
+        CurrentView = new DataExportView { DataContext = new DataExportViewModel(assetManager, optimizer, projectManager) };
+    }
+
+    /*[RelayCommand]
     private void ExportData()
     {
 
@@ -114,4 +122,5 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
         exporter.ExportScheduleData(OptimizedHeatProductionPath, optimizedSchedule.HeatProductionUnitSchedules);
         exporter.ExportScheduleData(OptimizedElectricityProductionPath, optimizedSchedule.ElectricityProductionUnitSchedules);
     }
+    */
 }
