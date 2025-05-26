@@ -56,7 +56,7 @@ public partial class MainWindowViewModel(IAssetManager assetManager, ISourceData
 
         for (int i = 0; i < 5; i++)
         {
-            
+
         }
     }
 
@@ -67,7 +67,7 @@ public partial class MainWindowViewModel(IAssetManager assetManager, ISourceData
     }
 
     [RelayCommand]
-    private void SetConfigPanelView()
+    internal void SetConfigPanelView()
     {
        
         CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel(assetManager, optimizer) };
