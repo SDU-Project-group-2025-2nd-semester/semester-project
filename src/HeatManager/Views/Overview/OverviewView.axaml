@@ -8,7 +8,7 @@
         x:Class="HeatManager.Views.Overview.OverviewView"
         x:DataType="overview:OverviewViewModel">
 
-    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+    <Grid Background="#FFDDDF" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="60*" /> 
             <RowDefinition Height="40*" /> 
@@ -17,12 +17,6 @@
             <ColumnDefinition Width="33*" /> 
             <ColumnDefinition Width="67*" /> 
         </Grid.ColumnDefinitions>
-
-        <!-- Red Background -->
-        <overview1:RedBackground Grid.RowSpan="2" Grid.ColumnSpan="2" />
-
-        <!-- White Background -->
-        <overview1:WhiteBackground Opacity="0.9" Grid.RowSpan="2" Grid.ColumnSpan="2" />
 
         <!-- Weekly Statistics Panel -->
         <overview1:WeeklyStatistics Grid.Row="0" Grid.Column="0" />

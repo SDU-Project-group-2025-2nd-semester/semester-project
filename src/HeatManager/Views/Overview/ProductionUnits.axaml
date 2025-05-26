@@ -9,7 +9,7 @@
     </UserControl.Styles>
 
     <Grid>
-        <Border Background="White" CornerRadius="15" Padding="10" Classes="dynamicMargin"> <!-- Margin="10,10,10,10" -->
+        <Border Background="#B3ffffff" CornerRadius="15" Padding="10" Classes="dynamicMargin"> 
             <StackPanel> 
                 <TextBlock Text="Production Units" Classes="heading" HorizontalAlignment="Left" Margin="10"/>
 
@@ -28,7 +28,7 @@
                                 </Border>
                             
                                 <!-- Grid for Icon, Name, and Status -->
-                                <Grid HorizontalAlignment="Center"> <!-- TO DO: Match the width of the picture -->
+                                <Grid HorizontalAlignment="Center">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
