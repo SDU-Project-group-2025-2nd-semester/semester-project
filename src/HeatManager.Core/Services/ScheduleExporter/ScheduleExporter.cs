@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace HeatManager.Core.Services.ScheduleExporter;
 
-public class ScheduleExporter
+public class ScheduleExporter : IScheduleExporter
 {
     public void ExportScheduleData<T>(string filePath, IEnumerable<T> records)
     {
@@ -16,6 +16,7 @@ public class ScheduleExporter
         {
             csv.WriteRecords(records);
         }
-        
+
     }
+    
 }

@@ -9,7 +9,7 @@
         x:DataType="viewModels:MainWindowViewModel"
         Title="HeatManager">
 
-        <SplitView IsPaneOpen = "True" DisplayMode="Inline" OpenPaneLength="300" 
+        <SplitView IsPaneOpen = "True" DisplayMode="Inline" OpenPaneLength="200" 
                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
        
             <SplitView.Pane>
@@ -29,7 +29,7 @@
 
 					<Button Content="Save Project" Command="{Binding SaveProjectCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
 
-                    <Button Content="Data Exporter" Command = "{Binding ExportDataCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
+                    <Button Content="Data Exporter" Command = "{Binding SetDataExportViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
 
 
 				</StackPanel>

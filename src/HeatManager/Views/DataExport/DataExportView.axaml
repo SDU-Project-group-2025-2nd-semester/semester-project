@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="HeatManager.Views.DataExport.DataExportView"
+             xmlns:vm="clr-namespace:HeatManager.ViewModels"
+             x:DataType="vm:DataExport.DataExportViewModel">
+  <StackPanel Margin="10 0 0 0">
+    
+    <TextBlock Text="Data Export" FontSize="24" Margin="10"/>
+
+    <TextBlock Text="Select the data you wish to export:" FontSize="16" Margin="10"/>
+
+    <CheckBox IsChecked="{Binding HeatProductionSummarized}">Summarized Optimized Heat Production</CheckBox>
+    
+    <CheckBox IsChecked = "{Binding HeatProductionHourly}">Optimized Hourly Heat Production</CheckBox>
+    
+    <CheckBox IsChecked = "{Binding ElectricityProductionSummarized}">Summarized Optimized Electricity Production</CheckBox>
+    
+    <CheckBox IsChecked = "{Binding ElectricityProductionHourly}">Optimized Hourly Electricity Production</CheckBox>
+
+    <Button Content = "Export Data" Command = "{Binding ExportDataCommand}" Margin="10 10 0 0"/>
+
+  </StackPanel>
+</UserControl>

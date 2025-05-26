@@ -9,11 +9,13 @@ using HeatManager.Core.Services.ProjectManagers;
 using HeatManager.Core.Services.ScheduleExporter;
 using HeatManager.Core.Services.SourceDataProviders;
 using HeatManager.ViewModels.ConfigPanel;
+using HeatManager.ViewModels.DataExport;
 using HeatManager.ViewModels.DemandPrice;
 using HeatManager.ViewModels.Optimizer;
 using HeatManager.ViewModels.Overview;
 using HeatManager.ViewModels.ProjectManager;
 using HeatManager.Views.ConfigPanel;
+using HeatManager.Views.DataExport;
 using HeatManager.Views.DemandPrice;
 using HeatManager.Views.Optimizer;
 using HeatManager.Views.Overview;
@@ -63,13 +65,9 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
     }
 
     [RelayCommand]
-    private async Task OpenProjectManagerWindow()
+    private void SetDataExportView()
     {
-        var dialog = ActivatorUtilities.CreateInstance<ProjectSelectionWindow>(serviceProvider);
-
-        dialog.DataContext = ActivatorUtilities.CreateInstance<ProjectSelectionViewModel>(serviceProvider, dialog);
-
-        await dialog.ShowDialog(window);
+        CurrentView = new DataExportView { DataContext = new DataExportViewModel(assetManager, optimizer, projectManager) };
     }
 
     [RelayCommand]
@@ -79,6 +77,18 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
     }
 
     [RelayCommand]
+    private async Task OpenProjectManagerWindow()
+    {
+        var dialog = ActivatorUtilities.CreateInstance<ProjectSelectionWindow>(serviceProvider);
+
+        dialog.DataContext = ActivatorUtilities.CreateInstance<ProjectSelectionViewModel>(serviceProvider, dialog);
+
+        await dialog.ShowDialog(window);
+    }
+
+    
+
+   /* [RelayCommand]
     private void ExportData()
     {
 
@@ -108,5 +118,5 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
 
         exporter.ExportScheduleData(OptimizedHeatProductionPath, optimizedSchedule.HeatProductionUnitSchedules);
         exporter.ExportScheduleData(OptimizedElectricityProductionPath, optimizedSchedule.ElectricityProductionUnitSchedules);
-    }
+    } */
 }
