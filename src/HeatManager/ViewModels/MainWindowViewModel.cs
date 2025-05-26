@@ -31,7 +31,7 @@ using HeatManager.ViewModels.DataExporter;
 namespace HeatManager.ViewModels;
 
 
-public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataProvider dataProvider, IOptimizer optimizer, IProjectManager projectManager, IDataLoader dataLoader, Window window, IServiceProvider serviceProvider) : ViewModelBase
+public partial class MainWindowViewModel(IAssetManager assetManager, ISourceDataProvider dataProvider, IOptimizer optimizer, IProjectManager projectManager, IDataLoader dataLoader, Window window, IServiceProvider serviceProvider) : ViewModelBase
 {
 
     [ObservableProperty]
@@ -42,6 +42,23 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
     //     // Set the default view to OverviewView
     //     CurrentView = new OverviewView { DataContext = new OverviewViewModel(this) };
     // }
+    [ObservableProperty]
+    private bool
+    isOverviewSelected = false, isOverviewNotSelected = true,
+    isOptimizerSelected = false, isOptimizerNotSelected = true,
+    isConfigSelected = false, isConfigNotSelected = true,
+    isGridSelected = false, isGridNotSelected = true,
+    isDataExportSelected = false, isDataExportNotSelected = true;
+
+    [RelayCommand]
+    private void SetButtonIcon()
+    {
+
+        for (int i = 0; i < 5; i++)
+        {
+            
+        }
+    }
 
     [RelayCommand]
     private async Task SaveProject()
@@ -50,11 +67,10 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
     }
 
     [RelayCommand]
-    internal void SetConfigPanelView()
+    private void SetConfigPanelView()
     {
-
+       
         CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel(assetManager, optimizer) };
-
     }
 
     [RelayCommand]
@@ -91,36 +107,5 @@ public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataP
         CurrentView = new DataExportView { DataContext = new DataExportViewModel(assetManager, optimizer, projectManager) };
     }
 
-    /*[RelayCommand]
-    private void ExportData()
-    {
-
-        assetManager.LoadUnits(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Models", "Producers", "ProductionUnits.json"));
-
-        optimizer.ChangeOptimizationSettings(new OptimizerSettings
-        {
-            AllUnits = assetManager.ProductionUnits.ToDictionary(x => x.Name, _ => true),
-        });
-        Schedule optimizedSchedule = optimizer.Optimize();
-        ScheduleExporter exporter = new ScheduleExporter();
-
-        string? dir = AppDomain.CurrentDomain.BaseDirectory;
-
-        while (dir != null && !Directory.Exists(Path.Combine(dir, "results")))
-        {
-            if (Directory.GetParent(dir) == null) break;
-            dir = Directory.GetParent(dir)?.FullName;
-        }
-
-        if (dir == null)
-            throw new DirectoryNotFoundException("Could not find the 'results' directory in any parent folder.");
-
-        string OptimizedHeatProductionPath = Path.Combine(dir, "results", "OptimizedHeatProduction.csv");
-
-        string OptimizedElectricityProductionPath = Path.Combine(dir, "results", "OptimizedElectricityProduction.csv");
-
-        exporter.ExportScheduleData(OptimizedHeatProductionPath, optimizedSchedule.HeatProductionUnitSchedules);
-        exporter.ExportScheduleData(OptimizedElectricityProductionPath, optimizedSchedule.ElectricityProductionUnitSchedules);
-    }
-    */
+    
 }
