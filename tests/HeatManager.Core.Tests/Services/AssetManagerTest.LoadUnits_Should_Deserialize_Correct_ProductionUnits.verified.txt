@@ -7,7 +7,8 @@
     Resource: {
       Name: Gas
     },
-    Emissions: 175.0
+    Emissions: 175.0,
+    IsActive: false
   },
   {
     Name: GB2,
@@ -17,7 +18,8 @@
     Resource: {
       Name: Gas
     },
-    Emissions: 130.0
+    Emissions: 130.0,
+    IsActive: false
   },
   {
     Name: OB1,
@@ -28,11 +30,11 @@
       Name: Oil,
       Type: Oil
     },
-    Emissions: 330.0
+    Emissions: 330.0,
+    IsActive: false
   },
   {
     MaxElectricity: 2.6,
-    MaxElectricitySafe: 2.6,
     Name: GM1,
     Cost: 990.0,
     MaxHeatProduction: 3.5,
@@ -40,17 +42,18 @@
     Resource: {
       Name: Gas
     },
-    Emissions: 650.0
+    Emissions: 650.0,
+    IsActive: false
   },
   {
     MaxElectricity: -6.0,
-    MaxElectricitySafe: -6.0,
     Name: HP1,
     Cost: 60.0,
     MaxHeatProduction: 6.0,
     Resource: {
       Name: Electricity,
       Type: Electricity
-    }
+    },
+    IsActive: false
   }
 ]

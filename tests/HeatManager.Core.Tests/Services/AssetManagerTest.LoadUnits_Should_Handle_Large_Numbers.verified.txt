@@ -6,6 +6,7 @@
     Resource: {
       Name: Gas
     },
-    Emissions: 9999999999.0
+    Emissions: 9999999999.0,
+    IsActive: false
   }
 ]
