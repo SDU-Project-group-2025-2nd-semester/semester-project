@@ -15,6 +15,9 @@ using System.ComponentModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 
+using HeatManager.Services.FileServices;
+using System.Threading.Tasks;
+using LiveChartsCore.SkiaSharpView.VisualElements;
 namespace HeatManager.ViewModels.OptimizerGraphs;
 
 /// <summary>
@@ -39,8 +42,6 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
     /// relevant to the optimization process.
     /// </summary>
     public OptimizerCalendarDatePickerViewModel? CalendarDatePicker { get; private set; }
-
-
 
     /// <summary>
     /// Gets or sets the selected date for filtering.
@@ -76,6 +77,16 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
     /// Gets or sets the chart margin.
     /// </summary>
     public Margin? Margin { get; set; }
+
+    /// <summary>
+    /// Chart exporter instance used to save chart visualizations to files.
+    /// </summary>
+    public ChartExporter chartExporter = new ChartExporter();
+
+    /// <summary>
+    /// Gets the filename prefix used when exporting the chart to an image file.
+    /// </summary>
+    protected abstract string FilenamePrefixOnExport { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="OptimizerHeatProductionGraphViewModel"/> class.
@@ -272,4 +283,64 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
         SKColors.Teal, SKColors.Navy, SKColors.Olive, SKColors.Aqua, SKColors.Silver,
         SKColors.Gold
     };
+
+    [RelayCommand]
+    public async Task ExportButton(object chartObject)
+    {
+        var currentChart = chartObject as LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart;
+
+        if (currentChart == null)
+        {
+            Console.WriteLine("ChartControl not found");
+            return;
+        }
+
+        try
+        {
+            // Create a new SKCartesianChart specifically for export
+            var skChart = new LiveChartsCore.SkiaSharpView.SKCharts.SKCartesianChart
+            {
+                Width = (int)currentChart.Bounds.Width,
+                Height = (int)currentChart.Bounds.Height,
+                Series = Series.ToArray(),
+                YAxes = YAxes
+            };
+
+            // Create X axes with the current visible range
+            var exportXAxes = new List<Axis>();
+            foreach (var axis in XAxes)
+            {
+                // Find the corresponding axis in the UI chart
+                var uiAxis = currentChart.XAxes.FirstOrDefault();
+                if (uiAxis != null)
+                {
+                    // Create a new axis with the visible range from the UI
+                    var newAxis = new Axis
+                    {
+                        Name = axis.Name,
+                        MinLimit = uiAxis.MinLimit,  // Use the current visible min
+                        MaxLimit = uiAxis.MaxLimit,  // Use the current visible max
+                        Labeler = axis.Labeler,
+                        TextSize = axis.TextSize,
+                        LabelsRotation = axis.LabelsRotation,
+                    };
+                    exportXAxes.Add(newAxis);
+                }
+                else
+                {
+                    exportXAxes.Add(axis);
+                }
+            }
+
+            // Set the X axes on the export chart
+            skChart.XAxes = exportXAxes.ToArray();
+
+            // Export the chart
+            await chartExporter.Export(skChart, FilenamePrefixOnExport);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error exporting chart: {ex.Message}");
+        }
+    }
 }

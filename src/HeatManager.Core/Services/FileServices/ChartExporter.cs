@@ -10,6 +10,12 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using HeatManager;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.Defaults;
+using LiveChartsCore.Measure;
+using LiveChartsCore.SkiaSharpView.VisualElements;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 namespace HeatManager.Services.FileServices;
 
@@ -69,7 +75,7 @@ public class ChartExporter() : IChartExporter
         }
     }
 
-    public async Task ExportControl<T>(T control, ISeries[]? series = null, object? xAxes = null, object? yAxes = null, string filenamePrefix = "Chart") where T : class
+    public async Task ExportControl<T>(T control, ISeries[]? series = null, object? xAxes = null, object? yAxes = null, string filenamePrefix = "Chart", string title = "") where T : class
     {
         try
         {
@@ -84,18 +90,48 @@ public class ChartExporter() : IChartExporter
                     Height = (int)cartesianChart.Bounds.Height,
                     Series = series ?? cartesianChart.Series,
                     XAxes = xAxes as ICartesianAxis[] ?? cartesianChart.XAxes as ICartesianAxis[],
-                    YAxes = yAxes as ICartesianAxis[] ?? cartesianChart.YAxes as ICartesianAxis[]
+                    YAxes = yAxes as ICartesianAxis[] ?? cartesianChart.YAxes as ICartesianAxis[],
+                    Title = new LabelVisual
+                    {
+                        Text = title,
+                        TextSize = 20,
+                        Padding = new LiveChartsCore.Drawing.Padding(15),
+                        Paint = new SolidColorPaint(SKColors.Black)
+                    }
                 };
 
             }
             else if (control is LiveChartsCore.SkiaSharpView.Avalonia.PieChart pieChart)
             {
-                skChart = new SKPieChart
+                var skPieChart = new SKPieChart
                 {
                     Width = (int)pieChart.Bounds.Width,
                     Height = (int)pieChart.Bounds.Height,
-                    Series = series ?? pieChart.Series
+                    Series = series?.ToArray() ?? pieChart.Series,
+
+                    InitialRotation = pieChart.InitialRotation,
+                    MaxValue = pieChart.MaxValue,
+                    MinValue = pieChart.MinValue,
+                    Title = new LabelVisual
+                    {
+                        Text = title,
+                        TextSize = 20,
+                        Padding = new LiveChartsCore.Drawing.Padding(15),
+                        Paint = new SolidColorPaint(SKColors.Black)
+                    }
                 };
+
+                // Ensure UI styling is applied
+                foreach (var serie in skPieChart.Series)
+                {
+                    if (serie is PieSeries<ObservableValue> pieSeries)
+                    {
+                        // Make sure data labels are visible
+                        pieSeries.DataLabelsPosition = PolarLabelsPosition.End;
+                        pieSeries.DataLabelsSize = 11;
+                    }
+                }
+                skChart = skPieChart;
 
             }
             else if (control is LiveChartsCore.SkiaSharpView.Avalonia.PolarChart polarChart)
@@ -106,7 +142,14 @@ public class ChartExporter() : IChartExporter
                     Height = (int)polarChart.Bounds.Height,
                     Series = series ?? polarChart.Series,
                     AngleAxes = polarChart.AngleAxes,
-                    RadiusAxes = polarChart.RadiusAxes
+                    RadiusAxes = polarChart.RadiusAxes,
+                    Title = new LabelVisual
+                    {
+                        Text = title,
+                        TextSize = 20,
+                        Padding = new LiveChartsCore.Drawing.Padding(15),
+                        Paint = new SolidColorPaint(SKColors.Black)
+                    }
                 };
 
             }

@@ -10,7 +10,7 @@ namespace HeatManager.ViewModels.OptimizerGraphs;
 
 internal class OptimizerResourceConsumptionViewModel : BaseOptimizerGraphViewModel
 {
-    public OptimizerResourceConsumptionViewModel(Schedule schedule, List<DateTime> OrderedTimes, DateTimeOffset? minDate) 
+    public OptimizerResourceConsumptionViewModel(Schedule schedule, List<DateTime> OrderedTimes, DateTimeOffset? minDate)
         : base(schedule, OrderedTimes, minDate) { }
 
     protected override void BuildChartSeries(List<HeatProductionUnitSchedule> schedules)
@@ -18,16 +18,21 @@ internal class OptimizerResourceConsumptionViewModel : BaseOptimizerGraphViewMod
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Gets the filename prefix used when exporting the chart to an image file.
+    /// </summary>
+    protected override string FilenamePrefixOnExport => "ResourceConsumptionChart";
+
     protected override void BuildChartSeries(Schedule schedule)
     {
         Series.Clear();
-        
+
         var resourceConsumption = schedule.ResourceConsumption;
 
-        int i = 0; 
+        int i = 0;
         foreach (var resource in resourceConsumption)
         {
-            i++; 
+            i++;
             var resourceType = resource.Key;
             var consumptionData = resource.Value;
 
