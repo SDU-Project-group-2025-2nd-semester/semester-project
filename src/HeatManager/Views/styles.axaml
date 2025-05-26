@@ -1,5 +1,5 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">    
 
     <!-- Heading Style -->
     <Style Selector="TextBlock.heading">
@@ -19,7 +19,7 @@
     <Style Selector="TextBlock.normaltext">
         <Setter Property="FontSize" Value="{DynamicResource NormalTextFontSize}" />
         <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="Margin" Value="0,0,0,25" />
+        <Setter Property="Margin" Value="0,0,0,15" />
     </Style>
 
     <!-- Button Style for the Pane -->

@@ -9,11 +9,11 @@
     </UserControl.Styles>
 
     <!-- Border for background and rounded edges -->
-    <Border Background="White" CornerRadius="15" Padding="10" Classes="dynamicMargin"> <!-- Margin="10" -->
+    <Border x:Name="WSBorder" Background="White" CornerRadius="15" Padding="10" Classes="dynamicMargin">
         <StackPanel>
             <TextBlock Text="Weekly Statistics" Classes="heading" HorizontalAlignment="Left" Margin="10"/>
 
-            <StackPanel Margin="40,0,0,0">
+            <StackPanel Margin="20,0,0,0">
                 <TextBlock Text="Heat demand" Classes="subheading" />
                 <TextBlock Text="{Binding HeatDemand, StringFormat='{}{0} MWh'}" Classes="normaltext" />
                 
