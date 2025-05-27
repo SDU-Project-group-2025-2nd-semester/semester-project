@@ -169,8 +169,8 @@ namespace HeatManager.Tests.Views
             dialog.Cost = "100";
             dialog.MaxHeatProduction = "15";
             dialog.MaxElectricity = "0";
-            dialog.ResourceConsumption = "1.0";
-            dialog.Emissions = "5.0";
+            dialog.ResourceConsumption = "1,0";
+            dialog.Emissions = "5,0";
             dialog.Resource = "Gas";
 
             dialog.GetType().GetMethod("IsUnitValid", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
