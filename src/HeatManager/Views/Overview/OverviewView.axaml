@@ -19,7 +19,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Weekly Statistics Panel -->
-        <overview1:WeeklyStatistics Grid.Row="0" Grid.Column="0" />
+        <overview1:WeeklyStatistics Grid.Row="0" Grid.Column="0" DataContext="{Binding WeeklyStatisticsVM}"/>
 
         <!-- Map Panel -->  
         <overview1:Map Grid.Row="0" Grid.Column="1" />

@@ -13,7 +13,6 @@ public partial class WeeklyStatistics : UserControl
     public WeeklyStatistics()
     {
         InitializeComponent();
-        DataContext = new WeeklyStatisticsViewModel();
 
         var border = this.FindControl<Border>("WSBorder");
         if (border != null)
@@ -22,7 +21,7 @@ public partial class WeeklyStatistics : UserControl
                 new AnonymousObserver<Rect>(bounds =>
                 {
                     // Calculate spacing based on height of the border
-                    double spacing = Math.Max(3, bounds.Height * 0.033);
+                    double spacing = Math.Max(3, bounds.Height * 0.04);
 
                     foreach (var tb in border.GetVisualDescendants().OfType<TextBlock>())
                     {

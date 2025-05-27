@@ -31,6 +31,8 @@ namespace HeatManager.ViewModels;
 public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataProvider dataProvider, IOptimizer optimizer, IProjectManager projectManager, IDataLoader dataLoader, Window window, IServiceProvider serviceProvider) : ViewModelBase
 {
 
+    public IOptimizer Optimizer { get; } = optimizer;
+
     [ObservableProperty]
     private UserControl? currentView;
 
