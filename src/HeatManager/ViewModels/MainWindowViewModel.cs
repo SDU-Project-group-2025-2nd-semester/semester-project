@@ -39,7 +39,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly IServiceProvider _serviceProvider;
     private readonly ProductionUnitsViewModel _productionUnitsViewModel;
 
-    public IOptimizer Optimizer { get; } = optimizer;
+    public IOptimizer Optimizer { get => _optimizer; }
 
     [ObservableProperty]
     private UserControl? currentView;
