@@ -33,7 +33,7 @@ public class AssetManager : IAssetManager
     /// </summary>
     public AssetManager()
     {
-        LoadUnits(DataFilePath);
+        //LoadUnits(DataFilePath);
     }
 
     /// <summary>

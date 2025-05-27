@@ -97,27 +97,37 @@ namespace HeatManager.ViewModels.ConfigPanel
         
         public void RefreshProductionUnitViewModels()
         {
-            // Get the current states from the actual units
-            Dictionary<string, bool> unitStates = _assetManager.ProductionUnits.ToDictionary(u => u.Name, u => u.IsActive);
+            // Store existing view models by unit name
+            var existingViewModels = ProductionUnitViewModels.ToDictionary(vm => vm.Name);
 
             // Clear and rebuild the collection
             ProductionUnitViewModels.Clear();
 
             foreach (var unit in _assetManager.ProductionUnits)
             {
-                var viewModel = new ProductionUnitViewModel(unit);
-                // Don't set IsActive directly as it triggers property changes
-                viewModel.PropertyChanged += (s, e) =>
+                ProductionUnitViewModel viewModel;
+                if (existingViewModels.TryGetValue(unit.Name, out var existingViewModel))
                 {
-                    if (e.PropertyName == nameof(ProductionUnitViewModel.IsActive))
+                    // Reuse existing view model to preserve state
+                    viewModel = existingViewModel;
+                }
+                else
+                {
+                    // Create new view model for new units
+                    viewModel = new ProductionUnitViewModel(unit);
+                    viewModel.PropertyChanged += (s, e) =>
                     {
-                        ReOptimize();
-                    }
-                };
+                        if (e.PropertyName == nameof(ProductionUnitViewModel.IsActive))
+                        {
+                            ReOptimize();
+                        }
+                    };
+                }
                 ProductionUnitViewModels.Add(viewModel);
             }
 
             // Update optimizer settings with the actual unit states
+            var unitStates = _assetManager.ProductionUnits.ToDictionary(u => u.Name, u => u.IsActive);
             _optimizer.ChangeOptimizationSettings(new OptimizerSettings(unitStates));
         }
 

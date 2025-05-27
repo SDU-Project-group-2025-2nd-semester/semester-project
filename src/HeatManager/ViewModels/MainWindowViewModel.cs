@@ -39,7 +39,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly IServiceProvider _serviceProvider;
     private readonly ProductionUnitsViewModel _productionUnitsViewModel;
 
-    public IOptimizer Optimizer { get; } = optimizer;
+    public IOptimizer Optimizer { get => _optimizer; }
 
     [ObservableProperty]
     private UserControl? currentView;
@@ -78,7 +78,17 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task SaveProject()
     {
-        await _projectManager.SaveProjectAsync();
+        try 
+        {
+            Console.WriteLine("Saving project...");
+            await _projectManager.SaveProjectAsync();
+            Console.WriteLine("Project saved successfully");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving project: {ex.Message}");
+            throw;
+        }
     }
 
 

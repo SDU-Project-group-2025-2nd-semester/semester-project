@@ -23,7 +23,13 @@ public class ProjectData
     public List<ElectricityProductionUnit> ElectricityProduction
     {
         get => ProductionUnits.OfType<ElectricityProductionUnit>().ToList();
-        set => ProductionUnits.AddRange(value);
+        set
+        {
+            // Remove existing electricity units
+            ProductionUnits.RemoveAll(u => u is ElectricityProductionUnit);
+            // Add new electricity units
+            ProductionUnits.AddRange(value);
+        }
     }
 
 
