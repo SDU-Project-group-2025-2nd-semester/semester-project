@@ -25,6 +25,7 @@
     <AvaloniaResource Include="Assets\Icons\overview-icon.png" />
     <AvaloniaResource Include="Assets\Icons\deselected-button-icon.png" />
     <AvaloniaResource Include="Assets\Icons\selected-button-icon.png" />
+    <AvaloniaResource Include="Assets\Icons\project-manager-icon.png" />
   </ItemGroup>
 
   <ItemGroup>

@@ -14,14 +14,14 @@
        
             <SplitView.Pane>
             
-                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin = "0,0,0,0">
+                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin = "0,0,0,0" Background="White">
             
                     <TextBlock Text="Menu" TextAlignment = "Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" FontSize="20" FontWeight="Bold"/>
 
                     <Button Command="{Binding SetOverviewViewCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="{Binding IsOverviewSelected}"/>
-                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="{Binding IsConfigSelected}"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible= "False"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="True"/>
                             <Image Source="avares://HeatManager/Assets/Icons/overview-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
                             <TextBlock Text="Overview"/>
                     </StackPanel>
@@ -29,8 +29,8 @@
                     
                     <Button Command="{Binding SetGridProductionViewCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="True"/>
-                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="False" />
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="False"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="True" />
                             <Image Source="avares://HeatManager/Assets/Icons/charts-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
                             <TextBlock Text="Grid &amp; Production"/>
                         </StackPanel>
@@ -38,7 +38,8 @@
 
                     <Button Command="{Binding SetConfigPanelViewCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" />
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="False"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="True" />
                             <Image Source="avares://HeatManager/Assets/Icons/config-panel-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
                             <TextBlock Text="Configuration Panel"/>
                         </StackPanel>
@@ -46,7 +47,8 @@
 
                     <Button Command="{Binding SetOptimizerViewCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" />
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="False"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="True" />
                             <Image Source="avares://HeatManager/Assets/Icons/optimizer-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
                             <TextBlock Text="Optimizer"/>
                         </StackPanel>
@@ -54,7 +56,8 @@
 
 					<Button Command="{Binding SaveProjectCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" />
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="False"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="True" />
                             <Image Source="avares://HeatManager/Assets/Icons/save-project-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
                             <TextBlock Text="Save Project"/>
                         </StackPanel>
@@ -62,9 +65,19 @@
 
                     <Button Command = "{Binding SetDataExportViewCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" />
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="False"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="True" />
                             <Image Source="avares://HeatManager/Assets/Icons/data-export-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
                             <TextBlock Text="Data Exporter"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command = "{Binding OpenProjectManagerWindowCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="False"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="True" />
+                            <Image Source="avares://HeatManager/Assets/Icons/project-manager-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
+                            <TextBlock Text="Project Manager"/>
                         </StackPanel>
                     </Button>
 

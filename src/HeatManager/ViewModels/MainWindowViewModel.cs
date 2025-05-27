@@ -43,22 +43,12 @@ public partial class MainWindowViewModel(IAssetManager assetManager, ISourceData
     //     CurrentView = new OverviewView { DataContext = new OverviewViewModel(this) };
     // }
     [ObservableProperty]
-    private bool
-    isOverviewSelected = false, isOverviewNotSelected = true,
-    isOptimizerSelected = false, isOptimizerNotSelected = true,
-    isConfigSelected = false, isConfigNotSelected = true,
-    isGridSelected = false, isGridNotSelected = true,
-    isDataExportSelected = false, isDataExportNotSelected = true;
+    private bool isOverviewSelected = true;
+    public string OverviewIconPath => isOverviewSelected
+    ? "avares://HeatManager/Assets/Icons/selected-button-icon.png"
+    : "avares://HeatManager/Assets/Icons/deselected-button-icon.png";
 
-    [RelayCommand]
-    private void SetButtonIcon()
-    {
 
-        for (int i = 0; i < 5; i++)
-        {
-
-        }
-    }
 
     [RelayCommand]
     private async Task SaveProject()
@@ -69,7 +59,7 @@ public partial class MainWindowViewModel(IAssetManager assetManager, ISourceData
     [RelayCommand]
     internal void SetConfigPanelView()
     {
-       
+
         CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel(assetManager, optimizer) };
     }
 
@@ -106,6 +96,7 @@ public partial class MainWindowViewModel(IAssetManager assetManager, ISourceData
     {
         CurrentView = new DataExportView { DataContext = new DataExportViewModel(assetManager, optimizer, projectManager) };
     }
+    
 
     
 }
