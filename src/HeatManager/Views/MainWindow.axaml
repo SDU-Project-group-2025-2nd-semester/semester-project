@@ -4,44 +4,64 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:HeatManager.ViewModels"
         xmlns:viewModels="clr-namespace:HeatManager.ViewModels"
+        xmlns:local="clr-namespace:HeatManager.Converters"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="HeatManager.Views.MainWindow"
         x:DataType="viewModels:MainWindowViewModel"
         Title="HeatManager">
 
-        <SplitView IsPaneOpen = "True" DisplayMode="Inline" OpenPaneLength="300" 
-                   VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-       
-            <SplitView.Pane>
-            
-                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin = "0,0,0,0">
-            
-                    <TextBlock Text="Menu" TextAlignment = "Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" FontSize="20" FontWeight="Bold"/>
+        <Window.Resources>
+            <local:BooleanToGridLengthConverter x:Key="BooleanToGridLengthConverter" />
+            <local:BooleanToContentConverter x:Key="BooleanToContentConverter" />
+            <local:BooleanToOrientationConverter x:Key="BooleanToOrientationConverter" />
+            <local:ContentToTooltipConverter x:Key="ContentToTooltipConverter" />
+        </Window.Resources>
 
-                    <Button Content="Overview" Command="{Binding SetOverviewViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
-            
-                    <Button Content="Grid &amp; Production" Command="{Binding SetGridProductionViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
+    <Grid>
+        <!-- Two columns: one for the pane and one for the content -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="{Binding IsPaneOpen, Converter={StaticResource BooleanToGridLengthConverter}, ConverterParameter='300,50'}" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-                    <Button Content="Configuration Panel" Command="{Binding SetConfigPanelViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
-                    <!-- Configuration panel is Asset Manager in the code, I will change the naming later -->
-            
-                    <Button Content="Optimiser" Command="{Binding SetOptimizerViewCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
+        <Border Grid.Column="0" Background="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0">
+                <Grid RowDefinitions="Auto,*,Auto">
+                        <!-- Top: Menu and navigation buttons -->
+                        <StackPanel Grid.Row="0">
+                                <ToggleButton IsChecked="{Binding IsPaneOpen}" Margin="10" Content="☰" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+                                <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Overview|🏠'}"
+                                        ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Overview'}"
+                                        Command="{Binding SetOverviewViewCommand}" Classes="reusable" />
+                                <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Grid &amp; Production|📊'}"
+                                        ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Grid &amp; Production'}"
+                                        Command="{Binding SetGridProductionViewCommand}" Classes="reusable" />
+                                <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Configuration Panel|⚙️'}"
+                                        ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Configuration Panel'}"
+                                        Command="{Binding SetConfigPanelViewCommand}" Classes="reusable" />
+                                <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Optimiser|📈'}"
+                                        ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Optimiser'}"
+                                        Command="{Binding SetOptimizerViewCommand}" Classes="reusable" />
+                        </StackPanel>
 
-					<Button Content="Save Project" Command="{Binding SaveProjectCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
+                        <!-- Spacer -->
+                        <Panel Grid.Row="1" />
 
-                    <Button Content="Data Exporter" Command = "{Binding ExportDataCommand}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10"/>
+                        <!-- Bottom: Save and Export buttons -->
+                        <StackPanel Grid.Row="2"
+                                    Orientation="{Binding IsPaneOpen, Converter={StaticResource BooleanToOrientationConverter}, ConverterParameter='Horizontal,Vertical'}"
+                                    HorizontalAlignment="Center"
+                                    Margin="0,0,0,10">
+                                <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Save Project|💾'}"
+                                        ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Save Project'}"
+                                        Command="{Binding SaveProjectCommand}" Classes="reusable"/> 
+                                <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Export Data|📤'}"
+                                        ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Export Data'}"
+                                        Command="{Binding ExportDataCommand}" Classes="reusable"/>
+                        </StackPanel>
+                </Grid>
+        </Border>
 
-
-				</StackPanel>
-        
-            </SplitView.Pane>
-       
-            <SplitView.Content>
-                
-                <ContentControl Content = "{Binding CurrentView}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-            
-            </SplitView.Content>
-    
-    </SplitView>
+        <ContentControl Grid.Column="1" Content="{Binding CurrentView}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+    </Grid>
 
 </Window>

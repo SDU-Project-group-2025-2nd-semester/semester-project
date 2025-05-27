@@ -13,6 +13,11 @@ internal partial class OptimizerCo2GraphViewModel : BaseOptimizerGraphViewModel
         : base(schedules, OrderedTimes, minDate) { }
 
 
+    /// <summary>
+    /// Gets the filename prefix used when exporting the chart to an image file.
+    /// </summary>
+    protected override string FilenamePrefixOnExport => "CO2Chart";
+
     protected override void BuildChartSeries(List<HeatProductionUnitSchedule> schedules)
     {
         Series.Clear();

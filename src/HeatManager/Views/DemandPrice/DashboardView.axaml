@@ -3,6 +3,7 @@
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
+        xmlns:buttons="clr-namespace:HeatManager.Design.Controls.Buttons"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:demandPrice="clr-namespace:HeatManager.ViewModels.DemandPrice"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,18 +12,37 @@
         x:DataType="demandPrice:GridProductionViewModel"
         mc:Ignorable="d">
 
-        <Grid RowDefinitions="Auto,*,100">
+        <Grid RowDefinitions="Auto,Auto,Auto,100"
+                Margin="20">
                 <StackPanel Grid.Row="0">
-                        <TextBlock Text="{Binding FirstViewText}" />
                         <TextBlock
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Text="{Binding PageTitle}" />
                 </StackPanel>
 
+                <StackPanel Grid.Row="1" HorizontalAlignment="Right">
+                        <!-- <buttons:ExportChartButton
+                                ButtonText="Export chart"
+                                Command="{Binding ExportButtonCommand}"
+                                CommandParameter="{Binding #mainChart}" /> -->
+
+                        <Button
+                                Command="{Binding ExportButton}"
+                                CommandParameter="{Binding ElementName=mainChart}">
+                                <StackPanel Orientation="Horizontal">
+                                        <Svg
+                                                Margin="0,0,5,0"
+                                                Width="20"
+                                                Path="/Assets/Icons/ic_fluent_arrow_exit_48_regular.svg" />
+                                        <TextBlock Text="Export" />
+                                </StackPanel>
+                        </Button>
+                </StackPanel>
+
                 <avalonia:CartesianChart
                         x:Name="mainChart"
-                        Grid.Row="1"
+                        Grid.Row="2"
                         Height="400"
                         DrawMargin="{Binding Margin}"
                         Series="{Binding ChartSeries}"
@@ -34,7 +54,7 @@
 
                 <avalonia:CartesianChart
                         x:Name="ScrollBarChart"
-                        Grid.Row="2"
+                        Grid.Row="3"
                         Height="80"
                         DrawMargin="{Binding Margin}"
                         PointerMoveCommand="{Binding PointerMoveCommand}"
@@ -46,10 +66,5 @@
                         XAxes="{Binding InvisibleX}"
                         YAxes="{Binding InvisibleY}" />
 
-                <Button
-                        Grid.Row="3"
-                        Command="{Binding ExportButton}"
-                        CommandParameter="{Binding ElementName=mainChart}"
-                        Content="Export Chart" />
         </Grid>
 </UserControl>

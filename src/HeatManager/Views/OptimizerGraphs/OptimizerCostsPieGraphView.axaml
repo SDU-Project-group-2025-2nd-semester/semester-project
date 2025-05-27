@@ -20,16 +20,30 @@
         </Grid.RowDefinitions>
 
         <!--  ========================== Chart Section ==========================  -->
+        <!--  Max Costs Chart  -->
         <TextBlock
             Grid.Row="0"
             Margin="10"
             VerticalAlignment="Center"
             FontSize="14"
             FontWeight="SemiBold"
-            Text="Max cost per Unit" />
+            Text="{Binding MaxCostTitle}"/>
 
-        <!--  Max Costs Chart -->
+        <Button
+            Grid.Row="0"
+            HorizontalAlignment="Right"
+            Command="{Binding ExportMaxCostButton}"
+            CommandParameter="{Binding ElementName=maxCostChart}">
+            <StackPanel Orientation="Horizontal">
+                <Svg
+                    Width="20"
+                    Margin="0,0,5,0"
+                    Path="/Assets/Icons/ic_fluent_arrow_exit_48_regular.svg" />
+            </StackPanel>
+        </Button>
+
         <avalonia:PieChart
+            x:Name="maxCostChart"
             Grid.Row="1"
             InitialRotation="-90"
             MaxAngle="350"
@@ -37,16 +51,30 @@
             MinValue="0"
             Series="{Binding MaxCostSeries}" />
 
+        <!--  Total Costs Chart  -->
         <TextBlock
             Grid.Row="2"
             Margin="10"
             VerticalAlignment="Center"
             FontSize="14"
             FontWeight="SemiBold"
-            Text="Total cost per Unit" />
+            Text="{Binding TotalCostTitle}"/>
 
-        <!--  Total Costs Chart -->
+        <Button
+            Grid.Row="2"
+            HorizontalAlignment="Right"
+            Command="{Binding ExportTotalCostButton}"
+            CommandParameter="{Binding ElementName=totalCostChart}">
+            <StackPanel Orientation="Horizontal">
+                <Svg
+                    Width="20"
+                    Margin="0,0,5,0"
+                    Path="/Assets/Icons/ic_fluent_arrow_exit_48_regular.svg" />
+            </StackPanel>
+        </Button>
+
         <avalonia:PieChart
+            x:Name="totalCostChart"
             Grid.Row="3"
             InitialRotation="-90"
             MaxAngle="350"

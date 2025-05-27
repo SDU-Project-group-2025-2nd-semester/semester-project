@@ -68,7 +68,7 @@
 
 									<!-- Production Cost -->
 									<TextBlock Text="Production Cost" FontWeight="Bold"/>
-									<TextBlock Text="{Binding Cost, StringFormat='{}{0} DKK/ MWh(th)'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>
+									<TextBlock Text="{Binding Cost, StringFormat='{}{0} DKK/ MWh'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>
 
 									<!-- Max Heat -->
 									<TextBlock Text="Max Heat" FontWeight="Bold"/>
@@ -80,13 +80,13 @@
 
 									<!-- CO2 Emissions -->
 									<TextBlock Text="CO2 Emissions" FontWeight="Bold"/>
-									<TextBlock Text="{Binding Emissions, StringFormat='{}{0} kg/ MWh(th)'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>
+									<TextBlock Text="{Binding Emissions, StringFormat='{}{0} kg/ MWh'}" Opacity="0.7" Margin="10,0,0,15" FontSize="12"/>
 
 									<!-- Consumption -->
 									<TextBlock Text="{Binding ResourceType, TargetNullValue='No', StringFormat='{}{0} Consumption'}" FontWeight="Bold"/>
 									<TextBlock Opacity="0.7" Margin="10,0,0,15" FontSize="12">
 										<Run Text="{Binding ResourceConsumption, FallbackValue=0}"></Run>
-										<Run Text="{Binding ResourceType, FallbackValue='N/A', StringFormat=' MWh({0})/ MWh(th)'}"></Run>
+										<Run Text="{Binding ResourceType, FallbackValue='N/A', StringFormat=' MWh({0})/ MWh'}"></Run>
 									</TextBlock>
 
 								</StackPanel>
