@@ -26,8 +26,9 @@ namespace HeatManager.ViewModels.DemandPrice;
 
 public partial class GridProductionViewModel : ViewModelBase
 {
+
     [ObservableProperty]
-    private string pageTitle = "Summer Data";
+    private string pageTitle = "Data";
 
     private bool _isDown = false;
     private readonly ObservableCollection<DateTimePoint> _heatValues = [];
@@ -90,6 +91,14 @@ public partial class GridProductionViewModel : ViewModelBase
 
         DateTime startDate = _heatValues.First().DateTime;
         DateTime endDate = initialViewSize < _heatValues.Count ? _heatValues[initialViewSize - 1].DateTime : _heatValues.Last().DateTime;
+
+        // Set pageTitle based on startDate
+        if (startDate.Month == 8 && startDate.Day == 11)
+            PageTitle = "Summer Data";
+        else if (startDate.Month == 3 && startDate.Day == 1)
+            PageTitle = "Winter Data";
+        else
+            PageTitle = "Data";
 
         TimeSpan timeSpan = TimeSpan.FromHours(1);
 

@@ -8,7 +8,6 @@ using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.Services.ProjectManagers;
 using HeatManager.Core.Services.ScheduleExporter;
 using HeatManager.Core.Services.SourceDataProviders;
-using HeatManager.Core.Services.AssetManagers;
 using HeatManager.ViewModels.ConfigPanel;
 using HeatManager.ViewModels.DemandPrice;
 using HeatManager.ViewModels.Optimizer;
@@ -32,8 +31,13 @@ namespace HeatManager.ViewModels;
 public partial class MainWindowViewModel(IAssetManager assetManager,ISourceDataProvider dataProvider, IOptimizer optimizer, IProjectManager projectManager, IDataLoader dataLoader, Window window, IServiceProvider serviceProvider) : ViewModelBase
 {
 
+    public IOptimizer Optimizer { get; } = optimizer;
+
     [ObservableProperty]
     private UserControl? currentView;
+
+    [ObservableProperty]
+    private bool isPaneOpen; 
 
     // public MainWindowViewModel() : this(default, default)
     // {

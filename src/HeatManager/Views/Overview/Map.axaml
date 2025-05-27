@@ -6,11 +6,11 @@
         <StyleInclude Source="/Views/styles.axaml" />
     </UserControl.Styles>
     
-    <Border Background="White" CornerRadius="15" Padding="10" Margin="10">
+    <Border Background="#B3ffffff" CornerRadius="15" Padding="10" Classes="dynamicMargin">
       <Grid>
           <Grid.RowDefinitions>
-              <RowDefinition Height="Auto" /> <!-- Row for the TextBlock -->
-              <RowDefinition Height="*" />    <!-- Row for the Image -->
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="*" />
           </Grid.RowDefinitions>
 
           <TextBlock Text="Heating Network" Classes="heading" HorizontalAlignment="Left" Margin="10" Grid.Row="0" />

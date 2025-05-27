@@ -20,7 +20,7 @@
                 <TextBox Text="{Binding UnitName}" />
 
                 <!-- Cost -->
-                <TextBlock Text="Cost (DKK/MWh(th))"/>
+                <TextBlock Text="Cost (DKK/MWh)"/>
                 <TextBox Text="{Binding Cost, TargetNullValue='0', FallbackValue='0'}"/>
 
                 <!-- Max Heat Production -->
@@ -28,7 +28,7 @@
                 <TextBox Text="{Binding MaxHeatProduction, TargetNullValue='0', FallbackValue='0'}"/>
 
                 <!-- Resource Consumption -->
-                <TextBlock Text="Resource Consumption (MWh/MWh(th))"/>
+                <TextBlock Text="Resource Consumption (MWh/MWh)"/>
                 <TextBox Text="{Binding ResourceConsumption, TargetNullValue='0', FallbackValue='0'}"/>
 
                 <!-- Resource -->
@@ -37,7 +37,7 @@
                           SelectedItem="{Binding Resource}" /> 
 
                 <!-- Emissions -->
-                <TextBlock Text="Emissions (kg/MWh(th))"/>
+                <TextBlock Text="Emissions (kg/MWh)"/>
                 <TextBox Text="{Binding Emissions, TargetNullValue='0', FallbackValue='0'}"/>
 
                 <!-- Max Electricity -->
