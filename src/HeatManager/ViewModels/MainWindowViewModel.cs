@@ -68,7 +68,17 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task SaveProject()
     {
-        await _projectManager.SaveProjectAsync();
+        try 
+        {
+            Console.WriteLine("Saving project...");
+            await _projectManager.SaveProjectAsync();
+            Console.WriteLine("Project saved successfully");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving project: {ex.Message}");
+            throw;
+        }
     }
 
 
