@@ -1,46 +1,50 @@
 <UserControl
+    x:Class="HeatManager.Views.OptimizerGraphs.OptimizerHeatProductionGraphView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:avalonia="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
     xmlns:optimizerGraphs="clr-namespace:HeatManager.ViewModels.OptimizerGraphs"
-    mc:Ignorable="d"
-    d:DesignWidth="800" d:DesignHeight="450"
-    x:Class="HeatManager.Views.OptimizerGraphs.OptimizerHeatProductionGraphView"
-    x:DataType="optimizerGraphs:OptimizerHeatProductionGraphViewModel">
+    xmlns:views="clr-namespace:HeatManager.Views.OptimizerGraphs"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="optimizerGraphs:OptimizerHeatProductionGraphViewModel"
+    mc:Ignorable="d">
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- ========================== Header Section ========================== -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+        <!--  ========================== Header Section ==========================  -->
+        <views:OptimizerHeaderSection Grid.Row="0" DataContext="{Binding}" />
 
-            <TextBlock Text="Navigate to Date:"
-                       FontWeight="SemiBold"
-                       FontSize="14"
-                       Margin="10"
-                       VerticalAlignment="Center"/>
+        <Button
+            Grid.Row="0"
+            Command="{Binding ExportButton}"
+            CommandParameter="{Binding ElementName=HeatProductionChart}">
+            <StackPanel Orientation="Horizontal">
+                <Svg
+                    Width="20"
+                    Margin="0,0,5,0"
+                    Path="/Assets/Icons/ic_fluent_arrow_exit_48_regular.svg" />
+                <TextBlock Text="Export" />
+            </StackPanel>
+        </Button>
 
-            <DatePicker Name="DatePickerControl"
-                        SelectedDate="{Binding SelectedDate, Mode=TwoWay}"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        Margin="10"/>
-        </StackPanel>
-
-        <!-- ========================== Chart Section ========================== -->
-        <avalonia:CartesianChart Grid.Row="1"
-                                 Series="{Binding Series}"
-                                 XAxes="{Binding XAxes}"
-                                 YAxes="{Binding YAxes}"
-                                 ZoomMode="X"
-                                 TooltipPosition="Top"
-                                 DrawMargin="{Binding Margin}"
-                                 UpdateStartedCommand="{Binding ChartUpdatedCommand}"/>
+        <!--  ========================== Chart Section ==========================  -->
+        <avalonia:CartesianChart
+            x:Name="HeatProductionChart"
+            Grid.Row="1"
+            DrawMargin="{Binding Margin}"
+            Series="{Binding Series}"
+            TooltipPosition="Top"
+            UpdateStartedCommand="{Binding ChartUpdatedCommand}"
+            XAxes="{Binding XAxes}"
+            YAxes="{Binding YAxes}"
+            ZoomMode="X" />
 
     </Grid>
 </UserControl>
