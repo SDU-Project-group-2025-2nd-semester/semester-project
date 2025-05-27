@@ -84,11 +84,11 @@ public class ChartExporter() : IChartExporter
 
             if (control is LiveChartsCore.SkiaSharpView.Avalonia.CartesianChart cartesianChart)
             {
-                skChart = new SKCartesianChart
+                var CartesianskChart = new SKCartesianChart
                 {
                     Width = (int)cartesianChart.Bounds.Width,
                     Height = (int)cartesianChart.Bounds.Height,
-                    Series = series ?? cartesianChart.Series,
+                    Series = series?.ToArray() ?? cartesianChart.Series,
                     XAxes = xAxes as ICartesianAxis[] ?? cartesianChart.XAxes as ICartesianAxis[],
                     YAxes = yAxes as ICartesianAxis[] ?? cartesianChart.YAxes as ICartesianAxis[],
                     Title = new LabelVisual
@@ -99,6 +99,7 @@ public class ChartExporter() : IChartExporter
                         Paint = new SolidColorPaint(SKColors.Black)
                     }
                 };
+                skChart = CartesianskChart;
 
             }
             else if (control is LiveChartsCore.SkiaSharpView.Avalonia.PieChart pieChart)
@@ -160,11 +161,67 @@ public class ChartExporter() : IChartExporter
             if (skChart != null)
             {
                 await Export(skChart, filenamePrefix);
+                await ShowStatusNotification("Chart exported successfully", false);
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error exporting SKChart: {ex.Message}");
+            await ShowStatusNotification("Error exporting Chart", true);
+        }
+    }
+
+    /// <summary>
+    /// Displays a temporary notification popup with a status message.
+    /// </summary>
+    /// <param name="message">The message to display in the notification.</param>
+    /// <param name="isError">Whether the notification represents an error state (true) or success state (false).</param>
+    /// <remarks>
+    /// The notification appears near the bottom center of the main application window for 1.5 seconds
+    /// before automatically closing. The notification styling (colors, borders) changes based on whether
+    /// it represents an error or success state.
+    /// </remarks>
+    private async Task ShowStatusNotification(string message, bool isError)
+    {
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            var mainWindow = desktop.MainWindow;
+            if (mainWindow != null)
+            {
+                //Custom text 
+                var TextBlock = new Avalonia.Controls.TextBlock
+                {
+                    Text = message,
+                    FontSize = 14,
+                    Foreground = isError ? Avalonia.Media.Brushes.DarkRed : Avalonia.Media.Brushes.DarkGreen,
+                    TextAlignment = Avalonia.Media.TextAlignment.Center,
+                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                    HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                    Margin = new Thickness(10)
+                };
+
+                //notification popup
+                var popup = new Avalonia.Controls.Window
+                {
+                    Title = isError ? "Error" : "Success",
+                    Content = TextBlock,
+                    Width = 400,
+                    Height = 50,
+                    WindowStartupLocation = Avalonia.Controls.WindowStartupLocation.CenterOwner,
+                    Background = isError ? Avalonia.Media.Brushes.LightPink : Avalonia.Media.Brushes.LightGreen,
+                    SystemDecorations = Avalonia.Controls.SystemDecorations.BorderOnly,
+                    CanResize = false,
+                    ShowInTaskbar = false,
+                    Topmost = true
+                };
+
+                popup.Show(mainWindow);
+                popup.Position = new PixelPoint((int)(mainWindow.Position.X + mainWindow.Width / 2), (int)(mainWindow.Position.Y + mainWindow.Height));
+
+                // Auto-close
+                await Task.Delay(1500);
+                popup.Close();
+            }
         }
     }
 }

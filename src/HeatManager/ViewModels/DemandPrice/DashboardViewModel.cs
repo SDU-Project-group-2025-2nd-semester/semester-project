@@ -218,7 +218,7 @@ public partial class GridProductionViewModel : ViewModelBase
             Console.WriteLine("ChartControl not found");
             return;
         }
-        await chartExporter.ExportControl(mainChart, ChartSeries, ScrollableAxes, YAxes, _filenamePrefixOnExport);
+        await chartExporter.ExportControl(mainChart, ChartSeries, ScrollableAxes, YAxes, _filenamePrefixOnExport, PageTitle);
     }
 
 }

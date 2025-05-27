@@ -297,15 +297,6 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
 
         try
         {
-            // Create a new SKCartesianChart specifically for export
-            var skChart = new LiveChartsCore.SkiaSharpView.SKCharts.SKCartesianChart
-            {
-                Width = (int)currentChart.Bounds.Width,
-                Height = (int)currentChart.Bounds.Height,
-                Series = Series.ToArray(),
-                YAxes = YAxes
-            };
-
             // Create X axes with the current visible range
             var exportXAxes = new List<Axis>();
             foreach (var axis in XAxes)
@@ -332,11 +323,8 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
                 }
             }
 
-            // Set the X axes on the export chart
-            skChart.XAxes = exportXAxes.ToArray();
-
             // Export the chart
-            await chartExporter.Export(skChart, FilenamePrefixOnExport);
+            await chartExporter.ExportControl(currentChart, Series.ToArray(), exportXAxes.ToArray(), YAxes.ToArray(), FilenamePrefixOnExport, GetYAxisTitle());
         }
         catch (Exception ex)
         {
