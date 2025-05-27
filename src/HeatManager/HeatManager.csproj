@@ -24,6 +24,7 @@
     <PackageReference Include="Avalonia" Version="11.2.8" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.8" />
     <PackageReference Include="Avalonia.Desktop" Version="11.2.8" />
+    <PackageReference Include="Avalonia.Headless" Version="11.2.8" />
     <PackageReference Include="Avalonia.Svg.Skia" Version="11.2.8" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.8" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.8" />
@@ -65,5 +66,11 @@
     </Compile>
 
   </ItemGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>HeatManager.Tests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
 
 </Project>
