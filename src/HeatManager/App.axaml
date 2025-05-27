@@ -9,10 +9,12 @@
     <Application.Styles>
         <FluentTheme />
 		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+        <StyleInclude Source="avares://HeatManager/Views/styles.axaml" />
     </Application.Styles>
 
     <Application.Resources>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <converters:BoolToStatusConverter x:Key="BoolToStatusConverter"/>
-    </Application.Resources>        
+        <x:Double x:Key="WeeklyStatisticsSpacing">15</x:Double>
+    </Application.Resources>
 </Application>

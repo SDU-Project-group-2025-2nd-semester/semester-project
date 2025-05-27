@@ -22,6 +22,10 @@ internal partial class OptimizerHeatProductionGraphViewModel : BaseOptimizerGrap
     {
     }
 
+    /// <summary>
+    /// Gets the filename prefix used when exporting the chart to an image file.
+    /// </summary>
+    protected override string FilenamePrefixOnExport => "HeatProductionChart";
 
     /// <summary>
     /// Builds the chart series based on provided schedule data.

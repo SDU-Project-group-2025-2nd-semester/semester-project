@@ -9,26 +9,24 @@
     </UserControl.Styles>
 
     <!-- Border for background and rounded edges -->
-    <Border Background="White" CornerRadius="15" Padding="10" Margin="10">
+    <Border x:Name="WSBorder" Background="#B3ffffff" CornerRadius="15" Padding="10" Classes="dynamicMargin">
         <StackPanel>
-            <TextBlock Text="Weekly Statistics" Classes="heading" HorizontalAlignment="Left" Margin="10"/>
+            <!-- This was called 'Weekly Statistics' before; I changed the title but won't change the naming in the code -->
+            <TextBlock Text="14-Day Statistics" Classes="heading" HorizontalAlignment="Left" Margin="10,10,10,20"/>
 
-            <StackPanel Margin="40,0,0,0">
+            <StackPanel Margin="20,0,0,0">
                 <TextBlock Text="Heat demand" Classes="subheading" />
-                <TextBlock Text="{Binding HeatDemand, StringFormat='{}{0} MWh'}" Classes="normaltext" />
-                
-                <TextBlock Text="Maximum electricity production" Classes="subheading" />
-                <TextBlock Text="{Binding MaxProduction, StringFormat='{}+{0} MWh'}" Classes="normaltext" />
+                <TextBlock Text="{Binding HeatDemand, StringFormat='{}{0} MWh'}" Classes="normaltext" /> <!-- Bind Sum of Total Heat Production -->
 
-                <TextBlock Text="Peak electricity consumption" Classes="subheading" />
-                <TextBlock Text="{Binding PeakConsumption, StringFormat='{}-{0} MWh'}" Classes="normaltext" />
+                <TextBlock Text="Resource Consumption" Classes="subheading" />
+                <TextBlock Text="{Binding ResourceConsumption, StringFormat='{}{0} MWh'}" Classes="normaltext" />
+
+                <TextBlock Text="CO2 Emissions" Classes="subheading" />
+                <TextBlock Text="{Binding Co2Emissions, StringFormat='{}{0} kg'}" Classes="normaltext" />
 
                 <TextBlock Text="Expenses" Classes="subheading" />
                 <TextBlock Text="{Binding Expenses, StringFormat='{}{0} DKK'}" Classes="normaltext" />
-
-                <TextBlock Text="Profit" Classes="subheading" />
-                <TextBlock Text="{Binding Profit, StringFormat='{}{0} DKK'}" Classes="normaltext" />                                        
-            </StackPanel>            
+            </StackPanel>          
         </StackPanel>
     </Border>
 </UserControl>

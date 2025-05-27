@@ -9,7 +9,6 @@ using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.Services.ProjectManagers;
 using HeatManager.Core.Services.ScheduleExporter;
 using HeatManager.Core.Services.SourceDataProviders;
-using HeatManager.Core.Services.AssetManagers;
 using HeatManager.ViewModels.ConfigPanel;
 using HeatManager.ViewModels.DemandPrice;
 using HeatManager.ViewModels.Optimizer;
@@ -40,6 +39,8 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly IServiceProvider _serviceProvider;
     private readonly ProductionUnitsViewModel _productionUnitsViewModel;
 
+    public IOptimizer Optimizer { get; } = optimizer;
+
     [ObservableProperty]
     private UserControl? currentView;
 
@@ -64,6 +65,15 @@ public partial class MainWindowViewModel : ViewModelBase
         _optimizer.ChangeOptimizationSettings(new OptimizerSettings());
         _productionUnitsViewModel = new ProductionUnitsViewModel(_assetManager);
     }
+    
+    // public MainWindowViewModel() : this(default, default)
+    // {
+    //     // Set the default view to OverviewView
+    //     CurrentView = new OverviewView { DataContext = new OverviewViewModel(this) };
+    // }
+    
+    [ObservableProperty]
+    private bool isPaneOpen; 
 
     [RelayCommand]
     private async Task SaveProject()
