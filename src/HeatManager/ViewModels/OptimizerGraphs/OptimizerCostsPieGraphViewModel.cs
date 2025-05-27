@@ -14,8 +14,11 @@ using LiveChartsCore.SkiaSharpView.Extensions;
 using SkiaSharp;
 using CommunityToolkit.Mvvm.Input;
 
+using HeatManager.Services.FileServices;
 using HeatManager.Core.Models.Schedules;
 using HeatManager.ViewModels.Optimizer;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 
 namespace HeatManager.ViewModels.OptimizerGraphs;
@@ -24,6 +27,17 @@ internal partial class OptimizerCostsPieGraphViewModel : ViewModelBase
 {
     public ObservableCollection<ISeries> MaxCostSeries { get; set; } = new();
     public ObservableCollection<ISeries> TotalCostSeries { get; set; } = new();
+
+    [ObservableProperty]
+    private string _maxCostTitle = "Maximum cost per Unit";
+
+    [ObservableProperty]
+    private string _totalCostTitle = "Total cost per Unit";
+
+    /// <summary>
+    /// Chart exporter instance used to save chart visualizations to files.
+    /// </summary>
+    public ChartExporter chartExporter = new ChartExporter();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="OptimizerCostsPieChartsViewModel"/> class.
@@ -121,4 +135,21 @@ internal partial class OptimizerCostsPieGraphViewModel : ViewModelBase
         SKColors.Teal, SKColors.Navy, SKColors.Olive, SKColors.Aqua, SKColors.Silver,
         SKColors.Gold
     };
+
+    [RelayCommand]
+    public async Task ExportMaxCostButton(object chartObject)
+    {
+        var pieChart = chartObject as LiveChartsCore.SkiaSharpView.Avalonia.PieChart;
+        if (pieChart == null) return;
+
+        await chartExporter.ExportControl(pieChart, MaxCostSeries.ToArray(), null, null, "MaxCost", MaxCostTitle);
+    }
+
+    public async Task ExportTotalCostButton(object chartObject)
+    {
+        var pieChart = chartObject as LiveChartsCore.SkiaSharpView.Avalonia.PieChart;
+        if (pieChart == null) return;
+
+        await chartExporter.ExportControl(pieChart, TotalCostSeries.ToArray(), null, null, "TotalCost", TotalCostTitle);
+    }
 }
