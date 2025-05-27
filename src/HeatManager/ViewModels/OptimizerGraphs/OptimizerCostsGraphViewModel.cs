@@ -14,6 +14,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using HeatManager.Services.FileServices;
+using System.Threading.Tasks;
+using LiveChartsCore.Defaults;
 
 namespace HeatManager.ViewModels.OptimizerGraphs;
 
@@ -26,6 +29,11 @@ internal partial class OptimizerCostsGraphViewModel : BaseOptimizerGraphViewMode
     /// Get the ViewModel for the Pie charts
     /// </summary>
     public OptimizerCostsPieGraphViewModel PieGraphViewModel { get; }
+
+    /// <summary>
+    /// Gets the filename prefix used when exporting the chart to an image file.
+    /// </summary>
+    protected override string FilenamePrefixOnExport => "CostsChart";
 
     /// <summary>
     /// Constructor of the <see cref="OptimizerCostsGraphViewModel"/> partial class
@@ -101,5 +109,4 @@ internal partial class OptimizerCostsGraphViewModel : BaseOptimizerGraphViewMode
     /// Gets the Y-axis title - each subclass must implement this
     /// </summary>
     protected override string GetYAxisTitle() => "Cost [ Dkk ]";
-
 }
