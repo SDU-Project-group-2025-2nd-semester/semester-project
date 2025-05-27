@@ -24,12 +24,12 @@
         <!-- Map Panel -->  
         <overview1:Map Grid.Row="0" Grid.Column="1" />
 
-        <!-- Production Units Panel 
-        <local:ProductionUnits Grid.Row="1" Grid.ColumnSpan="2" />  -->
-        <Button Command="{Binding NavigateToConfigPanelCommand}" Grid.Row="1" Grid.ColumnSpan="2" 
+        <!-- Production Units Panel -->
+        <overview1:ProductionUnits Grid.Row="1" Grid.ColumnSpan="2" DataContext="{Binding ProductionUnitsViewModel}"/>  
+        <!-- <Button Command="{Binding NavigateToConfigPanelCommand}" Grid.Row="1" Grid.ColumnSpan="2" 
                 Background="Transparent" BorderBrush="Transparent">
             <overview1:ProductionUnits />
-        </Button>
+        </Button> -->
     </Grid>
 
 </UserControl>

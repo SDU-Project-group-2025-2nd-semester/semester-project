@@ -18,6 +18,7 @@
     <AvaloniaResource Include="Assets\Icons\circle-xmark-solid.png" />
     <AvaloniaResource Include="Assets\units.png" />
     <AvaloniaResource Include="Views\styles.axaml" />
+    <ProjectReference Include="..\HeatManager.Core\HeatManager.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -63,6 +64,10 @@
 
     <Compile Update="Views\DemandPrice\DashboardGraph.axaml.cs">
       <DependentUpon>DashboardGraph.axaml</DependentUpon>
+    </Compile>
+
+    <Compile Update="Views\OptimizerGraphs\OptimizerHeaderSection.axaml.cs">
+      <DependentUpon>OptimizerHeaderSection.axaml</DependentUpon>
     </Compile>
 
   </ItemGroup>

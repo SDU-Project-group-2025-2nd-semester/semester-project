@@ -10,7 +10,8 @@
         Resource: {
           Name: Oil,
           Type: Oil
-        }
+        },
+        IsActive: false
       }
     ],
     Resources: [

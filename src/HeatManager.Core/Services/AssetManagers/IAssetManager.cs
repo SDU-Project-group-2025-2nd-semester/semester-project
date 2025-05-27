@@ -1,39 +1,40 @@
+using HeatManager.Core.Models;
 using HeatManager.Core.Models.Producers;
 using System.Collections.ObjectModel;
 
 namespace HeatManager.Core.Services.AssetManagers;
 
 /// <summary>
-/// Defines functionality for managing asset units in the system,
-/// including loading, adding, and removing production units.
+/// Interface for managing production units in the application.
 /// </summary>
 public interface IAssetManager
 {
     /// <summary>
-    /// Gets the collection of all production units.
+    /// Collection of all production units (heat and electricity).
     /// </summary>
-    public ObservableCollection<ProductionUnitBase> ProductionUnits { get; }
+    ObservableCollection<ProductionUnitBase> ProductionUnits { get; set; }
 
     /// <summary>
-    /// Gets the collection of heat production units.
+    /// Subset of ProductionUnits that includes only HeatProductionUnits.
+    /// Used for parity with the ProjectManager.
     /// </summary>
-    public ObservableCollection<HeatProductionUnit> HeatProductionUnits { get; }
+    ObservableCollection<HeatProductionUnit> HeatProductionUnits { get; }
 
     /// <summary>
-    /// Loads production units from a specified file.
+    /// Loads production units from a JSON file at the specified path.
     /// </summary>
-    /// <param name="filepath">The path to the file containing unit data.</param>
-    public void LoadUnits(string filepath);
+    /// <param name="filepath">The full path to the JSON file.</param>
+    void LoadUnits(string filepath);
 
     /// <summary>
-    /// Adds a new production unit to the collection.
+    /// Adds a production unit to the collection.
     /// </summary>
     /// <param name="unit">The production unit to add.</param>
-    public void AddUnit(ProductionUnitBase unit);
+    void AddUnit(ProductionUnitBase unit);
 
     /// <summary>
-    /// Removes an existing production unit from the collection.
+    /// Removes a production unit from the collection.
     /// </summary>
     /// <param name="unit">The production unit to remove.</param>
-    public void RemoveUnit(ProductionUnitBase unit);
+    void RemoveUnit(ProductionUnitBase unit);
 }

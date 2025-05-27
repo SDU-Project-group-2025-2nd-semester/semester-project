@@ -13,13 +13,30 @@
         <Setter Property="FontSize" Value="{DynamicResource SubheadingFontSize}" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Margin" Value="0,0,0,5" />
-    </Style>
+    </Style>  
 
     <!-- Normal Text Style -->
     <Style Selector="TextBlock.normaltext">
         <Setter Property="FontSize" Value="{DynamicResource NormalTextFontSize}" />
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="Margin" Value="0,0,0,15" />
+    </Style>
+
+    <!-- For the manual enabling/disabling -->
+    <Style Selector="ToggleButton Image.icon-active">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+
+    <Style Selector="ToggleButton:checked Image.icon-active">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+
+    <Style Selector="ToggleButton Image.icon-offline">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+
+    <Style Selector="ToggleButton:checked Image.icon-offline">
+        <Setter Property="IsVisible" Value="False" />
     </Style>
 
     <!-- Button Style for the Pane -->

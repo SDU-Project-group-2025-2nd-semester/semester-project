@@ -6,7 +6,8 @@
     Resource: {
       Name: Gas
     },
-    Emissions: 50.0
+    Emissions: 50.0,
+    IsActive: false
   },
   {
     Name: GB1,
@@ -15,6 +16,7 @@
     Resource: {
       Name: Gas
     },
-    Emissions: 50.0
+    Emissions: 50.0,
+    IsActive: false
   }
 ]

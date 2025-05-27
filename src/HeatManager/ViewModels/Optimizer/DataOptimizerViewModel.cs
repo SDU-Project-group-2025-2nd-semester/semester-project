@@ -1,6 +1,16 @@
-﻿using System;
+using CommunityToolkit.Mvvm.Input;
+using HeatManager.Core.Services;
+using HeatManager.Core.Services.Optimizers;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
+using System.Collections.ObjectModel;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+
 using System.Linq;
 using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.Models.Schedules;
@@ -21,6 +31,8 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
     private Schedule _schedule;
     private List<HeatProductionUnitSchedule> schedules;
     private List<DateTime> orderedTimes;
+    
+    private OptimizerSettings _settings;
 
     /// <summary>
     /// Gets or sets the current view displayed in the UI.
@@ -118,6 +130,7 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
     
     private void SetResourceConsumptionGraphView()
     {
+        _schedule = _optimizer.Optimize();
         CurrentView = new OptimizerResourceConsumptionView() { DataContext = new OptimizerResourceConsumptionViewModel(_schedule, orderedTimes, MinDate) };
     }
 
@@ -140,7 +153,6 @@ internal partial class DataOptimizerViewModel : ViewModelBase, IDataOptimizerVie
     /// <param name="value">The newly selected view type.</param>
     partial void OnSelectedViewChanged(OptimizerViewType? value)
     {
-
         switch (value)
         {
             case OptimizerViewType.HeatProductionGraph:

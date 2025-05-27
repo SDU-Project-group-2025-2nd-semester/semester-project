@@ -1,7 +1,13 @@
-﻿using HeatManager.Core.Models.Producers;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using HeatManager.Core.Models.Producers;
+using HeatManager.Core.Services;
 using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.Optimizers;
 using System.Collections.ObjectModel;
+using System.Linq;
+using HeatManager.ViewModels.Overview;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace HeatManager.ViewModels.ConfigPanel
 {
@@ -12,16 +18,50 @@ namespace HeatManager.ViewModels.ConfigPanel
     {
         private readonly IAssetManager _assetManager;
         private readonly IOptimizer _optimizer;
+        private readonly ProductionUnitsViewModel _productionUnitsViewModel;
+        public ObservableCollection<ProductionUnitViewModel> ProductionUnitViewModels { get; }
 
-        /// <summary>
-        /// Observable collection of production units managed by the asset manager.
-        /// </summary>
-        internal ObservableCollection<ProductionUnitBase> Units => _assetManager.ProductionUnits;
-
-        public AssetManagerViewModel(IAssetManager assetManager, IOptimizer optimizer)
+        public AssetManagerViewModel(IAssetManager assetManager, IOptimizer optimizer, ProductionUnitsViewModel productionUnitsViewModel)
         {
             _assetManager = assetManager;
             _optimizer = optimizer;
+            _productionUnitsViewModel = productionUnitsViewModel; 
+            
+            ProductionUnitViewModels = new ObservableCollection<ProductionUnitViewModel>();
+            
+            // Subscribe to changes in the AssetManager's ProductionUnits collection
+            ((INotifyCollectionChanged)_assetManager.ProductionUnits).CollectionChanged += (s, e) =>
+            {
+                RefreshProductionUnitViewModels();
+            };
+            
+            var units = _assetManager.ProductionUnits;
+            foreach (var unit in units)
+            {
+                var viewModel = new ProductionUnitViewModel(unit);
+                viewModel.PropertyChanged += (s, e) =>
+                {
+                    if (e.PropertyName == nameof(ProductionUnitViewModel.IsActive))
+                    {
+                        ReOptimize();
+                    }
+                };
+                ProductionUnitViewModels.Add(viewModel);
+            }
+
+            _assetManager.ProductionUnits.CollectionChanged += AssetManagerProductionUnits_CollectionChanged;
+            
+            // Initial population of the collection
+            RefreshProductionUnitViewModels();
+
+            // Subscribe to changes in ProductionUnitsViewModel
+            _productionUnitsViewModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(ProductionUnitsViewModel.ProductionUnits))
+                {
+                    ReOptimize();
+                }
+            };
         }
 
         /// <summary>
@@ -31,6 +71,7 @@ namespace HeatManager.ViewModels.ConfigPanel
         {
             _assetManager.RemoveUnit(unit);
             _optimizer.UpdateProductionUnits(_assetManager);
+            RefreshProductionUnitViewModels();
         }
 
         /// <summary>
@@ -40,6 +81,7 @@ namespace HeatManager.ViewModels.ConfigPanel
         {
             _assetManager.AddUnit(unit);
             _optimizer.UpdateProductionUnits(_assetManager);
+            RefreshProductionUnitViewModels();
         }
 
         /// <summary>
@@ -50,7 +92,47 @@ namespace HeatManager.ViewModels.ConfigPanel
             _assetManager.RemoveUnit(unitBase);
             _assetManager.AddUnit(unit);
             _optimizer.UpdateProductionUnits(_assetManager);
+            RefreshProductionUnitViewModels();
+        }
+        
+        public void RefreshProductionUnitViewModels()
+        {
+            // Get the current states from the actual units
+            Dictionary<string, bool> unitStates = _assetManager.ProductionUnits.ToDictionary(u => u.Name, u => u.IsActive);
+
+            // Clear and rebuild the collection
+            ProductionUnitViewModels.Clear();
+
+            foreach (var unit in _assetManager.ProductionUnits)
+            {
+                var viewModel = new ProductionUnitViewModel(unit);
+                // Don't set IsActive directly as it triggers property changes
+                viewModel.PropertyChanged += (s, e) =>
+                {
+                    if (e.PropertyName == nameof(ProductionUnitViewModel.IsActive))
+                    {
+                        ReOptimize();
+                    }
+                };
+                ProductionUnitViewModels.Add(viewModel);
+            }
+
+            // Update optimizer settings with the actual unit states
+            _optimizer.ChangeOptimizationSettings(new OptimizerSettings(unitStates));
+        }
+
+        // Handler for AssetManager ProductionUnits CollectionChanged
+        private void AssetManagerProductionUnits_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            RefreshProductionUnitViewModels();
+        }
+
+        public void ReOptimize()
+        {
+            var unitStates = _assetManager.ProductionUnits.ToDictionary(u => u.Name, u => u.IsActive);
+            _optimizer.ChangeOptimizationSettings(new OptimizerSettings(unitStates));
         }
     }
 }
+
 

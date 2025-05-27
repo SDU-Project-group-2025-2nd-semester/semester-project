@@ -7,26 +7,20 @@ namespace HeatManager.Core.Tests.Services;
 public class OptimizerStrategyTest
 {
     [Fact]
-    public void Constructor_WithPriceOptimizationTrue_SetsPriceOptimization()
+    public void Constructor_WithPriceOptimization_SetsPriceOptimization()
     {
-        // Arrange
-        bool priceOptimization = true;
-
         // Act
-        var strategy = new OptimizerStrategy(priceOptimization);
+        var strategy = new OptimizerStrategy(OptimizationType.PriceOptimization);
 
         // Assert
         Assert.Equal(OptimizationType.PriceOptimization, strategy.Optimization);
     }
 
     [Fact]
-    public void Constructor_WithPriceOptimizationFalse_SetsCo2Optimization()
+    public void Constructor_WithCo2Optimization_SetsCo2Optimization()
     {
-        // Arrange
-        bool priceOptimization = false;
-
         // Act
-        var strategy = new OptimizerStrategy(priceOptimization);
+        var strategy = new OptimizerStrategy(OptimizationType.Co2Optimization);
 
         // Assert
         Assert.Equal(OptimizationType.Co2Optimization, strategy.Optimization);
@@ -35,11 +29,8 @@ public class OptimizerStrategyTest
     [Fact]
     public void Constructor_ImplementsIOptimizerStrategy()
     {
-        // Arrange
-        bool priceOptimization = true;
-
         // Act
-        var strategy = new OptimizerStrategy(priceOptimization);
+        var strategy = new OptimizerStrategy(OptimizationType.PriceOptimization);
 
         // Assert
         Assert.IsAssignableFrom<IOptimizerStrategy>(strategy);
