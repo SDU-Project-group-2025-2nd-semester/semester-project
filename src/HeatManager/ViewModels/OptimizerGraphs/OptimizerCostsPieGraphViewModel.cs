@@ -115,13 +115,14 @@ internal partial class OptimizerCostsPieGraphViewModel : ViewModelBase
 
     public static void SetStyle(string name, PieSeries<ObservableValue> series, decimal labelValue, SKColor currentColor)
     {
-        series.Name = name;
+        // series.Name = name;
         series.DataLabelsSize = 11;
         series.DataLabelsPosition = PolarLabelsPosition.End;
-        series.DataLabelsFormatter = point => $"{labelValue:N0} DKK";
+        // series.DataLabelsFormatter = point => $"{labelValue:N0} DKK";
         series.InnerRadius = 20;
         series.MaxRadialColumnWidth = 5;
         series.Fill = new SolidColorPaint(currentColor);
+        series.ToolTipLabelFormatter = (chartPoint) => $"{name}";
     }
 
     /// <summary>
