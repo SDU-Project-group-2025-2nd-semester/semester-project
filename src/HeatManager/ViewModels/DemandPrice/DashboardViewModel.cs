@@ -44,7 +44,7 @@ public partial class GridProductionViewModel : ViewModelBase
     public RectangularSection[] Thumbs { get; set; }
 
     public ChartExporter chartExporter = new ChartExporter();
-    private string _filenamePrefixOnExport = "SummerDataChart";
+    private string _filenamePrefixOnExport = "DataChart";
 
     public GridProductionViewModel(ISourceDataProvider provider)
     {
@@ -94,11 +94,20 @@ public partial class GridProductionViewModel : ViewModelBase
 
         // Set pageTitle based on startDate
         if (startDate.Month == 8 && startDate.Day == 11)
+        {
             PageTitle = "Summer Data";
+            _filenamePrefixOnExport = "SummerDataChart";
+        }
         else if (startDate.Month == 3 && startDate.Day == 1)
+        {
             PageTitle = "Winter Data";
+            _filenamePrefixOnExport = "WinterDataChart";
+        }
         else
+        {
             PageTitle = "Data";
+            _filenamePrefixOnExport = "DataChart";
+        }
 
         TimeSpan timeSpan = TimeSpan.FromHours(1);
 

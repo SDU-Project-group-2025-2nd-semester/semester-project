@@ -125,7 +125,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         CurrentView = new OverviewView
         {
-            DataContext = new OverviewViewModel(this, _productionUnitsViewModel)
+            DataContext = new OverviewViewModel(this, _productionUnitsViewModel, _dataProvider)
         };
     }
 
