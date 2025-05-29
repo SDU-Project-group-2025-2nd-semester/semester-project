@@ -5,6 +5,7 @@
         xmlns:vm="using:HeatManager.ViewModels"
         xmlns:viewModels="clr-namespace:HeatManager.ViewModels"
         xmlns:local="clr-namespace:HeatManager.Converters"
+        xmlns:converter="clr-namespace:HeatManager.DataConverter"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="HeatManager.Views.MainWindow"
         x:DataType="viewModels:MainWindowViewModel"
@@ -56,7 +57,7 @@
                                         Command="{Binding SaveProjectCommand}" Classes="reusable"/> 
                                 <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Export Data|📤'}"
                                         ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Export Data'}"
-                                        Command="{Binding ExportDataCommand}" Classes="reusable"/>
+                                        Command="{Binding SetDataExportViewCommand}" Classes="reusable"/>
                         </StackPanel>
                 </Grid>
         </Border>
