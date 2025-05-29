@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:HeatManager.ViewModels"
         xmlns:viewModels="clr-namespace:HeatManager.ViewModels"
+        xmlns:converter="clr-namespace:HeatManager.DataConverter"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="HeatManager.Views.MainWindow"
         x:DataType="viewModels:MainWindowViewModel"
@@ -20,8 +21,8 @@
 
                     <Button Command="{Binding SetOverviewViewCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible= "False"/>
-                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="True"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible= "{Binding CurrentViewType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=Overview}"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToInverseBoolConverter}, ConverterParameter=Overview}"/>
                             <Image Source="avares://HeatManager/Assets/Icons/overview-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
                             <TextBlock Text="Overview"/>
                     </StackPanel>
@@ -29,8 +30,8 @@
                     
                     <Button Command="{Binding SetGridProductionViewCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="False"/>
-                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="True" />
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=GridProduction}"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToInverseBoolConverter}, ConverterParameter=GridProduction}" />
                             <Image Source="avares://HeatManager/Assets/Icons/charts-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
                             <TextBlock Text="Grid &amp; Production"/>
                         </StackPanel>
@@ -38,8 +39,8 @@
 
                     <Button Command="{Binding SetConfigPanelViewCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="False"/>
-                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="True" />
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=ConfigPanel}"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToInverseBoolConverter}, ConverterParameter=ConfigPanel}" />
                             <Image Source="avares://HeatManager/Assets/Icons/config-panel-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
                             <TextBlock Text="Configuration Panel"/>
                         </StackPanel>
@@ -47,8 +48,8 @@
 
                     <Button Command="{Binding SetOptimizerViewCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="False"/>
-                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="True" />
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=Optimizer}"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToInverseBoolConverter}, ConverterParameter=Optimizer}" />
                             <Image Source="avares://HeatManager/Assets/Icons/optimizer-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
                             <TextBlock Text="Optimizer"/>
                         </StackPanel>
@@ -56,8 +57,8 @@
 
 					<Button Command="{Binding SaveProjectCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="False"/>
-                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="True" />
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=SaveProject}"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToInverseBoolConverter}, ConverterParameter=SaveProject}" />
                             <Image Source="avares://HeatManager/Assets/Icons/save-project-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
                             <TextBlock Text="Save Project"/>
                         </StackPanel>
@@ -65,8 +66,8 @@
 
                     <Button Command = "{Binding SetDataExportViewCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="False"/>
-                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="True" />
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=DataExport}"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToInverseBoolConverter}, ConverterParameter=DataExport}" />
                             <Image Source="avares://HeatManager/Assets/Icons/data-export-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
                             <TextBlock Text="Data Exporter"/>
                         </StackPanel>
@@ -74,8 +75,8 @@
 
                     <Button Command = "{Binding OpenProjectManagerWindowCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="False"/>
-                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="True" />
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=ProjectManager}"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToInverseBoolConverter}, ConverterParameter=ProjectManager}" />
                             <Image Source="avares://HeatManager/Assets/Icons/project-manager-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
                             <TextBlock Text="Project Manager"/>
                         </StackPanel>
