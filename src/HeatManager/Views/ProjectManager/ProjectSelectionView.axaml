@@ -10,7 +10,7 @@
 	<Panel>
 		<DockPanel IsVisible="{Binding !IsCreatingProject}">
 
-			<TextBlock Text="What project would you like to choose?" FontSize="25" DockPanel.Dock="Top"/>
+			<TextBlock Text="Choose a Project" FontSize="25" DockPanel.Dock="Top"/>
 
 			<StackPanel Margin="20" Spacing="10" DockPanel.Dock="Left" MinWidth="400">
 				<TextBlock FontSize="15">Existing projects</TextBlock>
@@ -47,7 +47,7 @@
 						<TextBlock
 							Width="{Binding #NewProjectText.Bounds.Width }"
 							TextWrapping="Wrap" >
-							Create new project and import data to start optimizing
+							Create a new project and the import data.
 						</TextBlock>
 
 					</StackPanel>
@@ -62,7 +62,7 @@
 			<DockPanel IsVisible="{Binding IsDataImported}">
 
 				<StackPanel DockPanel.Dock="Top"    HorizontalAlignment="Left" >
-					<TextBlock Text="How should be new project called?" FontSize="25" DockPanel.Dock="Top" Padding="0 0 0 30"/>
+					<TextBlock Text="Name your new project" FontSize="25" DockPanel.Dock="Top" Padding="0 0 0 30"/>
 
 
 					<TextBox Text="{Binding NewProjectName}" MinWidth="100"/>
@@ -77,12 +77,12 @@
 			<DockPanel IsVisible="{Binding !IsDataImported}">
 
 				<StackPanel DockPanel.Dock="Top"    HorizontalAlignment="Left" >
-					<TextBlock Text="What data should project use?" FontSize="25" DockPanel.Dock="Top" Padding="0 0 0 30"/>
+					<TextBlock Text="Import your data" FontSize="25" DockPanel.Dock="Top" Padding="0 0 0 30"/>
 
 
 				</StackPanel>
 
-				<Button FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"  Command="{Binding GetFileCommand}">Import your precious data</Button>
+				<Button FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"  Command="{Binding GetFileCommand}">Import data file</Button>
 
 			</DockPanel>
 
