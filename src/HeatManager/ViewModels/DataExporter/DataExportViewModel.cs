@@ -78,14 +78,14 @@ public partial class DataExportViewModel(IAssetManager assetManager, IOptimizer 
             exporter.ExportScheduleData(SummarizedElectricityProductionPath, optimizedSchedule.ElectricityProductionUnitSchedules);
         }
 
-        if (ElectricityProductionHourly)
-        {
-            if (optimizedSchedule.ElectricityProduction.Any())
-            {
-                string HourlyElectricityProductionPath = Path.Combine(folderPath,  "HourlyElectricityProduction_" + projectName + ".csv");
-                exporter.ExportScheduleData(HourlyElectricityProductionPath, optimizedSchedule.ElectricityProduction);
-            }
-        }
+        // if (ElectricityProductionHourly)
+        // {
+        //     if (optimizedSchedule.ElectricityProduction.Any())
+        //     {
+        //         string HourlyElectricityProductionPath = Path.Combine(folderPath,  "HourlyElectricityProduction_" + projectName + ".csv");
+        //         exporter.ExportScheduleData(HourlyElectricityProductionPath, optimizedSchedule.ElectricityProduction);
+        //     }
+        // }
 
 
 

@@ -14,12 +14,14 @@ using HeatManager.ViewModels.DataExporter;
 using HeatManager.ViewModels.DemandPrice;
 using HeatManager.ViewModels.Optimizer;
 using HeatManager.ViewModels.Overview;
+using HeatManager.ViewModels.ProjectConfig;
 using HeatManager.ViewModels.ProjectManager;
 using HeatManager.Views.ConfigPanel;
 using HeatManager.Views.DataExporter;
 using HeatManager.Views.DemandPrice;
 using HeatManager.Views.Optimizer;
 using HeatManager.Views.Overview;
+using HeatManager.Views.ProjectConfig;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
@@ -67,20 +69,20 @@ public partial class MainWindowViewModel : ViewModelBase
         _optimizer.ChangeOptimizationSettings(new OptimizerSettings());
         _productionUnitsViewModel = new ProductionUnitsViewModel(_assetManager);
     }
-    
+
     // public MainWindowViewModel() : this(default, default)
     // {
     //     // Set the default view to OverviewView
     //     CurrentView = new OverviewView { DataContext = new OverviewViewModel(this) };
     // }
-    
+
     [ObservableProperty]
-    private bool isPaneOpen; 
+    private bool isPaneOpen;
 
     [RelayCommand]
     private async Task SaveProject()
     {
-        try 
+        try
         {
             Console.WriteLine("Saving project...");
             await _projectManager.SaveProjectAsync();
@@ -93,7 +95,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
-     public enum ViewType
+    public enum ViewType
     {
         Overview,
         ConfigPanel,
@@ -106,7 +108,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty]
     private ViewType currentViewType;
-    
+
 
     [RelayCommand]
     internal void SetConfigPanelView()
@@ -132,7 +134,6 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task OpenProjectManagerWindow()
     {
-        CurrentViewType = ViewType.ProjectManager;
 
         var dialog = ActivatorUtilities.CreateInstance<ProjectSelectionWindow>(_serviceProvider);
 
@@ -140,8 +141,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         await dialog.ShowDialog(_window);
 
-        CurrentView = new OverviewView { DataContext = new OverviewViewModel(this, _productionUnitsViewModel) };
-        CurrentViewType = ViewType.Overview;
+        
     }
 
     [RelayCommand]
@@ -151,10 +151,17 @@ public partial class MainWindowViewModel : ViewModelBase
         CurrentView = new OverviewView { DataContext = new OverviewViewModel(this, _productionUnitsViewModel) };
     }
 
-     [RelayCommand]
+    [RelayCommand]
     private void SetDataExportView()
     {
         CurrentViewType = ViewType.DataExport;
         CurrentView = new DataExportView { DataContext = new DataExportViewModel(_assetManager, _optimizer, _projectManager) };
+    }
+
+    [RelayCommand]
+    private void OpenProjectConfigView()
+    {
+        CurrentViewType = ViewType.ProjectManager;
+        CurrentView = new ProjectConfigView { DataContext = new ProjectConfigViewModel(_window, _serviceProvider, _projectManager) };
     }
 }
