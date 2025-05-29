@@ -1,0 +1,66 @@
+@startuml
+actor User
+participant UI
+participant ProjectManager
+participant SourceDataManager
+participant AssetManager
+participant Optimizer
+participant Database
+
+== Launch & Project Selection ==
+User -> UI : Launch Application
+UI -> ProjectManager : Open Project Manager
+ProjectManager -> Database: Load Projects
+Database --> ProjectManager : Projects
+ProjectManager -> UI : Display Projects
+User -> UI : Select/Create Project
+alt Select Existing
+  UI -> ProjectManager : Load Project
+else Create New
+  UI -> ProjectManager : Create Project
+  ProjectManager -> SourceDataManager : Load Data (Heat Demand, Prices)
+  SourceDataManager --> ProjectManager : Source Data
+  ProjectManager -> UI :  Open Project
+end
+
+== Configuration Panel Tab ==
+User -> UI : Open Configuration Panel
+UI -> AssetManager : Load Heat Units
+
+User -> AssetManager : Add/Edit/Delete/Enable/Disable Unit
+AssetManager -> Optimizer : Update
+
+== Optimizer Tab ==
+User -> UI : Open Optimizer Tab
+UI -> Optimizer : Run Optimization
+Optimizer -> UI : Return Results
+
+== Data Exporter Tab ==
+User -> UI : Open Data Exporter
+User -> UI : Export Optimized Data
+UI -> Optimizer : Retrieve Selected Data
+Optimizer --> UI : Optimized Data
+UI -> User : Provide Download 
+
+== Project Manager Tab ==
+User -> UI : Open Project Manager Tab
+User -> UI : Save Data
+UI -> ProjectManager : Load Changes
+ProjectManager -> SourceDataManager : Load Source Data
+SourceDataManager --> ProjectManager : Source Data
+ProjectManager -> AssetManager : Load Production Units
+AssetManager --> ProjectManager : Production Units
+ProjectManager -> Database : Save Project
+User -> UI : Open Project Selection
+ref over UI, ProjectManager : Project Selection (see above)
+
+== Remaining Tabs ==
+User -> UI : Open Overview Tab
+UI -> AssetManager : Get Production Units
+AssetManager --> UI : Production Units
+UI -> Optimizer : Get Weekly Statistics
+Optimizer --> UI : Weekly Statistics
+User -> UI : Open Grid & Production Tab
+UI -> SourceDataManager : Retrieve Source Data
+SourceDataManager --> UI : Source Data
+@enduml
