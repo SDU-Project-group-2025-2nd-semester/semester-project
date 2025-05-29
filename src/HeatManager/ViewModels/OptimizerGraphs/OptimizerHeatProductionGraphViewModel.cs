@@ -43,7 +43,7 @@ internal partial class OptimizerHeatProductionGraphViewModel : BaseOptimizerGrap
             {
                 Values = unitSchedule.HeatProduction,
                 Name = unitSchedule.Name,
-                Fill = new SolidColorPaint(Colors[i])
+                Fill = new SolidColorPaint(ColorGenerator.SetColor(unitSchedule.Name))
             });
         }
     }

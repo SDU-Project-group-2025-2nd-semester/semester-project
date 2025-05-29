@@ -76,7 +76,7 @@ internal partial class OptimizerCostsGraphViewModel : BaseOptimizerGraphViewMode
                 Name = unitSchedule.Name,
                 Stroke = new SolidColorPaint
                 {
-                    Color = Colors[i],
+                    Color = ColorGenerator.SetColor(unitSchedule.Name),
                     StrokeCap = SKStrokeCap.Square,
                     StrokeThickness = strokeThickness,
                     PathEffect = effect
@@ -91,7 +91,7 @@ internal partial class OptimizerCostsGraphViewModel : BaseOptimizerGraphViewMode
         {
             Values = totalCostsPerHour.Select(cost => (double)cost).ToArray(),
             Name = "Accumulative cost",
-            Stroke = new SolidColorPaint(Colors[i + 1]) { StrokeThickness = 5 },
+            Stroke = new SolidColorPaint(ColorGenerator.SetColor("Accumulative")) { StrokeThickness = 5 },
             Fill = null,
             GeometryFill = null,
             GeometryStroke = null,

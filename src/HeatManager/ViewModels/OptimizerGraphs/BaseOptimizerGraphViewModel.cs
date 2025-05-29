@@ -16,6 +16,7 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using HeatManager.Services.FileServices;
+using HeatManager.Services.ChartColorService;
 using System.Threading.Tasks;
 using LiveChartsCore.SkiaSharpView.VisualElements;
 namespace HeatManager.ViewModels.OptimizerGraphs;
@@ -42,6 +43,11 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
     /// relevant to the optimization process.
     /// </summary>
     public OptimizerCalendarDatePickerViewModel? CalendarDatePicker { get; private set; }
+
+    /// <summary>
+    /// Provides access to the color generation service
+    /// </summary>
+    public ChartColorGenerator ColorGenerator = new ChartColorGenerator();
 
     /// <summary>
     /// Gets or sets the selected date for filtering.
@@ -275,14 +281,14 @@ internal abstract partial class BaseOptimizerGraphViewModel : ViewModelBase, IDa
     /// <summary>
     /// Predefined color palette for chart series.
     /// </summary>
-    protected static readonly SKColor[] Colors =
-    {
-        SKColors.White, SKColors.Maroon, SKColors.Red, SKColors.Magenta, SKColors.Pink,
-        SKColors.Green, SKColors.Blue, SKColors.Yellow, SKColors.Orange, SKColors.Purple,
-        SKColors.Brown, SKColors.Gray, SKColors.Black, SKColors.Cyan, SKColors.Lime,
-        SKColors.Teal, SKColors.Navy, SKColors.Olive, SKColors.Aqua, SKColors.Silver,
-        SKColors.Gold
-    };
+    // protected static readonly SKColor[] Colors =
+    // {
+    //     SKColors.White, SKColors.Maroon, SKColors.Red, SKColors.Magenta, SKColors.Pink,
+    //     SKColors.Green, SKColors.Blue, SKColors.Yellow, SKColors.Orange, SKColors.Purple,
+    //     SKColors.Brown, SKColors.Gray, SKColors.Black, SKColors.Cyan, SKColors.Lime,
+    //     SKColors.Teal, SKColors.Navy, SKColors.Olive, SKColors.Aqua, SKColors.Silver,
+    //     SKColors.Gold
+    // };
 
     [RelayCommand]
     public async Task ExportButton(object chartObject)
