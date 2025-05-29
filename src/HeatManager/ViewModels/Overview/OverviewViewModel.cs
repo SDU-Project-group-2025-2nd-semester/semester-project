@@ -9,7 +9,6 @@ namespace HeatManager.ViewModels.Overview;
 public partial class OverviewViewModel : ViewModelBase
 {
     private readonly MainWindowViewModel _mainWindowViewModel;
-
     public ProductionUnitsViewModel ProductionUnitsViewModel { get; }
     public WeeklyStatisticsViewModel WeeklyStatisticsVM { get; }
 
