@@ -6,6 +6,7 @@
       "Cost": 520.0,
       "MaxHeatProduction": 4.0,
       "ResourceConsumption": 0.9,
+      "IsActive": true,
       "Resource": "Gas",
       "Emissions": 175.0
     },
@@ -14,6 +15,7 @@
       "Cost": 560.0,
       "MaxHeatProduction": 3.0,
       "ResourceConsumption": 0.7,
+      "IsActive": true,
       "Resource": "Gas",
       "Emissions": 130.0
     },
@@ -22,6 +24,7 @@
       "Cost": 670.0,
       "MaxHeatProduction": 4.0,
       "ResourceConsumption": 1.5,
+      "IsActive": true,
       "Resource": "Oil",
       "Emissions": 330.0
     }, 
@@ -30,6 +33,7 @@
       "Cost": 60.0,
       "MaxHeatProduction": 6.0,
       "ResourceConsumption": 6.0,
+      "IsActive": false,
       "Resource": "Electricity",
       "Emissions": 0.0
     }
@@ -41,6 +45,7 @@
       "Cost": 990.0,
       "MaxHeatProduction": 3.5,
       "ResourceConsumption": 1.8,
+      "IsActive": false,
       "Resource": "Gas",
       "Emissions": 650.0,
       "MaxElectricity": 2.6
