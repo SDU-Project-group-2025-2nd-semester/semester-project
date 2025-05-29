@@ -27,7 +27,8 @@ end
 User -> UI : Open Configuration Panel
 UI -> AssetManager : Load Heat Units
 
-User -> AssetManager : Add/Edit/Delete/Enable/Disable Unit
+User -> UI : Add/Edit/Delete/Enable/Disable 
+UI -> AssetManager : Save Changes
 AssetManager -> Optimizer : Update
 
 == Optimizer Tab ==
