@@ -1,0 +1,62 @@
+@startuml
+actor Client
+
+participant "DefaultOptimizer" as Optimizer
+participant "ISourceDataProvider" as SourceDataProvider
+participant "IAssetManager" as AssetManager
+participant "IOptimizerSettings" as OptimizerSettings
+participant "IOptimizerStrategy" as OptimizerStrategy
+
+== Start Optimization ==
+Client -> Optimizer: Optimize()
+
+Optimizer -> SourceDataProvider: get SourceDataCollection
+alt SourceDataCollection is null
+    Optimizer -> Client: throw InvalidOperationException
+    return
+end
+
+Optimizer -> SourceDataProvider: get DataPoints (scheduledEntries)
+
+Optimizer -> Optimizer: GetAvailableUnits()
+note right: Uses OptimizerSettings and AssetManager\nReturns active production units
+
+Optimizer -> Optimizer: Filter heatSources for electricitySources (OfType ElectricityProductionUnit)
+
+Optimizer -> Optimizer: GenerateHeatProductionUnitSchedules(heatSources)
+Optimizer -> Optimizer: GenerateElectricityProductionUnitSchedules(electricitySources)
+
+== For each scheduledEntry ==
+loop over scheduledEntries
+    Optimizer -> Optimizer: GetHeatSourcePriorityList(heatSources, entry)
+
+    note right: Sorts by optimization strategy
+
+    Optimizer -> Optimizer: Initialize remainingDemand = entry.HeatDemand
+
+    loop over priorityList (heatSource)
+        alt remainingDemand <= 0
+            Optimizer -> heatProductionUnitSchedules: AddDataPoint(utilization=0, production=0, cost=0, consumption=0, emissions=0)
+        else
+            Optimizer -> Optimizer: production = min(heatSource.MaxHeatProduction, remainingDemand)
+            Optimizer -> Optimizer: utilization = production / heatSource.MaxHeatProduction
+            Optimizer -> Optimizer: cost = production * heatSource.Cost
+            Optimizer -> Optimizer: consumption = production * heatSource.ResourceConsumption
+            Optimizer -> Optimizer: emissions = production * heatSource.Emissions
+
+            Optimizer -> heatProductionUnitSchedules: AddDataPoint(timeFrom, timeTo, utilization, production, cost, consumption, emissions)
+
+            alt heatSource is ElectricityProductionUnit
+                Optimizer -> Optimizer: electricityProduction = utilization * MaxElectricity
+                Optimizer -> electricityProductionUnitSchedules: AddDataPoint(timeFrom, timeTo, electricityProduction, electricityPrice)
+            end
+
+            Optimizer -> Optimizer: remainingDemand -= production
+        end
+    end
+end
+
+Optimizer -> Optimizer: Create Schedule(heatProductionUnitSchedules, electricityProductionUnitSchedules)
+
+Optimizer -> Client: return Schedule
+@enduml
