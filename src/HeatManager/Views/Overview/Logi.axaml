@@ -2,6 +2,32 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="HeatManager.Views.Overview.Logi">
 
-    <Image Source="/Assets/logi2.jpg" Stretch="UniformToFill" Margin="0" />
+    <UserControl.Styles>
+        <StyleInclude Source="/Views/styles.axaml" />
+    </UserControl.Styles>
+    
+    <Border Background="#FFDDDF">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Welcome to Logi!" Grid.Row="0" HorizontalAlignment="Center"  Classes="heading" Margin="0,20,0,20"/>
+
+            <TextBlock Grid.Row="1" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="20,0,20,20">
+                <Run Text="Designed to support your daily operations," />
+                <Run Text="Logi" FontStyle="Italic"/>
+                <Run Text=" helps you make smarter, more cost-effective decisions by optimizing heat production and energy use. It makes your work easier by handling the data for you, visualising everything clearly, and letting you test different scenarios — so you can stay in control and make confident decisions."/>
+                <LineBreak/>
+                <Run Text="We named the app" />
+                <Run Text="Logi" FontStyle="Italic"/>
+                <Run Text=" after the personification of fire in Nordic mythology — a fitting symbol for a tool that brings clarity and precision to the world of heat."/>
+            </TextBlock>
+
+            <Image Source="/Assets/logi2.jpg" Grid.Row="2" Stretch="UniformToFill" Margin="0" />
+        </Grid>
+    </Border>    
 
 </UserControl>
