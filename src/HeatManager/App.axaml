@@ -1,11 +1,23 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:HeatManager.Core.Converters;assembly=HeatManager.Core"
+             xmlns:converter="clr-namespace:HeatManager.DataConverter"
              x:Class="HeatManager.App"
+
              RequestedThemeVariant="Light">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <Application.Styles>
         <FluentTheme />
 		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+        <StyleInclude Source="avares://HeatManager/Views/styles.axaml" />
     </Application.Styles>
+
+    <Application.Resources>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <converters:BoolToStatusConverter x:Key="BoolToStatusConverter"/>
+        <converter:EnumToBoolConverter x:Key="EnumToBoolConverter"/>
+        <converter:EnumToInverseBoolConverter x:Key="EnumToInverseBoolConverter"/>
+        <x:Double x:Key="WeeklyStatisticsSpacing">15</x:Double>
+    </Application.Resources>
 </Application>

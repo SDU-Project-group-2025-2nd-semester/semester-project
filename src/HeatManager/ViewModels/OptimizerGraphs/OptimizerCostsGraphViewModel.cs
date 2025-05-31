@@ -14,6 +14,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using HeatManager.Services.FileServices;
+using System.Threading.Tasks;
+using LiveChartsCore.Defaults;
 
 namespace HeatManager.ViewModels.OptimizerGraphs;
 
@@ -26,6 +29,11 @@ internal partial class OptimizerCostsGraphViewModel : BaseOptimizerGraphViewMode
     /// Get the ViewModel for the Pie charts
     /// </summary>
     public OptimizerCostsPieGraphViewModel PieGraphViewModel { get; }
+
+    /// <summary>
+    /// Gets the filename prefix used when exporting the chart to an image file.
+    /// </summary>
+    protected override string FilenamePrefixOnExport => "CostsChart";
 
     /// <summary>
     /// Constructor of the <see cref="OptimizerCostsGraphViewModel"/> partial class
@@ -68,7 +76,7 @@ internal partial class OptimizerCostsGraphViewModel : BaseOptimizerGraphViewMode
                 Name = unitSchedule.Name,
                 Stroke = new SolidColorPaint
                 {
-                    Color = Colors[i],
+                    Color = ColorGenerator.SetColor(unitSchedule.Name),
                     StrokeCap = SKStrokeCap.Square,
                     StrokeThickness = strokeThickness,
                     PathEffect = effect
@@ -83,7 +91,7 @@ internal partial class OptimizerCostsGraphViewModel : BaseOptimizerGraphViewMode
         {
             Values = totalCostsPerHour.Select(cost => (double)cost).ToArray(),
             Name = "Accumulative cost",
-            Stroke = new SolidColorPaint(Colors[i + 1]) { StrokeThickness = 5 },
+            Stroke = new SolidColorPaint(ColorGenerator.SetColor("Accumulative")) { StrokeThickness = 5 },
             Fill = null,
             GeometryFill = null,
             GeometryStroke = null,
@@ -101,5 +109,4 @@ internal partial class OptimizerCostsGraphViewModel : BaseOptimizerGraphViewMode
     /// Gets the Y-axis title - each subclass must implement this
     /// </summary>
     protected override string GetYAxisTitle() => "Cost [ Dkk ]";
-
 }

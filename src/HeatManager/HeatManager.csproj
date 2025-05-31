@@ -17,13 +17,27 @@
     <AvaloniaResource Include="Assets\Icons\circle-exclamation-solid.png" />
     <AvaloniaResource Include="Assets\Icons\circle-xmark-solid.png" />
     <AvaloniaResource Include="Assets\units.png" />
+    <AvaloniaResource Include="Assets\logi2.jpg" />
     <AvaloniaResource Include="Views\styles.axaml" />
+    <AvaloniaResource Include="Assets\Icons\charts-icon.png" />
+    <AvaloniaResource Include="Assets\Icons\config-panel-icon.png" />
+    <AvaloniaResource Include="Assets\Icons\data-export-icon.png" />
+    <AvaloniaResource Include="Assets\Icons\save-project-icon.png" />
+    <AvaloniaResource Include="Assets\Icons\optimizer-icon.png" />
+    <AvaloniaResource Include="Assets\Icons\overview-icon.png" />
+    <AvaloniaResource Include="Assets\Icons\deselected-button-icon.png" />
+    <AvaloniaResource Include="Assets\Icons\selected-button-icon.png" />
+    <AvaloniaResource Include="Assets\Icons\project-manager-icon.png" />
+    <ProjectReference Include="..\HeatManager.Core\HeatManager.Core.csproj" />
+    
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.2.8" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.8" />
     <PackageReference Include="Avalonia.Desktop" Version="11.2.8" />
+    <PackageReference Include="Avalonia.Headless" Version="11.2.8" />
+    <PackageReference Include="Avalonia.Svg.Skia" Version="11.2.8" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.8" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.8" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
@@ -31,7 +45,10 @@
       <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="MessageBox.Avalonia" Version="3.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
+    <PackageReference Include="SkiaSharp" Version="3.116.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.116.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -62,6 +79,16 @@
       <DependentUpon>DashboardGraph.axaml</DependentUpon>
     </Compile>
 
+    <Compile Update="Views\OptimizerGraphs\OptimizerHeaderSection.axaml.cs">
+      <DependentUpon>OptimizerHeaderSection.axaml</DependentUpon>
+    </Compile>
+
   </ItemGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>HeatManager.Tests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
 
 </Project>

@@ -1,25 +1,87 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">    
 
     <!-- Heading Style -->
     <Style Selector="TextBlock.heading">
-        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontSize" Value="{DynamicResource HeadingFontSize}" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Margin" Value="0,0,0,20" />
     </Style>
 
     <!-- Subheading Style -->
     <Style Selector="TextBlock.subheading">
-        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontSize" Value="{DynamicResource SubheadingFontSize}" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Margin" Value="0,0,0,5" />
-    </Style>
+    </Style>  
 
     <!-- Normal Text Style -->
     <Style Selector="TextBlock.normaltext">
-        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontSize" Value="{DynamicResource NormalTextFontSize}" />
         <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="Margin" Value="0,0,0,25" />
+        <Setter Property="Margin" Value="0,0,0,15" />
     </Style>
+
+    <!-- For the manual enabling/disabling -->
+    <Style Selector="ToggleButton Image.icon-active">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+
+    <Style Selector="ToggleButton:checked Image.icon-active">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+
+    <Style Selector="ToggleButton Image.icon-offline">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+
+    <Style Selector="ToggleButton:checked Image.icon-offline">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+
+    <!-- Button Style for the Pane -->
+    <Style Selector="Button.reusable">
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="10" />
+    </Style>
+
+    <!-- Dynamic Margin for Borders (in Overview) -->
+    <Style Selector="Border.dynamicMargin">
+        <Setter Property="Margin" Value="{DynamicResource BorderMargin}" />
+    </Style>
+
+    <!-- Icon Style -->
+    <Style Selector="Image.dynamicIcon">
+        <Setter Property="Width" Value="{DynamicResource IconSize}" />
+        <Setter Property="Height" Value="{DynamicResource IconSize}" />
+    </Style>
+   
+    <Style Selector="ToggleButton#MenuToggleButton">
+        <Setter Property="Background" Value="Red"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="Red"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+    
+    <Style Selector="ToggleButton#MenuToggleButton:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="DarkRed"/>
+    </Style>
+
+    <Style Selector="ToggleButton#MenuToggleButton:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="DarkRed"/>
+    </Style>
+
+    <Style Selector="ToggleButton#MenuToggleButton /template/ ContentPresenter">
+        <Setter Property="Background" Value="DarkRed"/>
+    </Style>
+
+    <Style Selector="ToggleButton#MenuToggleButton:checked /template/ ContentPresenter">
+        <Setter Property="Background" Value="Red"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+    
 
 </Styles>

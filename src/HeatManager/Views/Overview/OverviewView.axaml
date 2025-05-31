@@ -8,7 +8,7 @@
         x:Class="HeatManager.Views.Overview.OverviewView"
         x:DataType="overview:OverviewViewModel">
 
-    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+    <Grid Background="#FFDDDF" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="60*" /> 
             <RowDefinition Height="40*" /> 
@@ -18,24 +18,18 @@
             <ColumnDefinition Width="67*" /> 
         </Grid.ColumnDefinitions>
 
-        <!-- Red Background -->
-        <overview1:RedBackground Grid.RowSpan="2" Grid.ColumnSpan="2" />
-
-        <!-- White Background -->
-        <overview1:WhiteBackground Opacity="0.9" Grid.RowSpan="2" Grid.ColumnSpan="2" />
-
         <!-- Weekly Statistics Panel -->
-        <overview1:WeeklyStatistics Grid.Row="0" Grid.Column="0" />
+        <overview1:WeeklyStatistics Grid.Row="0" Grid.Column="0" DataContext="{Binding WeeklyStatisticsVM}"/>
 
         <!-- Map Panel -->  
         <overview1:Map Grid.Row="0" Grid.Column="1" />
 
-        <!-- Production Units Panel 
-        <local:ProductionUnits Grid.Row="1" Grid.ColumnSpan="2" />  -->
-        <Button Command="{Binding NavigateToConfigPanelCommand}" Grid.Row="1" Grid.ColumnSpan="2" 
+        <!-- Production Units Panel -->
+        <overview1:ProductionUnits Grid.Row="1" Grid.ColumnSpan="2" DataContext="{Binding ProductionUnitsViewModel}"/>  
+        <!-- <Button Command="{Binding NavigateToConfigPanelCommand}" Grid.Row="1" Grid.ColumnSpan="2" 
                 Background="Transparent" BorderBrush="Transparent">
             <overview1:ProductionUnits />
-        </Button>
+        </Button> -->
     </Grid>
 
 </UserControl>

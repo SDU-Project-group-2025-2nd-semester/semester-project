@@ -1,6 +1,14 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Interactivity;
+using HeatManager.Core.Models;
+using HeatManager.Core.Services;
+using HeatManager.ViewModels.ConfigPanel;
+using HeatManager.ViewModels.Overview;
+
 using Avalonia.Input;
 using HeatManager.Core.Models.Producers;
+using HeatManager.ViewModels;
 using HeatManager.ViewModels.ConfigPanel;
 using HeatManager.Views.ConfigPanel.Dialogs;
 
@@ -24,27 +32,27 @@ namespace HeatManager.Views.ConfigPanel
         {
             if (sender is Border border && DataContext is AssetManagerViewModel vm)
             {
-                if (border.Tag is ProductionUnitBase unit)
+                if (border.Tag is ProductionUnitViewModel unitViewModel)
                 {
                     var parentWindow = (Window)this.VisualRoot!;
 
                     // Show dialog to select edit or remove option
-                    var choiceDialog = new EditOrRemoveDialog(unit.Name);
+                    var choiceDialog = new EditOrRemoveDialog(unitViewModel.Name);
                     await choiceDialog.ShowDialog(parentWindow);
 
                     if (choiceDialog.SelectedOption == EditOrRemoveDialog.EditOrRemoveOption.Remove)
                     {
                         // Confirm deletion dialog
-                        var deletionDialog = new DeletionDialog(unit.Name);
+                        var deletionDialog = new DeletionDialog(unitViewModel.Name);
                         await deletionDialog.ShowDialog(parentWindow);
 
                         if (deletionDialog.Confirmed)
-                            vm.RemoveUnit(unit);
+                            vm.RemoveUnit(unitViewModel.ProductionUnit);
                     }
                     else if (choiceDialog.SelectedOption == EditOrRemoveDialog.EditOrRemoveOption.Edit)
                     {
                         // Show editing dialog
-                        var editDialog = new EditingDialog(unit);
+                        var editDialog = new EditingDialog(unitViewModel.ProductionUnit);
                         await editDialog.ShowDialog(parentWindow);
 
                         if (editDialog.Confirmed && editDialog.Unit != null)

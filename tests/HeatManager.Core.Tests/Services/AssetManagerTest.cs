@@ -3,6 +3,7 @@ using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Models.Resources;
 using JetBrains.Annotations;
 using Shouldly;
+using System.Text.Json;
 
 namespace HeatManager.Core.Tests.Services;
 
@@ -48,8 +49,18 @@ public class AssetManagerTest
         // Arrange
         var service = new AssetManager();
 
-        // Act & Validate
-        await Throws(() => service.LoadUnits("./Services/AssetManagerTest_InvalidData.json"));
+        // Act & Assert
+        var exception = Assert.Throws<JsonException>(() => service.LoadUnits("./Services/AssetManagerTest_InvalidData.json"));
+        
+        // Normalize the error message by removing stack traces and inner exceptions
+        var normalizedError = new
+        {
+            LineNumber = exception.LineNumber,
+            BytePositionInLine = exception.BytePositionInLine,
+            Path = exception.Path,
+            Message = exception.Message
+        };
+        await Verify(normalizedError);
     }
 
     [Fact]
@@ -58,8 +69,18 @@ public class AssetManagerTest
         // Arrange
         var service = new AssetManager();
 
-        // Act & Validate
-        await Throws(() => service.LoadUnits("./Services/AssetManagerTest_Empty.json"));
+        // Act & Assert
+        var exception = Assert.Throws<JsonException>(() => service.LoadUnits("./Services/AssetManagerTest_Empty.json"));
+        
+        // Normalize the error message by removing stack traces and inner exceptions
+        var normalizedError = new
+        {
+            exception.LineNumber,
+            exception.BytePositionInLine,
+            exception.Path,
+            exception.Message
+        };
+        await Verify(normalizedError);
     }
 
     [Fact]
@@ -182,9 +203,9 @@ public class AssetManagerTest
         manager.AddUnit(unit);
 
         // Assert
-        // Even though it gets added, you might want to validate this elsewhere — flag for improvement
+        // Even though it gets added, you might want to validate this elsewhere ï¿½ flag for improvement
         manager.ProductionUnits.ShouldContain(unit);
-        unit.Cost.ShouldBeLessThan(0); // Fails logically, but passes technically — flag this in domain logic
+        unit.Cost.ShouldBeLessThan(0); // Fails logically, but passes technically ï¿½ flag this in domain logic
     }
 
     [Fact]

@@ -22,6 +22,10 @@ internal partial class OptimizerHeatProductionGraphViewModel : BaseOptimizerGrap
     {
     }
 
+    /// <summary>
+    /// Gets the filename prefix used when exporting the chart to an image file.
+    /// </summary>
+    protected override string FilenamePrefixOnExport => "HeatProductionChart";
 
     /// <summary>
     /// Builds the chart series based on provided schedule data.
@@ -39,7 +43,7 @@ internal partial class OptimizerHeatProductionGraphViewModel : BaseOptimizerGrap
             {
                 Values = unitSchedule.HeatProduction,
                 Name = unitSchedule.Name,
-                Fill = new SolidColorPaint(Colors[i])
+                Fill = new SolidColorPaint(ColorGenerator.SetColor(unitSchedule.Name))
             });
         }
     }

@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:projectConfig="clr-namespace:HeatManager.ViewModels.ProjectConfig"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="HeatManager.Views.ProjectConfig.ProjectConfigView"
+             x:DataType="projectConfig:ProjectConfigViewModel">
+  <StackPanel Margin="20,20,0,0" Spacing = "10" HorizontalAlignment = "Center">
+    
+    <TextBlock Text = "Project Configuration" FontSize = "24" HorizontalAlignment = "Center" Margin = "0,0,0,0"/>
+
+    <Button Command = "{Binding OpenProjectManagerWindowCommand}" HorizontalContentAlignment="Left" Margin="20,0,0,0" Padding="10,20,10,20">
+      <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+        <Image Source="avares://HeatManager/Assets/Icons/project-manager-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
+        <TextBlock Text="Open Project Manager"/>
+      </StackPanel>
+    </Button>
+
+    <Button Command="{Binding SaveProjectCommand}" HorizontalContentAlignment="Center" Padding = "20,20,32,20" Margin = "20,0,0,0" >
+      <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+        <Image Source="avares://HeatManager/Assets/Icons/save-project-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
+        <TextBlock Text="Save your Project"/>
+      </StackPanel>
+    </Button>
+    
+  </StackPanel>
+</UserControl>

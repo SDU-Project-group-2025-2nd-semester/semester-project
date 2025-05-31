@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:overview="clr-namespace:HeatManager.ViewModels.Overview"
+             xmlns:converters="clr-namespace:HeatManager.Core.Converters;assembly=HeatManager.Core"
              x:Class="HeatManager.Views.Overview.ProductionUnits"
              x:DataType="overview:ProductionUnitsViewModel">
 
@@ -8,15 +9,18 @@
         <StyleInclude Source="/Views/styles.axaml" />
     </UserControl.Styles>
 
-    <Grid>
-        <Border Background="White" CornerRadius="15" Padding="10" Margin="10,10,10,10">
-            <StackPanel> 
-                <TextBlock Text="Production Units" Classes="heading" HorizontalAlignment="Left" Margin="10"/>
+    <UserControl.Resources>
+        <converters:BoolToStatusConverter x:Key="BoolToStatusConverter" />
+    </UserControl.Resources>
 
+    <Grid>
+        <Border Background="#B3ffffff" CornerRadius="15" Padding="10" Classes="dynamicMargin"> 
+            <StackPanel> 
+                <TextBlock Text="Production Units" Classes="heading" HorizontalAlignment="Left" Margin="10"/>  
                 <ItemsControl ItemsSource="{Binding ProductionUnits}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <UniformGrid Rows="1" Columns="5" />
+                            <UniformGrid Rows="1" Columns="{Binding UnitCount}"/> 
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
 
@@ -24,30 +28,30 @@
                         <DataTemplate>
                             <StackPanel Orientation="Vertical" Spacing="10" HorizontalAlignment="Center" Margin="10">
                                 <Border CornerRadius="10" ClipToBounds="True"> <!--Rounded corners --> 
-                                    <Image Source="/Assets/units.png" Stretch="Uniform"/>
+                                    <Image Source="/Assets/units.png" Stretch="Uniform" MaxWidth="250"/> 
                                 </Border>
-                            
+                                
                                 <!-- Grid for Icon, Name, and Status -->
-                                <Grid HorizontalAlignment="Center"> <!-- TO DO: Match the width of the picture -->
+                                <Grid HorizontalAlignment="Center">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" /> 
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="1*" /> 
                                         <ColumnDefinition Width="2*" /> 
+                                        <ColumnDefinition Width="2*" /> 
                                     </Grid.ColumnDefinitions>
 
-                                    <Image Source="{Binding Icon}" Width="18" Height="18" Grid.Row="0" Grid.Column="0" Margin="0,0,10,0" />
+                                    <Image Source="{Binding Icon}" Classes="dynamicIcon" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0" />
 
-                                    <TextBlock Text="{Binding Name}" Classes="subheading" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="1" />
+                                    <TextBlock Text="{Binding Name}" Classes="subheading" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0" />
 
-                                    <TextBlock Text="{Binding Status}" Classes="normaltext" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" Margin="0,0,0,30" />
-                                </Grid>                            
+                                    <TextBlock Text="{Binding IsActive, Converter={StaticResource BoolToStatusConverter}}" Classes="normaltext" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" />
+                                </Grid>    
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                </ItemsControl>   
             </StackPanel>
         </Border>
     </Grid>    

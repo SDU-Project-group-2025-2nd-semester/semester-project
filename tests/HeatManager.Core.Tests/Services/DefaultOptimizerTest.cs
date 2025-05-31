@@ -840,43 +840,17 @@ public class DefaultOptimizerTest
     public void UpdateProductionUnits_Updates_AssetManager_OptimizerSettings()
     {
         // Arrange
-        var unit1 = new HeatProductionUnit
+        var _newmockAssetManager = new Mock<IAssetManager>();
+        var productionUnits = new ObservableCollection<ProductionUnitBase>
         {
-            Name = "Unit1",
-            MaxHeatProduction = 50,
-            Cost = 1,
-            Emissions = 1,
-            ResourceConsumption = 1,
-            Resource = _oil
+            new HeatProductionUnit { Name = "TestUnit", Resource = _oil }
         };
+        _newmockAssetManager.Setup(a => a.ProductionUnits).Returns(productionUnits);
 
-        var unit2 = new HeatProductionUnit
-        {
-            Name = "Unit2",
-            MaxHeatProduction = 50,
-            Cost = 2,
-            Emissions = 2,
-            ResourceConsumption = 1,
-            Resource = _oil
-        };
-
-        var sourceDataPoint = new SourceDataPoint
-        {
-            HeatDemand = 10,
-            ElectricityPrice = 0,
-            TimeFrom = DateTime.Now,
-            TimeTo = DateTime.Now.AddHours(1)
-        };
-
-        var sourceDataCollection = new SourceDataCollection([sourceDataPoint]);
-
-        _mockSourceDataProvider.Setup(p => p.SourceDataCollection).Returns(sourceDataCollection);
-        _mockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<ProductionUnitBase> { unit1, unit2 });
-        _mockOptimizerSettings.SetupProperty(s => s.AllUnits);
-        _mockOptimizerStrategy.Setup(s => s.Optimization).Returns(OptimizationType.PriceOptimization);
-
-        Mock<IAssetManager>_newmockAssetManager = new Mock<IAssetManager>();
-        _newmockAssetManager.Setup(a => a.ProductionUnits).Returns(new ObservableCollection<ProductionUnitBase> { unit1 });
+        var mockOptimizerSettings = new Mock<IOptimizerSettings>();
+        var allUnits = new Dictionary<string, bool> { { "TestUnit", true } };
+        mockOptimizerSettings.Setup(s => s.AllUnits).Returns(allUnits);
+        _optimizer.ChangeOptimizationSettings(mockOptimizerSettings.Object);
 
         // Act
         _optimizer.UpdateProductionUnits(_newmockAssetManager.Object);
@@ -884,8 +858,9 @@ public class DefaultOptimizerTest
         // Assert
         Assert.NotNull(_optimizer._assetManager);
         Assert.Single(_optimizer._assetManager.ProductionUnits);
-
-        Assert.NotNull(_optimizer._optimizerSettings);
-        Assert.Single(_optimizer._optimizerSettings.AllUnits);
+        
+        // Verify through public property
+        Assert.NotNull(_optimizer.OptimizerSettings);
+        Assert.Single(_optimizer.OptimizerSettings.AllUnits);
     }
 }

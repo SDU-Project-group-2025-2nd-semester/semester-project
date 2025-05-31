@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Headless;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
@@ -7,6 +8,7 @@ using HeatManager.Core.Extensions;
 using HeatManager.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using MainWindow = HeatManager.Views.MainWindow;
+using HeatManager.Core.StartupHosts;
 
 namespace HeatManager
 {
@@ -36,6 +38,9 @@ namespace HeatManager
                 // Creates a ServiceProvider containing services from the provided IServiceCollection
                 var services = collection.BuildServiceProvider();
 
+                var startupHost = services.GetRequiredService<StartupHost>();
+
+                startupHost.Execute(default!);
 
                 var vm = services.GetRequiredService<MainWindowViewModel>();
 

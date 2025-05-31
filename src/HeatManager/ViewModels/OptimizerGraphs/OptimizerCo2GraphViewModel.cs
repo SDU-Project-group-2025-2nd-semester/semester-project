@@ -13,6 +13,11 @@ internal partial class OptimizerCo2GraphViewModel : BaseOptimizerGraphViewModel
         : base(schedules, OrderedTimes, minDate) { }
 
 
+    /// <summary>
+    /// Gets the filename prefix used when exporting the chart to an image file.
+    /// </summary>
+    protected override string FilenamePrefixOnExport => "CO2Chart";
+
     protected override void BuildChartSeries(List<HeatProductionUnitSchedule> schedules)
     {
         Series.Clear();
@@ -31,7 +36,7 @@ internal partial class OptimizerCo2GraphViewModel : BaseOptimizerGraphViewModel
             {
                 Values = unitSchedule.Emissions,
                 Name = unitSchedule.Name,
-                Stroke = new SolidColorPaint(Colors[i]) { StrokeThickness = 3 },
+                Stroke = new SolidColorPaint(ColorGenerator.SetColor(unitSchedule.Name)) { StrokeThickness = 3 },
                 Fill = null,
                 GeometryFill = null,
                 GeometryStroke = null,
@@ -43,7 +48,7 @@ internal partial class OptimizerCo2GraphViewModel : BaseOptimizerGraphViewModel
         {
             Values = totalEmissionsPerHour.ToArray(),
             Name = "Accumulative CO₂",
-            Stroke = new SolidColorPaint(Colors[i + 1]) { StrokeThickness = 5 },
+            Stroke = new SolidColorPaint(ColorGenerator.SetColor("Accumulative")) { StrokeThickness = 5 },
             Fill = null,
             GeometryFill = null,
             GeometryStroke = null,
