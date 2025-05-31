@@ -10,14 +10,18 @@ using HeatManager.Core.Services.ProjectManagers;
 using HeatManager.Core.Services.ScheduleExporter;
 using HeatManager.Core.Services.SourceDataProviders;
 using HeatManager.ViewModels.ConfigPanel;
+using HeatManager.ViewModels.DataExporter;
 using HeatManager.ViewModels.DemandPrice;
 using HeatManager.ViewModels.Optimizer;
 using HeatManager.ViewModels.Overview;
+using HeatManager.ViewModels.ProjectConfig;
 using HeatManager.ViewModels.ProjectManager;
 using HeatManager.Views.ConfigPanel;
+using HeatManager.Views.DataExporter;
 using HeatManager.Views.DemandPrice;
 using HeatManager.Views.Optimizer;
 using HeatManager.Views.Overview;
+using HeatManager.Views.ProjectConfig;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
@@ -67,14 +71,14 @@ public partial class MainWindowViewModel : ViewModelBase
 
         CurrentView = new Logi { DataContext = new LogiViewModel() };
     }
-    
+
     [ObservableProperty]
-    private bool isPaneOpen; 
+    private bool isPaneOpen;
 
     [RelayCommand]
     private async Task SaveProject()
     {
-        try 
+        try
         {
             Console.WriteLine("Saving project...");
             await _projectManager.SaveProjectAsync();
@@ -87,69 +91,72 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    public enum ViewType
+    {
+        Overview,
+        ConfigPanel,
+        Optimizer,
+        GridProduction,
+        DataExport,
+        ProjectManager,
+        SaveProject
+    }
+
+    [ObservableProperty]
+    private ViewType currentViewType;
+
     [RelayCommand]
     internal void SetConfigPanelView()
     {
+        CurrentViewType = ViewType.ConfigPanel;
         CurrentView = new AssetManagerView { DataContext = new AssetManagerViewModel(_assetManager, _optimizer, _productionUnitsViewModel) };
     }
 
     [RelayCommand]
     private void SetOptimizerView()
     {
+        CurrentViewType = ViewType.Optimizer;
         CurrentView = new DataOptimizerView { DataContext = new DataOptimizerViewModel(_optimizer) };
     }
 
     [RelayCommand]
     private void SetGridProductionView()
     {
+        CurrentViewType = ViewType.GridProduction;
         CurrentView = new GridProductionView { DataContext = new GridProductionViewModel(_dataProvider) };
     }
 
     [RelayCommand]
     private async Task OpenProjectManagerWindow()
     {
+
         var dialog = ActivatorUtilities.CreateInstance<ProjectSelectionWindow>(_serviceProvider);
 
         dialog.DataContext = ActivatorUtilities.CreateInstance<ProjectSelectionViewModel>(_serviceProvider, dialog);
 
         await dialog.ShowDialog(_window);
+
+        
     }
 
     [RelayCommand]
     private void SetOverviewView()
     {
-        CurrentView = new OverviewView
-        {
-            DataContext = new OverviewViewModel(this, _productionUnitsViewModel, _dataProvider)
-        };
+        CurrentViewType = ViewType.Overview;
+        CurrentView = new OverviewView { DataContext = new OverviewViewModel(this, _productionUnitsViewModel, _dataProvider) };
     }
 
     [RelayCommand]
-    private void ExportData()
+    private void SetDataExportView()
     {
-        // Use current state of units instead of reloading from JSON
-        _optimizer.ChangeOptimizationSettings(new OptimizerSettings
-        {
-            AllUnits = _assetManager.ProductionUnits.ToDictionary(x => x.Name, _ => true),
-        });
-        
-        Schedule optimizedSchedule = _optimizer.Optimize();
-        var exporter = new ScheduleExporter();
+        CurrentViewType = ViewType.DataExport;
+        CurrentView = new DataExportView { DataContext = new DataExportViewModel(_assetManager, _optimizer, _projectManager) };
+    }
 
-        string? dir = AppDomain.CurrentDomain.BaseDirectory;
-        while (dir != null && !Directory.Exists(Path.Combine(dir, "results")))
-        {
-            if (Directory.GetParent(dir) == null) break;
-            dir = Directory.GetParent(dir)?.FullName;
-        }
-
-        if (dir == null)
-            throw new DirectoryNotFoundException("Could not find the 'results' directory in any parent folder.");
-
-        string optimizedHeatProductionPath = Path.Combine(dir, "results", "OptimizedHeatProduction.csv");
-        string optimizedElectricityProductionPath = Path.Combine(dir, "results", "OptimizedElectricityProduction.csv");
-
-        exporter.ExportScheduleData(optimizedHeatProductionPath, optimizedSchedule.HeatProductionUnitSchedules);
-        exporter.ExportScheduleData(optimizedElectricityProductionPath, optimizedSchedule.ElectricityProductionUnitSchedules);
+    [RelayCommand]
+    private void OpenProjectConfigView()
+    {
+        CurrentViewType = ViewType.ProjectManager;
+        CurrentView = new ProjectConfigView { DataContext = new ProjectConfigViewModel(_window, _serviceProvider, _projectManager) };
     }
 }

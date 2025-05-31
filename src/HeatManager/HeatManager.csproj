@@ -19,7 +19,17 @@
     <AvaloniaResource Include="Assets\units.png" />
     <AvaloniaResource Include="Assets\logi2.jpg" />
     <AvaloniaResource Include="Views\styles.axaml" />
+    <AvaloniaResource Include="Assets\Icons\charts-icon.png" />
+    <AvaloniaResource Include="Assets\Icons\config-panel-icon.png" />
+    <AvaloniaResource Include="Assets\Icons\data-export-icon.png" />
+    <AvaloniaResource Include="Assets\Icons\save-project-icon.png" />
+    <AvaloniaResource Include="Assets\Icons\optimizer-icon.png" />
+    <AvaloniaResource Include="Assets\Icons\overview-icon.png" />
+    <AvaloniaResource Include="Assets\Icons\deselected-button-icon.png" />
+    <AvaloniaResource Include="Assets\Icons\selected-button-icon.png" />
+    <AvaloniaResource Include="Assets\Icons\project-manager-icon.png" />
     <ProjectReference Include="..\HeatManager.Core\HeatManager.Core.csproj" />
+    
   </ItemGroup>
 
   <ItemGroup>

@@ -5,6 +5,7 @@
         xmlns:vm="using:HeatManager.ViewModels"
         xmlns:viewModels="clr-namespace:HeatManager.ViewModels"
         xmlns:local="clr-namespace:HeatManager.Converters"
+        xmlns:converter="clr-namespace:HeatManager.DataConverter"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="HeatManager.Views.MainWindow"
         x:DataType="viewModels:MainWindowViewModel"
@@ -20,44 +21,74 @@
     <Grid>
         <!-- Two columns: one for the pane and one for the content -->
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="{Binding IsPaneOpen, Converter={StaticResource BooleanToGridLengthConverter}, ConverterParameter='300,50'}" />
+            <ColumnDefinition Width="{Binding IsPaneOpen, Converter={StaticResource BooleanToGridLengthConverter}, ConverterParameter='300,65'}" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Border Grid.Column="0" Background="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0">
+        <Border Grid.Column="0" Background="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0">
                 <Grid RowDefinitions="Auto,*,Auto">
                         <!-- Top: Menu and navigation buttons -->
                         <StackPanel Grid.Row="0">
-                                <ToggleButton IsChecked="{Binding IsPaneOpen}" Margin="10" Content="☰" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
-                                <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Overview|🏠'}"
-                                        ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Overview'}"
-                                        Command="{Binding SetOverviewViewCommand}" Classes="reusable" />
-                                <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Grid &amp; Production|📊'}"
-                                        ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Grid &amp; Production'}"
-                                        Command="{Binding SetGridProductionViewCommand}" Classes="reusable" />
-                                <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Configuration Panel|⚙️'}"
-                                        ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Configuration Panel'}"
-                                        Command="{Binding SetConfigPanelViewCommand}" Classes="reusable" />
-                                <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Optimiser|📈'}"
-                                        ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Optimiser'}"
-                                        Command="{Binding SetOptimizerViewCommand}" Classes="reusable" />
+                <ToggleButton x:Name = "MenuToggleButton" IsChecked="{Binding IsPaneOpen}" Margin="10" Content="☰" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+                    <Button Command="{Binding SetOverviewViewCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White" ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Overview'}" >
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible= "{Binding CurrentViewType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=Overview}"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToInverseBoolConverter}, ConverterParameter=Overview}"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/overview-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
+                            <TextBlock Text="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Overview|'}"/>
+                    </StackPanel>
+                    </Button>
+                    
+                    <Button Command="{Binding SetGridProductionViewCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White" ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Grid &amp; Production'}">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=GridProduction}"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToInverseBoolConverter}, ConverterParameter=GridProduction}" />
+                            <Image Source="avares://HeatManager/Assets/Icons/charts-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
+                            <TextBlock Text="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Grid &amp; Production|'}"/>
                         </StackPanel>
+                    </Button>
 
+                    <Button Command="{Binding SetConfigPanelViewCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White" ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Configuration Panel'}">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=ConfigPanel}"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToInverseBoolConverter}, ConverterParameter=ConfigPanel}" />
+                            <Image Source="avares://HeatManager/Assets/Icons/config-panel-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
+                            <TextBlock Text="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Configuration Panel|'}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding SetOptimizerViewCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White" ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Optimiser'}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=Optimizer}"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToInverseBoolConverter}, ConverterParameter=Optimizer}" />
+                            <Image Source="avares://HeatManager/Assets/Icons/optimizer-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
+                            <TextBlock Text="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Optimiser|'}"/>
+                        </StackPanel>
+                    </Button>
+
+		
+
+                    <Button Command = "{Binding SetDataExportViewCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White" ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Data Export'}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=DataExport}"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToInverseBoolConverter}, ConverterParameter=DataExport}" />
+                            <Image Source="avares://HeatManager/Assets/Icons/data-export-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
+                            <TextBlock Text="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Data Export|'}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command = "{Binding OpenProjectConfigViewCommand}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0" Padding="10" Background="White" ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Project Configuration'}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=ProjectManager}"/>
+                            <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToInverseBoolConverter}, ConverterParameter=ProjectManager}" />
+                            <Image Source="avares://HeatManager/Assets/Icons/project-manager-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
+                            <TextBlock Text="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Project Manager|'}"/>
+                        </StackPanel>
+                    </Button>
+
+                        </StackPanel>
                         <!-- Spacer -->
-                        <Panel Grid.Row="1" />
-
-                        <!-- Bottom: Save and Export buttons -->
-                        <StackPanel Grid.Row="2"
-                                    Orientation="{Binding IsPaneOpen, Converter={StaticResource BooleanToOrientationConverter}, ConverterParameter='Horizontal,Vertical'}"
-                                    HorizontalAlignment="Center"
-                                    Margin="0,0,0,10">
-                                <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Save Project|💾'}"
-                                        ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Save Project'}"
-                                        Command="{Binding SaveProjectCommand}" Classes="reusable"/> 
-                                <Button Content="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Export Data|📤'}"
-                                        ToolTip.Tip="{Binding IsPaneOpen, Converter={StaticResource ContentToTooltipConverter}, ConverterParameter='Export Data'}"
-                                        Command="{Binding ExportDataCommand}" Classes="reusable"/>
-                        </StackPanel>
+                        <Panel Grid.Row="1" />                        
                 </Grid>
         </Border>
 

@@ -21,6 +21,7 @@ using HeatManager.Core.Models.SourceData;
 using HeatManager.Core.Services.SourceDataProviders;
 using HeatManager.Services.FileServices;
 using System.Threading.Tasks;
+using LiveChartsCore.SkiaSharpView.Painting.Effects;
 
 namespace HeatManager.ViewModels.DemandPrice;
 
@@ -43,8 +44,13 @@ public partial class GridProductionViewModel : ViewModelBase
     public LiveChartsCore.Measure.Margin Margin { get; set; }
     public RectangularSection[] Thumbs { get; set; }
 
+    // Colors
+    private SKColor _accentColor = new SKColor(220, 22, 22, 255);
+    private SKColor _secondaryColor = new SKColor(100, 100, 100, 100);
+    private SKColor _secondaryLightColor = new SKColor(200, 200, 200, 200);
+
     public ChartExporter chartExporter = new ChartExporter();
-    private string _filenamePrefixOnExport = "DataChart";
+    private string _filenamePrefixOnExport = "DemandPriceChart";
 
     public GridProductionViewModel(ISourceDataProvider provider)
     {
@@ -64,7 +70,8 @@ public partial class GridProductionViewModel : ViewModelBase
                 Values = _priceValues,
                 Name = "Electricity Price",
                 DataPadding = new(0,1),
-                ScalesYAt = 1
+                Fill = new SolidColorPaint(_secondaryLightColor),
+                ScalesYAt = 0
             },
             new LineSeries<DateTimePoint>
             {
@@ -72,8 +79,9 @@ public partial class GridProductionViewModel : ViewModelBase
                 Name = "Heat Demand",
                 GeometryStroke = null,
                 GeometryFill = null,
+                Fill = null,
                 DataPadding = new(0,1),
-                ScalesYAt = 0
+                ScalesYAt = 1
             },
         ];
 
@@ -83,6 +91,8 @@ public partial class GridProductionViewModel : ViewModelBase
                 Values = _heatValues,
                 GeometryStroke = null,
                 GeometryFill = null,
+                Stroke = new SolidColorPaint(_secondaryColor),
+                Fill = null,
                 DataPadding = new(0, 1)
             }
         ];
@@ -96,17 +106,17 @@ public partial class GridProductionViewModel : ViewModelBase
         if (startDate.Month == 8 && startDate.Day == 11)
         {
             PageTitle = "Summer Data";
-            _filenamePrefixOnExport = "SummerDataChart";
+            _filenamePrefixOnExport = "SummerDemandPriceChart";
         }
         else if (startDate.Month == 3 && startDate.Day == 1)
         {
             PageTitle = "Winter Data";
-            _filenamePrefixOnExport = "WinterDataChart";
+            _filenamePrefixOnExport = "WinterDemandPriceChart";
         }
         else
         {
             PageTitle = "Data";
-            _filenamePrefixOnExport = "DataChart";
+            _filenamePrefixOnExport = "DemandPriceChart";
         }
 
         TimeSpan timeSpan = TimeSpan.FromHours(1);
@@ -114,7 +124,7 @@ public partial class GridProductionViewModel : ViewModelBase
         Thumbs = [
             new RectangularSection
             {
-                Fill = new SolidColorPaint(new SKColor(220, 220, 220, 120)),
+                Fill = new SolidColorPaint(_secondaryLightColor),
                 // Stroke = new SolidColorPaint(SKColors.Gray) {StrokeThickness = 1},
                 Xi = startDate.Ticks,
                 Xj = endDate.Ticks
@@ -124,20 +134,30 @@ public partial class GridProductionViewModel : ViewModelBase
         YAxes = [
             new Axis
             {
-            Name = "Heat Demand",
-            NameTextSize = 14,
+            // IsVisible = false,
+            Name = "Heat Demand [DKK/MWh]",
+            NameTextSize = 12,
             // NamePadding = new LiveChartsCore.Drawing.Padding(0, 20),
-            // Padding =  new LiveChartsCore.Drawing.Padding(0, 0, 10, 0),
+            Padding =  new LiveChartsCore.Drawing.Padding(0, 10, 5, 10),
             TextSize = 12,
+            ShowSeparatorLines = true,
+            SeparatorsPaint = new SolidColorPaint
+            {
+                Color = _secondaryLightColor,
+                StrokeThickness = 1,
+                PathEffect = new DashEffect(new float[] { 3, 3 })
+            }
+            // Labeler = value => $"{value:N0} DKK/MWh"
             },
             new Axis
             {
-            Name = "Electricity Price",
-            NameTextSize = 14,
+            Name = "Electricity Price [MWh]",
+            NameTextSize = 12,
             // NamePadding = new LiveChartsCore.Drawing.Padding(0, 20),
-            // Padding =  new LiveChartsCore.Drawing.Padding(0, 0, 20, 0),
+            Padding =  new LiveChartsCore.Drawing.Padding(0, 20, 5, 20),
             TextSize = 12,
             ShowSeparatorLines = false,
+                // Labeler = value => $"{value:N1} MWh"
             }
         ];
 

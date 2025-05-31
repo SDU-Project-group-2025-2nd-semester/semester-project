@@ -19,6 +19,7 @@ using HeatManager.Core.Models.Schedules;
 using HeatManager.ViewModels.Optimizer;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using HeatManager.Services.ChartColorService;
 
 
 namespace HeatManager.ViewModels.OptimizerGraphs;
@@ -33,6 +34,11 @@ internal partial class OptimizerCostsPieGraphViewModel : ViewModelBase
 
     [ObservableProperty]
     private string _totalCostTitle = "Total cost per Unit";
+
+    /// <summary>
+    /// Provides access to the color generation service
+    /// </summary>
+    public ChartColorGenerator ColorGenerator = new ChartColorGenerator();
 
     /// <summary>
     /// Chart exporter instance used to save chart visualizations to files.
@@ -74,9 +80,9 @@ internal partial class OptimizerCostsPieGraphViewModel : ViewModelBase
 
         for (int i = 0; i < schedules.Count; i++)
         {
-            SKColor currentColor = Colors[i + 1];
-
             var unitSchedule = schedules[i];
+
+            SKColor currentColor = ColorGenerator.SetColor(unitSchedule.Name);
 
             maxItems[i + 1] = new GaugeItem(
                 (double)GetProportionalValue(SumOfMaxAllUnits, unitSchedule.MaxCost),
@@ -115,26 +121,27 @@ internal partial class OptimizerCostsPieGraphViewModel : ViewModelBase
 
     public static void SetStyle(string name, PieSeries<ObservableValue> series, decimal labelValue, SKColor currentColor)
     {
-        series.Name = name;
+        // series.Name = name;
         series.DataLabelsSize = 11;
         series.DataLabelsPosition = PolarLabelsPosition.End;
-        series.DataLabelsFormatter = point => $"{labelValue:N0} DKK";
+        // series.DataLabelsFormatter = point => $"{labelValue:N0} DKK";
         series.InnerRadius = 20;
         series.MaxRadialColumnWidth = 5;
         series.Fill = new SolidColorPaint(currentColor);
+        series.ToolTipLabelFormatter = (chartPoint) => $"{name}";
     }
 
     /// <summary>
     /// Predefined color palette for chart series.
     /// </summary>
-    protected static readonly SKColor[] Colors =
-    {
-        SKColors.White, SKColors.Maroon, SKColors.Red, SKColors.Magenta, SKColors.Pink,
-        SKColors.Green, SKColors.Blue, SKColors.Yellow, SKColors.Orange, SKColors.Purple,
-        SKColors.Brown, SKColors.Gray, SKColors.Black, SKColors.Cyan, SKColors.Lime,
-        SKColors.Teal, SKColors.Navy, SKColors.Olive, SKColors.Aqua, SKColors.Silver,
-        SKColors.Gold
-    };
+    // protected static readonly SKColor[] Colors =
+    // {
+    //     SKColors.White, SKColors.Maroon, SKColors.Red, SKColors.Magenta, SKColors.Pink,
+    //     SKColors.Green, SKColors.Blue, SKColors.Yellow, SKColors.Orange, SKColors.Purple,
+    //     SKColors.Brown, SKColors.Gray, SKColors.Black, SKColors.Cyan, SKColors.Lime,
+    //     SKColors.Teal, SKColors.Navy, SKColors.Olive, SKColors.Aqua, SKColors.Silver,
+    //     SKColors.Gold
+    // };
 
     [RelayCommand]
     public async Task ExportMaxCostButton(object chartObject)
