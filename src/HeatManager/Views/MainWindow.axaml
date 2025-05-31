@@ -10,7 +10,7 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:DataType="viewModels:MainWindowViewModel"
-    Icon="/Assets/logo3.png"
+    Icon="/Assets/logi-logo-02.png"
     mc:Ignorable="d">
 
     <SplitView
