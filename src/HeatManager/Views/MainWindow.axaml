@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:HeatManager.ViewModels"
     xmlns:vm="using:HeatManager.ViewModels"
-    Title="HeatManager"
+    Title="Logi"
     d:DesignHeight="450"
     d:DesignWidth="800"
     x:DataType="viewModels:MainWindowViewModel"
