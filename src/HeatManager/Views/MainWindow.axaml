@@ -9,7 +9,8 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="HeatManager.Views.MainWindow"
         x:DataType="viewModels:MainWindowViewModel"
-        Title="HeatManager">
+        Title="Logi"
+        Icon="/Assets/logi-logo-02.png">
 
         <Window.Resources>
             <local:BooleanToGridLengthConverter x:Key="BooleanToGridLengthConverter" />

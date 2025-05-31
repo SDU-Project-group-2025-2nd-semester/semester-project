@@ -11,7 +11,7 @@
     <AvaloniaXaml Remove="Views\styles.axaml" />
   </ItemGroup>
   <ItemGroup>
-    <AvaloniaResource Include="Assets\Icons\*.svg" />
+    <AvaloniaResource Include="Assets\*.png" />
     <AvaloniaResource Include="Assets\city-map.jpg" />
     <AvaloniaResource Include="Assets\Icons\circle-check-solid.png" />
     <AvaloniaResource Include="Assets\Icons\circle-exclamation-solid.png" />
