@@ -12,11 +12,14 @@
     <Border x:Name="WSBorder" Background="#B3ffffff" CornerRadius="15" Padding="10" Classes="dynamicMargin">
         <StackPanel>
             <!-- This was called 'Weekly Statistics' before; I changed the title but won't change the naming in the code -->
-            <TextBlock Text="14-Day Statistics" Classes="heading" HorizontalAlignment="Left" Margin="10,10,10,20"/>
+            <TextBlock Text="14-Day Statistics" Classes="heading" HorizontalAlignment="Left" Margin="10"/>
 
             <StackPanel Margin="20,0,0,0">
-                <TextBlock Text="Heat demand" Classes="subheading" />
-                <TextBlock Text="{Binding HeatDemand, StringFormat='{}{0} MWh'}" Classes="normaltext" /> <!-- Bind Sum of Total Heat Production -->
+                <TextBlock Text="Heat Demand" Classes="subheading" />
+                <TextBlock Text="{Binding HeatDemand, StringFormat='{}{0} MWh'}" Classes="normaltext" />
+                
+                <TextBlock Text="Total Heat Produced" Classes="subheading" />
+                <TextBlock Text="{Binding TotalHeat, StringFormat='{}{0} MWh'}" Classes="normaltext" />
 
                 <TextBlock Text="Resource Consumption" Classes="subheading" />
                 <TextBlock Text="{Binding ResourceConsumption, StringFormat='{}{0} MWh'}" Classes="normaltext" />

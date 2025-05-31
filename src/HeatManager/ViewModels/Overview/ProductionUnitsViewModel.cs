@@ -17,16 +17,17 @@ public partial class ProductionUnitsViewModel : ViewModelBase
 {
     [ObservableProperty]
     private ObservableCollection<ProductionUnitViewModel>? productionUnits;
-    
+    public int UnitCount => ProductionUnits?.Count ?? 0;
+
     private readonly IAssetManager _assetManager;
 
     public ProductionUnitsViewModel(IAssetManager assetManager)
-    { 
+    {
         _assetManager = assetManager;
-        
+
         // Initialize the collection even if empty
         ProductionUnits = new ObservableCollection<ProductionUnitViewModel>();
-        
+
         // Subscribe to collection changes
         _assetManager.ProductionUnits.CollectionChanged += OnProductionUnitsCollectionChanged;
 
@@ -40,13 +41,14 @@ public partial class ProductionUnitsViewModel : ViewModelBase
         }
         RefreshProductionUnits();
     }
-    
+
     public void RefreshProductionUnits()
     {
         var units = _assetManager.ProductionUnits;
         ProductionUnits = new ObservableCollection<ProductionUnitViewModel>(units.Select(u => new ProductionUnitViewModel(u)));
+        OnPropertyChanged(nameof(UnitCount));
     }
-    
+
     private void OnProductionUnitsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (e.Action == NotifyCollectionChangedAction.Add)
@@ -80,4 +82,9 @@ public partial class ProductionUnitsViewModel : ViewModelBase
             RefreshProductionUnits();
         }
     } 
+    
+    partial void OnProductionUnitsChanged(ObservableCollection<ProductionUnitViewModel>? oldValue, ObservableCollection<ProductionUnitViewModel>? newValue)
+    {
+        OnPropertyChanged(nameof(UnitCount));
+    }
 }

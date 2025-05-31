@@ -17,6 +17,7 @@
     <AvaloniaResource Include="Assets\Icons\circle-exclamation-solid.png" />
     <AvaloniaResource Include="Assets\Icons\circle-xmark-solid.png" />
     <AvaloniaResource Include="Assets\units.png" />
+    <AvaloniaResource Include="Assets\logi2.jpg" />
     <AvaloniaResource Include="Views\styles.axaml" />
     <AvaloniaResource Include="Assets\Icons\charts-icon.png" />
     <AvaloniaResource Include="Assets\Icons\config-panel-icon.png" />

@@ -68,13 +68,9 @@ public partial class MainWindowViewModel : ViewModelBase
         // Initialize optimizer with empty settings
         _optimizer.ChangeOptimizationSettings(new OptimizerSettings());
         _productionUnitsViewModel = new ProductionUnitsViewModel(_assetManager);
-    }
 
-    // public MainWindowViewModel() : this(default, default)
-    // {
-    //     // Set the default view to OverviewView
-    //     CurrentView = new OverviewView { DataContext = new OverviewViewModel(this) };
-    // }
+        CurrentView = new Logi { DataContext = new LogiViewModel() };
+    }
 
     [ObservableProperty]
     private bool isPaneOpen;
@@ -108,7 +104,6 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty]
     private ViewType currentViewType;
-
 
     [RelayCommand]
     internal void SetConfigPanelView()
@@ -148,7 +143,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private void SetOverviewView()
     {
         CurrentViewType = ViewType.Overview;
-        CurrentView = new OverviewView { DataContext = new OverviewViewModel(this, _productionUnitsViewModel) };
+        CurrentView = new OverviewView { DataContext = new OverviewViewModel(this, _productionUnitsViewModel, _dataProvider) };
     }
 
     [RelayCommand]

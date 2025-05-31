@@ -104,11 +104,20 @@ public partial class GridProductionViewModel : ViewModelBase
 
         // Set pageTitle based on startDate
         if (startDate.Month == 8 && startDate.Day == 11)
+        {
             PageTitle = "Summer Data";
+            _filenamePrefixOnExport = "SummerDemandPriceChart";
+        }
         else if (startDate.Month == 3 && startDate.Day == 1)
+        {
             PageTitle = "Winter Data";
+            _filenamePrefixOnExport = "WinterDemandPriceChart";
+        }
         else
+        {
             PageTitle = "Data";
+            _filenamePrefixOnExport = "DemandPriceChart";
+        }
 
         TimeSpan timeSpan = TimeSpan.FromHours(1);
 
