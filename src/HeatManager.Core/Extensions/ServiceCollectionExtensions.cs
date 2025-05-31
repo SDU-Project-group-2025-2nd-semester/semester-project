@@ -3,8 +3,8 @@ using HeatManager.Core.Db;
 using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.Services.ProjectManagers;
-using HeatManager.Core.Services.ResourceManagers;
 using HeatManager.Core.Services.SourceDataProviders;
+using HeatManager.Core.StartupHosts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
@@ -22,10 +22,12 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IOptimizerSettings, OptimizerSettings>()
             .AddSingleton<IOptimizerStrategy, OptimizerStrategy>()
             .AddSingleton<IAssetManager, AssetManager>()
-            .AddSingleton<IResourceManager, ResourceManager>()
+            //.AddSingleton<IResourceManager, ResourceManager>()
             .AddSingleton<IOptimizer, DefaultOptimizer>()
             .AddSingleton<IDataLoader, CsvDataLoader>()
             .AddSingleton<IProjectManager, ProjectManager>();
+
+        services.AddScoped<StartupHost>();
 
         #endregion
 

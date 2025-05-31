@@ -34,6 +34,6 @@ public class ProjectData
 
 
     //public List<HeatProductionUnit> HeatProductionUnits { get; set; } = [];
-    public List<Resource> Resources { get; set; } = [];
+    //public List<Resource> Resources { get; set; } = [];
     public SourceDataCollection? SourceData { get; set; }
 }

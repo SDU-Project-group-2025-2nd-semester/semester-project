@@ -4,7 +4,7 @@ using HeatManager.Core.Models.Projects;
 using HeatManager.Core.Models.Schedules;
 using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.Optimizers;
-using HeatManager.Core.Services.ResourceManagers;
+//using HeatManager.Core.Services.ResourceManagers;
 using HeatManager.Core.Services.SourceDataProviders;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +13,7 @@ namespace HeatManager.Core.Services.ProjectManagers;
 public class ProjectManager(
     HeatManagerDbContext dbContext, 
     IAssetManager assetManager, 
-    IResourceManager resourceManager, 
+    //IResourceManager resourceManager, 
     ISourceDataProvider sourceDataProvider,
     IOptimizer optimizer) : IProjectManager
 {
@@ -44,8 +44,8 @@ public class ProjectManager(
             Console.WriteLine($"  - Unit: {unit.Name}, Status: {unit.IsActive}");
         }
 
-        projectData.Resources = resourceManager.Resources.ToList();
-        Console.WriteLine($"Saving {projectData.Resources.Count} resources to project");
+        //projectData.Resources = resourceManager.Resources.ToList();
+        //Console.WriteLine($"Saving {projectData.Resources.Count} resources to project");
 
         projectData.SourceData = sourceDataProvider.SourceDataCollection;
 
@@ -130,7 +130,7 @@ public class ProjectManager(
     {
         Console.WriteLine("Starting to load project data");
         assetManager.ProductionUnits.Clear();
-        resourceManager.Resources.Clear();
+        //resourceManager.Resources.Clear();
 
         var projectData = CurrentProject?.ProjectData ?? throw new InvalidOperationException("Project needs to be retrieved from db before it's loading.");
 
@@ -141,8 +141,8 @@ public class ProjectManager(
             Console.WriteLine($"  - Unit: {unit.Name}, Status: {unit.IsActive}");
         }
 
-        projectData.Resources.ForEach(resourceManager.Resources.Add);
-        Console.WriteLine($"Loaded {projectData.Resources.Count} resources from project data");
+        //projectData.Resources.ForEach(resourceManager.Resources.Add);
+        //Console.WriteLine($"Loaded {projectData.Resources.Count} resources from project data");
 
         sourceDataProvider.SourceDataCollection = projectData.SourceData;
         Console.WriteLine("Loaded source data collection");
