@@ -11,13 +11,17 @@ Before running the project, ensure you have the PostgreSQL running.
 
 You can run the PostgreSQL database using Docker with the following command in root of the repository:
 ```bash
-
 docker compose up -d
 ```
 
+Then you can navigate to the directory `\semester-project\src\HeatManager` and run the application by typing:
+```bash
+dotnet run
+```
+
+
 After you are done, remember to stop the database with:
 ```bash
-
 docker compose down
 ```
 
