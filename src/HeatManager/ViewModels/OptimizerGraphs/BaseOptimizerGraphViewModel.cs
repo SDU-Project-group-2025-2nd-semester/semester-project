@@ -1,24 +1,20 @@
 using CommunityToolkit.Mvvm.Input;
-using HeatManager.Core.Models.Schedules;
-using HeatManager.ViewModels.Optimizer;
 using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore;
-using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Linq;
-using CommunityToolkit.Mvvm.ComponentModel;
-
 using HeatManager.Services.FileServices;
 using HeatManager.Services.ChartColorService;
-using System.Threading.Tasks;
-using LiveChartsCore.SkiaSharpView.VisualElements;
+using HeatManager.Core.Models.Schedules;
+using HeatManager.ViewModels.Optimizer;
+
 namespace HeatManager.ViewModels.OptimizerGraphs;
 
 /// <summary>

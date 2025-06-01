@@ -1,10 +1,6 @@
 using HeatManager.Core.Models.Resources;
 using HeatManager.Core.Models.Schedules;
 using HeatManager.Core.ResultData;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
 
 namespace HeatManager.Core.Tests.Models.Schedules;
 

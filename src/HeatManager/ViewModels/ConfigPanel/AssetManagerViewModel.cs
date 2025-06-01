@@ -1,12 +1,9 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using HeatManager.Core.Models.Producers;
-using HeatManager.Core.Services;
+﻿using HeatManager.Core.Models.Producers;
 using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.Optimizers;
 using System.Collections.ObjectModel;
 using System.Linq;
 using HeatManager.ViewModels.Overview;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 
 namespace HeatManager.ViewModels.ConfigPanel
@@ -144,5 +141,3 @@ namespace HeatManager.ViewModels.ConfigPanel
         }
     }
 }
-
-

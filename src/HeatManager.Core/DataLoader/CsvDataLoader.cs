@@ -34,7 +34,6 @@ public class CsvDataLoader : IDataLoader
         using StreamReader reader = new(csvFilePath);
 
         LoadData(reader);
-
     }
 
     private void LoadData(StreamReader reader)
@@ -75,5 +74,4 @@ public class CsvDataLoader : IDataLoader
             Map(m => m.TimeTo).TypeConverterOption.Format("M/d/yyyy H:mm");
         }
     }
-
 }

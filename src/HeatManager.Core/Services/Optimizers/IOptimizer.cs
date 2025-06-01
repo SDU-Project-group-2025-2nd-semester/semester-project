@@ -1,5 +1,4 @@
-﻿using HeatManager.Core.Models.Producers;
-using HeatManager.Core.Models.Schedules;
+﻿using HeatManager.Core.Models.Schedules;
 using HeatManager.Core.Services.AssetManagers;
 
 namespace HeatManager.Core.Services.Optimizers;
