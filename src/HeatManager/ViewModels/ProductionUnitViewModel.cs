@@ -1,9 +1,7 @@
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using HeatManager.Core.Models;
 using HeatManager.Core.Models.Producers;
 using HeatManager.Core.Models.Resources;
-using HeatManager.Core.Services.Optimizers;
 using System;
 using System.ComponentModel;
 

@@ -1,5 +1,3 @@
-using System;
-
 namespace HeatManager.Core.Services.ScheduleExporter;
 
 public interface IScheduleExporter

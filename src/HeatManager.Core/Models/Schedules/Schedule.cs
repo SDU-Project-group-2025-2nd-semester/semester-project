@@ -1,8 +1,5 @@
 ﻿using HeatManager.Core.Models.Resources;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 
 namespace HeatManager.Core.Models.Schedules;
 

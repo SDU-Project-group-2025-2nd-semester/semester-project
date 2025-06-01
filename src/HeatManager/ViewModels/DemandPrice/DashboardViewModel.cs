@@ -6,22 +6,15 @@ using LiveChartsCore.Kernel.Events;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
-using LiveChartsCore.SkiaSharpView.SKCharts;
+using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using SkiaSharp;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Avalonia.Controls;
-using Avalonia;
-using System.IO;
-using Avalonia.Platform.Storage;
-using Avalonia.Controls.ApplicationLifetimes;
-
+using System.Threading.Tasks;
 using HeatManager.Core.Models.SourceData;
 using HeatManager.Core.Services.SourceDataProviders;
 using HeatManager.Services.FileServices;
-using System.Threading.Tasks;
-using LiveChartsCore.SkiaSharpView.Painting.Effects;
 
 namespace HeatManager.ViewModels.DemandPrice;
 
@@ -258,5 +251,4 @@ public partial class GridProductionViewModel : ViewModelBase
         }
         await chartExporter.ExportControl(mainChart, ChartSeries, ScrollableAxes, YAxes, _filenamePrefixOnExport, PageTitle);
     }
-
 }

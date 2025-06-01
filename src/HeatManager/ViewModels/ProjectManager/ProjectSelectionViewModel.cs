@@ -6,7 +6,6 @@ using HeatManager.Core.DataLoader;
 using HeatManager.Core.Models.Projects;
 using HeatManager.Core.Services.ProjectManagers;
 using HeatManager.Core.Services.SourceDataProviders;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;

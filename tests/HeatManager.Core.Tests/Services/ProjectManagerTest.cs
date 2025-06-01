@@ -98,7 +98,6 @@ public class ProjectManagerTest : DatabaseAccess
         
         var heatUnit = new HeatProductionUnit { Name = "Test", Resource = testResource };
         _assetManager.ProductionUnits.Add(heatUnit);
-         
 
         _sourceDataProvider.SourceDataCollection = new SourceDataCollection([
             new SourceDataPoint()
@@ -154,7 +153,6 @@ public class ProjectManagerTest : DatabaseAccess
             
         var heatUnit = new HeatProductionUnit { Name = "Test", Resource = testResource };
         _assetManager.ProductionUnits.Add(heatUnit);
-
 
         _sourceDataProvider.SourceDataCollection = new SourceDataCollection([
             new SourceDataPoint()

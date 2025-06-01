@@ -2,12 +2,9 @@ using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HeatManager.Core.DataLoader;
-using HeatManager.Core.Models.Schedules;
-using HeatManager.Core.Services;
 using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.Services.ProjectManagers;
-using HeatManager.Core.Services.ScheduleExporter;
 using HeatManager.Core.Services.SourceDataProviders;
 using HeatManager.ViewModels.ConfigPanel;
 using HeatManager.ViewModels.DataExporter;
@@ -24,8 +21,6 @@ using HeatManager.Views.Overview;
 using HeatManager.Views.ProjectConfig;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 // ReSharper disable InconsistentNaming
