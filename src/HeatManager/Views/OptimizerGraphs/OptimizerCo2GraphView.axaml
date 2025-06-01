@@ -27,10 +27,7 @@
             Command="{Binding ExportButton}"
             CommandParameter="{Binding ElementName=Co2Chart}">
             <StackPanel Orientation="Horizontal">
-                <Svg
-                    Width="20"
-                    Margin="0,0,5,0"
-                    Path="/Assets/Icons/ic_fluent_arrow_exit_48_regular.svg" />
+                <Image Margin="0,0,5,0" Width = "20" Height = "20" Source="avares://HeatManager/Assets/Icons/save-project-icon.png" />
                 <TextBlock Text="Export" />
             </StackPanel>
         </Button>
