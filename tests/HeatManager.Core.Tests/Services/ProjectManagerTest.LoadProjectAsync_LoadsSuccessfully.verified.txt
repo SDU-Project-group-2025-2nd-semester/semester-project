@@ -14,12 +14,6 @@
         IsActive: false
       }
     ],
-    Resources: [
-      {
-        Name: Electricity,
-        Type: Electricity
-      }
-    ],
     SourceData: {
       DataPoints: [
         {
