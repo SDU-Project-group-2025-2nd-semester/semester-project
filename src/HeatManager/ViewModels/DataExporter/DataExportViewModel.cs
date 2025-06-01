@@ -4,7 +4,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using HeatManager.Core.Models.Projects;
 using HeatManager.Core.Models.Schedules;
 using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.Optimizers;
@@ -86,10 +85,5 @@ public partial class DataExportViewModel(IAssetManager assetManager, IOptimizer 
         //         exporter.ExportScheduleData(HourlyElectricityProductionPath, optimizedSchedule.ElectricityProduction);
         //     }
         // }
-
-
-
     }
-
-    
 }

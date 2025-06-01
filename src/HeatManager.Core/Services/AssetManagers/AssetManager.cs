@@ -1,4 +1,3 @@
-using HeatManager.Core.Models;
 using HeatManager.Core.Models.Producers;
 using System.Collections.ObjectModel;
 using System.Text.Json;
@@ -84,5 +83,4 @@ public class AssetManager : IAssetManager
         if (unit == null) throw new ArgumentNullException(nameof(unit));
         ProductionUnits.Remove(unit);
     }
-
 } 

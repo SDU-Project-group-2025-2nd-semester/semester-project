@@ -3,7 +3,6 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace HeatManager.ViewModels.OptimizerGraphs;
 

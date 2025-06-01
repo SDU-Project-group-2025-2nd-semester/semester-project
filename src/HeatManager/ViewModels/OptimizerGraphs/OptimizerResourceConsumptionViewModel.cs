@@ -1,5 +1,4 @@
 using HeatManager.Core.Models.Schedules;
-using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using System;

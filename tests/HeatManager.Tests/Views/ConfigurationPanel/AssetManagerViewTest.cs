@@ -1,18 +1,11 @@
-using Avalonia.Headless;
-using Avalonia.Input;
 using Avalonia.Headless.XUnit;
-using HeatManager.Views.ConfigPanel;
 using HeatManager.Views.ConfigPanel.Dialogs;
-using HeatManager.ViewModels.ConfigPanel;
 using HeatManager.Core.Models.Producers;
-using HeatManager.Core.Models.SourceData;
 using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.Models.Resources;
 using Moq;
-using System.Collections.ObjectModel;
 using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.SourceDataProviders;
-using HeatManager.Core.Models.Schedules;
 
 namespace HeatManager.Tests.Views
 {

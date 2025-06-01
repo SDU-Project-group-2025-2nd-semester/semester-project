@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 namespace HeatManager.ViewModels.ProjectConfig;
 
 public partial class ProjectConfigViewModel(Window window, IServiceProvider serviceProvider, IProjectManager projectManager) : ViewModelBase
-{
-
-    
+{    
     [RelayCommand]
     private async Task OpenProjectManagerWindow()
     {

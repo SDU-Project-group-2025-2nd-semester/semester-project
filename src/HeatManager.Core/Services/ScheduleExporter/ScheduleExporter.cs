@@ -1,8 +1,5 @@
 using CsvHelper;
-using HeatManager.Core.Models.Schedules;
-using System;
 using System.Globalization;
-using System.Linq;
 
 namespace HeatManager.Core.Services.ScheduleExporter;
 
@@ -16,6 +13,5 @@ public class ScheduleExporter : IScheduleExporter
         {
             csv.WriteRecords(records);
         }
-        
     }
 }

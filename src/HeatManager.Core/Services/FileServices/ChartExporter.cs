@@ -5,11 +5,6 @@ using Avalonia.Platform.Storage;
 using LiveChartsCore;
 using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView.SKCharts;
-
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using HeatManager;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Measure;

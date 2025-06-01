@@ -22,11 +22,6 @@
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" HorizontalAlignment="Right">
-                        <!-- <buttons:ExportChartButton
-                                ButtonText="Export chart"
-                                Command="{Binding ExportButtonCommand}"
-                                CommandParameter="{Binding #mainChart}" /> -->
-
                         <Button
                                 Command="{Binding ExportButton}"
                                 CommandParameter="{Binding ElementName=mainChart}">
