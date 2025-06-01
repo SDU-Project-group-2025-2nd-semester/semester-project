@@ -1,19 +1,6 @@
-using CommunityToolkit.Mvvm.Input;
-using HeatManager.Core.Models.Schedules;
-using HeatManager.ViewModels.Optimizer;
-using LiveChartsCore.Kernel.Events;
-using LiveChartsCore.Kernel.Sketches;
-using LiveChartsCore.Measure;
-using LiveChartsCore.SkiaSharpView.Painting;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore;
-using SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace HeatManager.ViewModels.OptimizerGraphs;
 
@@ -97,5 +84,4 @@ internal partial class OptimizerCalendarDatePickerViewModel : ViewModelBase
             MaxDate = times.Last();
         }
     }
-
 }

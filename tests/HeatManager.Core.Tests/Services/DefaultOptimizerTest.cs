@@ -6,7 +6,6 @@ using Moq;
 using System.Collections.ObjectModel;
 using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.SourceDataProviders;
-using HeatManager.Core.Models.Schedules;
 
 namespace HeatManager.Core.Tests.Services;
 /*

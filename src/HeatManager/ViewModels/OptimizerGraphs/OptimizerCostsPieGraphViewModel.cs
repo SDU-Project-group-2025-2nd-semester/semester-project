@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using LiveChartsCore;
 using LiveChartsCore.Measure;
 using LiveChartsCore.Defaults;
-using LiveChartsCore.Kernel.Events;
-using LiveChartsCore.Kernel.Sketches;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Extensions;
@@ -16,7 +13,6 @@ using CommunityToolkit.Mvvm.Input;
 
 using HeatManager.Services.FileServices;
 using HeatManager.Core.Models.Schedules;
-using HeatManager.ViewModels.Optimizer;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using HeatManager.Services.ChartColorService;

@@ -1,19 +1,14 @@
 using HeatManager.ViewModels.Optimizer;
 using HeatManager.Core.Services.Optimizers;
-using HeatManager.Core.Models.Schedules;
 using HeatManager.Core.Models.Resources;
 using HeatManager.Core.Models.Producers;
 using HeatManager.Core.Models.SourceData;
 using HeatManager.Core.Services.AssetManagers;
 using HeatManager.Core.Services.SourceDataProviders;
-using Avalonia.Headless;
-using Avalonia.Input;
 using Avalonia.Headless.XUnit;
-using JetBrains.Annotations;
 using Moq;
 using Shouldly;
 using System.Collections.ObjectModel;
-using HeatManager.Core.ResultData;
 
 namespace HeatManager.Tests.ViewModels;
 
@@ -99,7 +94,4 @@ public class DataOptimizerViewModelTest
         // Assert
         vm.SelectedView.ShouldBe(OptimizerViewType.SummaryTable);
     }
-
-
-
 }

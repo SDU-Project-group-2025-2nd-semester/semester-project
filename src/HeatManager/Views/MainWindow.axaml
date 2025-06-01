@@ -45,7 +45,7 @@
                             <Image Source="avares://HeatManager/Assets/Icons/selected-button-icon.png" Width = "20" Height = "20" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter=GridProduction}"/>
                             <Image Source="avares://HeatManager/Assets/Icons/deselected-button-icon.png" Width = "12" Height = "12" Margin="0,0,8,0" IsVisible="{Binding CurrentViewType, Converter={StaticResource EnumToInverseBoolConverter}, ConverterParameter=GridProduction}" />
                             <Image Source="avares://HeatManager/Assets/Icons/charts-icon.png" Width = "20" Height = "20" Margin="0,0,8,0"/>
-                            <TextBlock Text="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Grid &amp; Production|'}"/>
+                            <TextBlock Text="{Binding IsPaneOpen, Converter={StaticResource BooleanToContentConverter}, ConverterParameter='Demand &amp; Price|'}"/>
                         </StackPanel>
                     </Button>
 

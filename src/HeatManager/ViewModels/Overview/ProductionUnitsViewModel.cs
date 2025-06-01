@@ -1,11 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using HeatManager.Core.Models;
 using HeatManager.Core.Models.Producers;
-using HeatManager.Core.Services;
 using HeatManager.Core.Services.AssetManagers;
-using HeatManager.Core.Services.Optimizers;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;

@@ -1,24 +1,14 @@
-using CommunityToolkit.Mvvm.Input;
-using HeatManager.Core.Services;
-using HeatManager.Core.Services.Optimizers;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
-using System.Collections.ObjectModel;
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-
 using System.Linq;
-using HeatManager.Core.Services.Optimizers;
 using HeatManager.Core.Models.Schedules;
+using HeatManager.Core.Services.Optimizers;
 using HeatManager.ViewModels.OptimizerGraphs;
 using HeatManager.Views.OptimizerGraphs;
 using Avalonia.Controls;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace HeatManager.ViewModels.Optimizer;
 

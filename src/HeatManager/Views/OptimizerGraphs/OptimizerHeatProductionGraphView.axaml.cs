@@ -1,7 +1,4 @@
 using Avalonia.Controls;
-using Avalonia.Interactivity;
-using HeatManager.ViewModels.Optimizer;
-using System;
 
 namespace HeatManager.Views.OptimizerGraphs
 {
@@ -10,8 +7,6 @@ namespace HeatManager.Views.OptimizerGraphs
         public OptimizerHeatProductionGraphView()
         {
             InitializeComponent();
-
         }
-
     }
 }

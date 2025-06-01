@@ -1,9 +1,8 @@
 using Avalonia;
 using Avalonia.Controls;
-using System;
 using Avalonia.Reactive;
-using HeatManager.ViewModels.Overview;
 using Avalonia.VisualTree;
+using System;
 using System.Linq;
 
 namespace HeatManager.Views.Overview;

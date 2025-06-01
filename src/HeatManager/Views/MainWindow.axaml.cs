@@ -1,16 +1,9 @@
 using Avalonia;
 using Avalonia.Controls;
-using HeatManager.Core.DataLoader;
-using HeatManager.Core.Services.AssetManagers;
-using HeatManager.Core.Services.Optimizers;
-using HeatManager.Core.Services.ProjectManagers;
-using HeatManager.Core.Services.SourceDataProviders;
-using HeatManager.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Linq;
 using Avalonia.Interactivity;
 using Avalonia.Reactive; 
+using HeatManager.ViewModels;
+using System;
 
 namespace HeatManager.Views
 {
@@ -21,26 +14,6 @@ namespace HeatManager.Views
         {
             
             InitializeComponent();
-
-            //var sourceDataProvider = new SourceDataProvider();
-
-            //var parser = new CsvDataLoader(sourceDataProvider);
-
-            //parser.LoadData("./source-data-csv/winter.csv");    
-
-
-            //var assetManager = new AssetManager();
-
-
-            //var optimizerSettings = new OptimizerSettings(assetManager.ProductionUnits.Select(u => u.JustSomeRadndomProperty).ToList());
-
-            //optimizerSettings.SetActive("GB1");
-            //optimizerSettings.SetActive("GB2");
-            //optimizerSettings.SetActive("OB1");
-
-            //var optimizer = new DefaultOptimizer( assetManager, sourceDataProvider, optimizerSettings,new OptimizerStrategy(true));
-
-            //DataContext = new MainWindowViewModel(sourceDataProvider, optimizer);
 
             this.Opened += MainWindow_Opened;
             this.SizeChanged += MainWindow_SizeChanged;

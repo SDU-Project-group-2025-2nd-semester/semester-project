@@ -1,4 +1,3 @@
-using HeatManager.Core.Models;
 using HeatManager.Core.Models.Producers;
 using System.Collections.ObjectModel;
 
