@@ -21,12 +21,12 @@
         <!--  ========================== Header Section ==========================  -->
         <views:OptimizerHeaderSection Grid.Row="0" DataContext="{Binding}" />
 
-        <Button  Grid.Row="0" Command="{Binding ExportButton}" CommandParameter="{Binding ElementName=costChart}">
+        <Button
+            Grid.Row="0"
+            Command="{Binding ExportButton}"
+            CommandParameter="{Binding ElementName=costChart}">
             <StackPanel Orientation="Horizontal">
-                <Svg
-                    Width="20"
-                    Margin="0,0,5,0"
-                    Path="/Assets/Icons/ic_fluent_arrow_exit_48_regular.svg" />
+                <Image Margin="0,0,5,0" Width = "20" Height = "20" Source="avares://HeatManager/Assets/Icons/save-project-icon.png" />
                 <TextBlock Text="Export" />
             </StackPanel>
         </Button>
@@ -39,16 +39,16 @@
 
             <!--  ========================== Chart Section ==========================  -->
             <!--  Line Chart  -->
-                <avalonia:CartesianChart
-                    x:Name="costChart"
-                    Grid.Row="1"
-                    DrawMargin="{Binding Margin}"
-                    Series="{Binding Series}"
-                    TooltipPosition="Top"
-                    UpdateStartedCommand="{Binding ChartUpdatedCommand}"
-                    XAxes="{Binding XAxes}"
-                    YAxes="{Binding YAxes}"
-                    ZoomMode="X" />
+            <avalonia:CartesianChart
+                x:Name="costChart"
+                Grid.Row="1"
+                DrawMargin="{Binding Margin}"
+                Series="{Binding Series}"
+                TooltipPosition="Top"
+                UpdateStartedCommand="{Binding ChartUpdatedCommand}"
+                XAxes="{Binding XAxes}"
+                YAxes="{Binding YAxes}"
+                ZoomMode="X" />
 
             <!--  Pie Charts (using separate user control)  -->
             <views:OptimizerCostsPieGraphView Grid.Column="1" DataContext="{Binding PieGraphViewModel}" />

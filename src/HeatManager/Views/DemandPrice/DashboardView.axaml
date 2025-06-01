@@ -12,8 +12,7 @@
         x:DataType="demandPrice:GridProductionViewModel"
         mc:Ignorable="d">
 
-        <Grid RowDefinitions="Auto,Auto,Auto,100"
-                Margin="20">
+        <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,100">
                 <StackPanel Grid.Row="0">
                         <TextBlock
                                 HorizontalAlignment="Center"
@@ -25,16 +24,14 @@
                         <!-- <buttons:ExportChartButton
                                 ButtonText="Export chart"
                                 Command="{Binding ExportButtonCommand}"
-                                CommandParameter="{Binding #mainChart}" /> -->
+                                CommandParameter="{Binding #mainChart}" />-->
 
-                        <Button
-                                Command="{Binding ExportButton}"
-                                CommandParameter="{Binding ElementName=mainChart}">
+                        <Button Command="{Binding ExportButton}" CommandParameter="{Binding ElementName=mainChart}">
                                 <StackPanel Orientation="Horizontal">
-                                        <Svg
+                                        <Image
                                                 Margin="0,0,5,0"
-                                                Width="20"
-                                                Path="/Assets/Icons/ic_fluent_arrow_exit_48_regular.svg" />
+                                                Width = "20" Height = "20"
+                                                Source="avares://HeatManager/Assets/Icons/save-project-icon.png" />
                                         <TextBlock Text="Export" />
                                 </StackPanel>
                         </Button>
