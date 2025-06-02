@@ -53,6 +53,7 @@ public class ChartExporter() : IChartExporter
                 await sourceStream.CopyToAsync(destinationStream);
 
                 Console.WriteLine($"Chart image saved successfully to {file.Path}");
+                await ShowStatusNotification("Chart exported successfully", false);
 
             }
             else
@@ -156,7 +157,6 @@ public class ChartExporter() : IChartExporter
             if (skChart != null)
             {
                 await Export(skChart, filenamePrefix);
-                await ShowStatusNotification("Chart exported successfully", false);
             }
         }
         catch (Exception ex)
