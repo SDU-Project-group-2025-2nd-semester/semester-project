@@ -1,0 +1,170 @@
+@startuml CoreClassUML
+
+' skinparam linetype polyline
+' skinparam linetype ortho
+' !pragma ratio 0.7
+
+package "Data Access"{
+    interface IDataLoader{
+        + LoadData():void
+        + LoadData():Task
+    }
+
+    class CsvDataLoader{
+        - _sourceDataProvider: ISourceDataProvider
+        + LoadData():void
+    }
+
+    class SourceDataPointMap <<private>> <<sealed>>{
+    }
+
+    interface ISourceDataProvider{
+        + SourceDataCollection: SourceDataCollection
+    }
+
+    package "DataBase"{
+        class HeatManagerDbContext{
+            + Projects: DbSet<Project>
+            # OnModelCreating(): void
+        }
+
+        class HeatManagerDbContextFactory{
+            + CreateDbContext():HeatManagerDbContext
+        }
+    }
+}
+
+package "Asset Manager"{
+    interface IAssetManager{
+        ProductionUnits: ObservableCollection<ProductionUnitBase>
+        HeatProductionUnits: ObservableCollection<HeatProductionUnit>
+        LoadUnits(): void
+        AddUnit(): void
+        RemoveUnit(): void
+    }
+
+    class AssetManager{}
+
+    class JsonDataStructure{
+        + HeatProductionUnits: List<HeatProductionUnit>?
+        + ElectricityProductionUnits: List<ElectricityProductionUnit>?
+    }
+}
+
+package "Optimization"{
+    interface IOptimizer{
+        + OptimizerSettings: IOptimizerSettings
+        + ChangeOptimizationSettings(): void
+        + UpdateUnits(): void
+        + UpdateProductionUnits(): void
+    }
+
+    class DefaultOptimizer{
+        - _assetManager: IAssetManager
+        - _sourceDataProvider: ISourceDataProvider
+        - _optimizerStrategy: IOptimizerStrategy
+        + Optimize(): Schedule
+    }
+
+    interface IOptimizerSettings{
+        + AllUnits:  Dictionary<string, bool>
+        + GetActiveUnitsNames(): List<string>
+        + SetActive(): void
+        + SetOffline(): void
+    }
+
+    interface IOptimizerStrategy{
+        + Optimization: OptimizationType
+    }
+}
+
+package "Resource Manager"{
+    interface IResourceManager{
+        + Resources: List<Resource>
+        + AddResource(): void
+    }
+
+    class ResourceManager{}
+}
+
+package "Project Manager"{
+        interface IProjectManager{
+            + CurrentProject: Project
+            + GetProjectsFromDatabaseDisplaysAsync(): Task<List<ProjectDisplay>>
+            + GetProjectsFromDatabaseDisplays(): List<ProjectDisplay>
+            + LoadProjectFromDb(): Task
+            + SaveProjectAsync(): Task
+        }
+
+        class ProjectManager{}
+}
+
+package "Models"{
+    abstract ProductionUnitBase{
+        - _isActive: boolean
+        + Name: string
+        + Cost: decimal
+        + MaxHeatProduction: double
+        + ResourceConsumption: double
+        + Resource: Resource
+        + Emissions: double
+        + IsActive(): boolean
+    }
+
+    class HeatProductionUnit{}
+
+    class ElectricityProductionUnit{
+        MaxElectricity: double
+    }
+
+    class Resource{
+        + Name: string
+        + Type: ResourceType
+    }
+
+    class Project{
+        + Id: Guid
+        + Name: string
+        + CreatedAt: DateTime
+        + LastOpened: DateTime
+        + ProjectData: ProjectData
+    }
+}
+
+' ==== Relationships ====
+' Implementation
+CsvDataLoader --|> IDataLoader : implements
+AssetManager --|> IAssetManager : implements
+DefaultOptimizer --|> IOptimizer : implements
+ResourceManager --|> IResourceManager : implements
+ProjectManager --|> IProjectManager: implements
+
+' Inheritance
+HeatProductionUnit --|> ProductionUnitBase: extends 
+ElectricityProductionUnit --|> ProductionUnitBase: extends
+
+' Aggregation
+ProjectManager o--- HeatManagerDbContext
+ProjectManager o--- IAssetManager
+ProjectManager o--- IResourceManager
+ProjectManager o--- ISourceDataProvider
+ProjectManager o-- IOptimizer
+DefaultOptimizer o-- IAssetManager : referenced
+DefaultOptimizer o-- ISourceDataProvider : referenced
+DefaultOptimizer o-- IOptimizerStrategy : referenced
+DefaultOptimizer o-- IOptimizerSettings : referenced
+ProductionUnitBase o-- Resource : uses >
+IResourceManager "1" o-- "many" Resource : manages >
+
+
+AssetManager ..|> JsonDataStructure : uses
+ProductionUnitBase "many" --*  AssetManager
+
+ResourceManager *-- "many" ProductionUnitBase
+
+HeatManagerDbContextFactory ..> HeatManagerDbContext : creates
+HeatManagerDbContext *- "many" Project
+
+CsvDataLoader +-- SourceDataPointMap: inner class
+ISourceDataProvider --o CsvDataLoader : < uses
+@enduml
